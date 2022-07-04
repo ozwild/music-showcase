@@ -2,10 +2,14 @@ import { Howl, HowlCallback } from 'howler'
 import { computed, onMounted, onUnmounted, ref, unref, watch } from 'vue'
 import type { Ref } from 'vue'
 
+import {
+  IAudioPlayerOptions,
+  IInterval,
+  IHowlEvent,
+  IAudioPlayer,
+} from '@/types/types'
 import { clamp } from '@/composables/useClamp'
 import { pipe } from '@/composables/usePipe'
-
-import { IAudioPlayerOptions, IInterval, IHowlEvent } from '@/types/types'
 
 const defaultSettings = {
   muted: false,
@@ -22,7 +26,7 @@ const defaultOptions: IAudioPlayerOptions = {
   xhr: undefined,
 }
 
-export function useAudioPlayer(options?: IAudioPlayerOptions) {
+export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
   const howl: Ref<Howl | null | undefined> = ref()
   const source: Ref<string | null> = ref(null)
   const duration: Ref<number> = ref(0)
@@ -112,6 +116,16 @@ export function useAudioPlayer(options?: IAudioPlayerOptions) {
   const progress = computed(() => {
     if (duration.value == 0) return 0
     return seek.value / duration.value
+  })
+
+  const elapsed = computed(() => {
+    if (seek.value == 0) return 0
+    return seek.value
+  })
+
+  const remaining = computed(() => {
+    if (duration.value == 0) return 0
+    return duration.value - seek.value
   })
 
   watch(isPlaying, (value) => {
@@ -226,11 +240,9 @@ export function useAudioPlayer(options?: IAudioPlayerOptions) {
   const play = () => howl.value?.play()
   const pause = () => howl.value?.pause()
   const stop = () => {
-    console.log('stopping')
     howl.value?.stop()
   }
   const togglePlayback = () => {
-    console.log('toggling play state')
     isPlaying.value ? pause() : play()
   }
   const setMute = (value: boolean) => {
@@ -267,6 +279,8 @@ export function useAudioPlayer(options?: IAudioPlayerOptions) {
 
     // Computed Variables
     progress,
+    elapsed,
+    remaining,
 
     // Actions
     useSound,

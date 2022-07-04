@@ -1,3 +1,12 @@
+import { Ref } from 'vue'
+import { Howl } from 'howler'
+
+export interface ISong {
+  id: string
+  title: string
+  url: string
+}
+
 export type AvailableEvents =
   | 'load'
   | 'loaderror'
@@ -34,6 +43,33 @@ export interface IAudioPlayerOptions {
     headers?: Record<string, string> | undefined
     withCredentials?: boolean | undefined
   }
+}
+
+export interface IAudioPlayer {
+  instance: Ref<Howl | null | undefined>
+  sound: Ref<Howl | null | undefined>
+  howl: Ref<Howl | null | undefined>
+  isPlaying: Ref<boolean>
+  muted: Ref<boolean>
+  duration: Ref<number>
+  volume: Ref<number>
+  rate: Ref<number>
+  seek: Ref<number>
+  progress: Ref<number>
+  elapsed: Ref<number>
+  remaining: Ref<number>
+  useSound: (source: string) => void
+  play: () => void
+  pause: () => void
+  stop: () => void
+  togglePlayback?: () => void
+  mute: () => void
+  unmute: () => void
+  toggleMute: () => void
+  setVolume: (value: number) => void
+  setRate: (value: number) => void
+  setSeek: (value: number) => void
+  setProgress: (value: number) => void
 }
 
 export interface IEmits {

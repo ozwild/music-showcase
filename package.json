@@ -4,26 +4,14 @@
   "private": true,
   "description": "My own personal home-baked music showcase vue web app",
   "author": "ozwild",
-  "keywords": [
-    "audio",
-    "player",
-    "howler",
-    "vue",
-    "composable",
-    "music",
-    "showcase"
-  ],
-  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@ozwild/use-pseudo-pipe": "^1.0.0",
     "howler": "^2.2.3",
     "vue": "^3.2.13",
-    "vue-cli-plugin-ts-paths": "^0.0.4",
     "vue-eslint-parser": "^9.0.3"
   },
   "devDependencies": {
@@ -36,6 +24,18 @@
     "@vue/eslint-config-typescript": "^9.1.0",
     "eslint": "^8.18.0",
     "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2",
     "typescript": "~4.5.5"
-  }
+  },
+  "keywords": [
+    "audio",
+    "player",
+    "howler",
+    "vue",
+    "composable",
+    "music",
+    "showcase"
+  ],
+  "license": "MIT"
 }

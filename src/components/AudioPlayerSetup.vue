@@ -1,14 +1,63 @@
+<template>
+  <div id="player">
+    <div>
+      <ol>
+        <li v-for="song in songs" :key="song.id" @click="() => playSong(song)">
+          {{ song.title }}
+        </li>
+      </ol>
+    </div>
+    <div class="bottom-bar">
+      <div class="box">
+        <div>
+          <div>Is Playing: {{ isPlaying ? 'Yes' : 'No' }}</div>
+          <div>
+            <SongInfo :song="currentSong" />
+            <ProgressInformation :audioPlayer="audioPlayer" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <button v-if="!isPlaying" @click="() => play()">Play</button>
+        <button v-if="isPlaying" @click="() => stop()">Stop</button>
+        <button v-if="isPlaying" @click="() => pause()">Pause</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+#player {
+  font-size: 1rem;
+  .bottom-bar {
+    .box {
+      padding: 1em 1.3em;
+    }
+    background-color: yellow;
+    color: #040405;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+  }
+}
+</style>
+
 <script lang="ts" setup>
-import { useAudioPlayer } from '../composables/useAudioPlayer'
-import { IAudioPlayerOptions } from '../types/types'
+import { ref, Ref } from 'vue'
+import { IAudioPlayerOptions, ISong } from '@/types/types'
+import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import ProgressInformation from '@/components/ProgressInformation.vue'
+import SongInfo from '@/components/SongInfo.vue'
 
 interface IProps extends IAudioPlayerOptions {
-  sources: string | string[]
+  songs: ISong[]
 }
+
+const currentSong: Ref<ISong | null> = ref(null)
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const {
-  sources = [],
+  songs = [],
   autoPlay = false,
   loop = false,
   preload = true,
@@ -17,41 +66,19 @@ const {
   xhr = undefined,
 } = defineProps<IProps>()
 
-const { play, stop, pause, useSound, isPlaying, duration, progress } =
-  useAudioPlayer({
-    autoPlay,
-    loop,
-    preload,
-    html5,
-    formats,
-    xhr,
-  })
-</script>
+const audioPlayer = useAudioPlayer({
+  autoPlay,
+  loop,
+  preload,
+  html5,
+  formats,
+  xhr,
+})
 
-<template>
-  <div>
-    <div>
-      <ol>
-        <li
-          v-for="source in sources"
-          :key="source"
-          @click="() => useSound(source)"
-        >
-          {{ source }}
-        </li>
-      </ol>
-    </div>
-    <div>
-      <ul>
-        <li>Is Playing: {{ isPlaying ? 'Yes' : 'No' }}</li>
-        <li v-if="progress">Progress: {{ progress.toFixed(2) }}%</li>
-        <li>Duration: {{ duration }}</li>
-      </ul>
-    </div>
-    <div>
-      <button v-if="!isPlaying" @click="() => play()">Play</button>
-      <button v-if="isPlaying" @click="() => stop()">Stop</button>
-      <button v-if="isPlaying" @click="() => pause()">Pause</button>
-    </div>
-  </div>
-</template>
+const { useSound, play, stop, pause, isPlaying } = audioPlayer
+
+const playSong = (song: ISong) => {
+  currentSong.value = song
+  useSound(song.url)
+}
+</script>
