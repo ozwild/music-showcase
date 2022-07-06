@@ -38,7 +38,6 @@ export interface IAudioPlayerOptions {
   preload?: boolean
   html5?: boolean
   formats?: string[]
-  fftSize: number
   xhr?: {
     method?: string | undefined
     headers?: Record<string, string> | undefined
@@ -61,9 +60,6 @@ export interface IAudioPlayer {
   remaining: Ref<number>
   context: Ref<AudioContext>
   gainNode: Ref<GainNode>
-  analyserNode: Ref<AnalyserNode>
-  bufferLength: Ref<number>
-  dataArray: Ref<Float32Array>
   useSound: (source: string) => void
   play: () => void
   pause: () => void

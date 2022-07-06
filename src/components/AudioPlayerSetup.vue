@@ -1,10 +1,11 @@
 <template>
   <div id="player">
-    <div class="blur background">
-      <div class="background" id="background"></div>
-      <canvas id="canvas" :width="width" :height="height"></canvas>
+    <div class="background">
+      <div class="background blur" id="background">
+        <canvas id="canvas-a" :width="width" :height="height"></canvas>
+      </div>
+      <canvas id="canvas-b" :width="width" :height="height"></canvas>
     </div>
-    <div><svg id="svg"></svg></div>
 
     <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
 
@@ -13,6 +14,9 @@
         <div>
           <div>
             <SongInfo :song="currentSong" />
+            <div>
+              <p>MinValue: {{ minValue }}; MaxValue: {{ maxValue }}</p>
+            </div>
             <a v-if="!isPlaying" href="#" @click="play">Continue</a>&nbsp;
             <a v-if="isPlaying" href="#" @click="stop">Stop</a>
           </div>
@@ -25,7 +29,7 @@
 
 <style lang="scss" scoped>
 .blur {
-  filter: blur(2px);
+  filter: blur(5px);
 }
 .background {
   position: absolute;
@@ -55,11 +59,12 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { $ref, $, $$ } from 'vue/macros'
 import { IAudioPlayerOptions, ISong } from '@/types/types'
 
-import { FFTSizes, useAudioPlayer } from '@/composables/useAudioPlayer'
+import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { useCanvasRendering } from '@/composables/useCanvasRendering'
 //import ProgressInformation from '@/components/ProgressInformation.vue'
 import SongInfo from '@/components/SongInfo.vue'
 import SongList from './SongList.vue'
@@ -70,84 +75,61 @@ interface IProps extends IAudioPlayerOptions {
 }
 
 let currentSong: ISong | null = $ref(null)
-let bufferLength: number = $ref(0)
-let dataArray: Float32Array = $ref(new Float32Array())
-let canvas: HTMLCanvasElement = $ref()
-let canvasCtx: CanvasRenderingContext2D | null = $ref(null)
-let width = $ref(500)
-let height = $ref(300)
+let canvasA: HTMLCanvasElement = $ref()
+let canvasACtx: CanvasRenderingContext2D | null = $ref(null)
+let canvasB: HTMLCanvasElement = $ref()
+let canvasBCtx: CanvasRenderingContext2D | null = $ref(null)
+let width = $ref(window.innerWidth)
+let height = $ref(window.innerHeight)
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
 
-const audioPlayer = useAudioPlayer({
-  fftSize: FFTSizes.LOW,
-})
+const audioPlayer = useAudioPlayer()
 
-const {
-  useSound,
-  play,
-  stop,
-  pause,
-  isPlaying,
-  context,
-  gainNode,
-  analyserNode,
-} = $(audioPlayer)
+const { useSound, play, stop, pause, isPlaying, context, gainNode } =
+  $(audioPlayer)
+
+const { clearCanvas, drawBars, drawOsciloscope, minValue, maxValue } =
+  useCanvasRendering($$(context), $$(gainNode))
 
 const playSong = (song: ISong) => {
   currentSong = song
   useSound(song.url)
 }
 
-watch($$(analyserNode), (value) => {
-  bufferLength = value.frequencyBinCount
-  dataArray = new Float32Array(bufferLength)
-})
-
 function draw() {
   requestAnimationFrame(draw)
 
-  analyserNode.getFloatFrequencyData(dataArray)
-
-  if (!canvasCtx) {
-    return
+  if (canvasACtx) {
+    clearCanvas(canvasACtx)
+    drawOsciloscope(canvasACtx)
   }
 
-  canvasCtx.clearRect(0, 0, width, height)
-
-  canvasCtx.lineWidth = 5
-  canvasCtx.strokeStyle = 'rgb(0, 0, 0)'
-  canvasCtx.filter = 'blur'
-
-  canvasCtx.beginPath()
-
-  const sliceWidth = (width * 1.0) / bufferLength
-  let x = 0
-
-  for (let i = 0; i < bufferLength; i++) {
-    const v = dataArray[i] / 128.0
-    const y = (-v * height) / 3
-    canvasCtx.strokeStyle = `rgb(100, ${i / 4}, ${y / 4})`
-
-    if (i === 0) {
-      canvasCtx.moveTo(x, y)
-    } else {
-      canvasCtx.lineTo(x, y)
-    }
-
-    x += sliceWidth
+  if (canvasBCtx) {
+    clearCanvas(canvasBCtx)
+    drawBars(canvasBCtx)
   }
+}
 
-  canvasCtx.lineTo(width, height / 2)
-  canvasCtx.stroke()
+function updateCanvasDimensions() {
+  console.log('resize handler')
+  width = window.innerWidth
+  height = window.innerHeight
 }
 
 onMounted(() => {
-  canvas = document.getElementById('canvas') as HTMLCanvasElement
-  canvasCtx = canvas.getContext('2d')
-  width = window.innerWidth
-  height = window.innerHeight
+  canvasA = document.getElementById('canvas-a') as HTMLCanvasElement
+  canvasACtx = canvasA.getContext('2d')
+
+  canvasB = document.getElementById('canvas-b') as HTMLCanvasElement
+  canvasBCtx = canvasB.getContext('2d')
+
+  window.addEventListener('resize', updateCanvasDimensions)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateCanvasDimensions)
 })
 
 draw()

@@ -195,8 +195,6 @@ function draw() {
     return
   }
 
-  //canvasCtx.fillStyle = 'rgb(250, 251, 255)'
-  //canvasCtx.fillRect(0, 0, width, height)
   canvasCtx.clearRect(0, 0, width, height)
 
   canvasCtx.lineWidth = 1

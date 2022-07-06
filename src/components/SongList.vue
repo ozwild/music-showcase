@@ -18,21 +18,22 @@
 .list {
   &:hover {
     .li:not(:hover) {
-      filter: opacity(0.3);
+      filter: opacity(0.18);
     }
   }
 }
 .li {
-  background: yellow;
-  padding: 2px 15px 2px 5px;
-  display: contents;
+  background: white;
+  padding: 2px 15px 6px 4px;
   display: inline flow-root list-item;
-  font-size: x-large;
+  display: inline-flex;
+  font-size: xx-large;
   transform: scale(0.7);
   cursor: pointer;
   transition: all 0.6s;
   &.active {
-    background: greenyellow;
+    background: black;
+    color: white;
   }
   &:hover {
     transform: scale(1);

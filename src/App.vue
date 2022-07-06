@@ -19,7 +19,8 @@ html {
   font-size: 16px;
 }
 body {
-  background: linear-gradient(white, #aaa);
+  background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
+  //color: white;
   min-height: 100vh;
 }
 </style>

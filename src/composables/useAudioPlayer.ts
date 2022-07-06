@@ -11,12 +11,6 @@ import {
 import { clamp } from '@/composables/useClamp'
 import { pipe } from '@/composables/usePipe'
 
-export const FFTSizes = {
-  LOW: 2048,
-  MEDIUM: 8192,
-  HIGH: 16384,
-}
-
 const defaultSettings = {
   muted: false,
   volume: 1.0,
@@ -28,7 +22,6 @@ const defaultOptions: IAudioPlayerOptions = {
   loop: false,
   preload: true,
   html5: false,
-  fftSize: FFTSizes.LOW,
   formats: ['audio/mpeg'],
   xhr: undefined,
 }
@@ -37,9 +30,6 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
   const howl: Ref<Howl | null | undefined> = ref()
   const context: Ref<AudioContext> = ref(new AudioContext())
   const gainNode: Ref<GainNode> = ref(new GainNode(context.value))
-  const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(context.value))
-  const bufferLength: Ref<number> = ref(0)
-  const dataArray: Ref<Float32Array> = ref(new Float32Array())
 
   const source: Ref<string | null> = ref(null)
   const duration: Ref<number> = ref(0)
@@ -278,22 +268,15 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     setSeek(clamp(value, 0, 1) * duration.value)
 
   function fillAudioNodes() {
-    const { fftSize } = { ...defaultOptions, ...options }
     const masterContext = Howler.ctx
     const masterGainNode = Howler.masterGain
 
     if (masterContext) {
-      console.log('Setting up masterContext')
       context.value = masterContext
-      analyserNode.value = new AnalyserNode(context.value, { fftSize })
-      bufferLength.value = analyserNode.value.frequencyBinCount
-      dataArray.value = new Float32Array(bufferLength.value)
     }
 
     if (masterGainNode) {
-      console.log('Setting up masterGainNode')
       gainNode.value = masterGainNode
-      masterGainNode.connect(analyserNode.value)
     }
   }
 
@@ -312,9 +295,6 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     howl,
     context,
     gainNode,
-    analyserNode,
-    bufferLength,
-    dataArray,
 
     // Player Ref Variables
     isPlaying,
