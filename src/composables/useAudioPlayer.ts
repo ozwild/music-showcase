@@ -11,6 +11,12 @@ import {
 import { clamp } from '@/composables/useClamp'
 import { pipe } from '@/composables/usePipe'
 
+export const FFTSizes = {
+  LOW: 2048,
+  MEDIUM: 8192,
+  HIGH: 16384,
+}
+
 const defaultSettings = {
   muted: false,
   volume: 1.0,
@@ -21,13 +27,20 @@ const defaultOptions: IAudioPlayerOptions = {
   autoPlay: false,
   loop: false,
   preload: true,
-  html5: true,
+  html5: false,
+  fftSize: FFTSizes.LOW,
   formats: ['audio/mpeg'],
   xhr: undefined,
 }
 
 export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
   const howl: Ref<Howl | null | undefined> = ref()
+  const context: Ref<AudioContext> = ref(new AudioContext())
+  const gainNode: Ref<GainNode> = ref(new GainNode(context.value))
+  const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(context.value))
+  const bufferLength: Ref<number> = ref(0)
+  const dataArray: Ref<Float32Array> = ref(new Float32Array())
+
   const source: Ref<string | null> = ref(null)
   const duration: Ref<number> = ref(0)
   const isPlaying: Ref<boolean> = ref(false)
@@ -45,7 +58,7 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     },
   })
 
-  const howlEvents: Ref<IHowlEvent[]> = ref(
+  const internalEvents: Ref<IHowlEvent[]> = ref(
     [
       {
         name: 'load',
@@ -147,20 +160,27 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     console.log(`${event} triggered ${id ? `with id ${id}` : ''}`)
   }
 
-  watch(
-    () => source,
-    () => reinitialize()
-  )
-
-  function reinitialize() {
-    cleanup(false)
-    initialize()
+  function initialize() {
+    start()
   }
 
-  function initialize() {
-    if (!source.value) {
-      throw 'Unable to initialize. Source is required'
+  function cleanup(resetSettings = false) {
+    reset()
+
+    // Reset settings (optionally)
+    if (resetSettings) {
+      muted.value = defaultSettings.muted
+      volume.value = defaultSettings.volume
+      rate.value = defaultSettings.rate
     }
+  }
+
+  function start() {
+    if (!source.value) {
+      console.error('Unable to start. Source is required')
+      return
+    }
+    console.log(source.value)
 
     const initializationOptions = { ...defaultOptions, ...options }
 
@@ -169,17 +189,19 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
       src: unref(source) as string,
     })
 
+    console.log('howl initialization', howl.value)
+
     duration.value = howl.value.duration()
 
     if (duration.value > 0) {
       emit('load')
     }
 
-    howlEvents.value.map((event: IHowlEvent) => {
+    internalEvents.value.map((event: IHowlEvent) => {
       const { name, hook } = event
       const handler: HowlCallback = (id: number) => {
         if (hook) hook(id)
-        emit(name, id)
+        //emit(name, id)
       }
 
       howl.value?.on(name, handler)
@@ -188,7 +210,7 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     })
   }
 
-  function cleanup(resetSettings = false) {
+  function reset() {
     // Stop playback
     if (howl.value) {
       stop()
@@ -201,29 +223,22 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
 
     // Clear all event listeners
 
-    howlEvents.value.map((event) => {
+    internalEvents.value.map((event) => {
       const { name, hook } = event
       if (hook && howl.value) {
         howl.value.off(name, hook)
       }
 
-      // I'm dubious about this block of code
-      /* const _event = { ...event }
-      delete _event.hook
-      return _event */
       return event
     })
 
     // Destroy the Howl instance
     howl.value = null
     duration.value = 0
+  }
 
-    // Reset settings (optionally)
-    if (resetSettings) {
-      muted.value = defaultSettings.muted
-      volume.value = defaultSettings.volume
-      rate.value = defaultSettings.rate
-    }
+  function restart() {
+    return pipe().then(reset).then(start).then(fillAudioNodes)
   }
 
   const useSound = (url: string) => {
@@ -234,10 +249,13 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
 
     source.value = url
 
-    pipe().then(reinitialize).then(play)
+    pipe().then(restart).then(play)
   }
 
-  const play = () => howl.value?.play()
+  const play = () => {
+    console.log('play', howl.value)
+    howl.value?.play()
+  }
   const pause = () => howl.value?.pause()
   const stop = () => {
     howl.value?.stop()
@@ -259,17 +277,46 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
   const setProgress = (value: number) =>
     setSeek(clamp(value, 0, 1) * duration.value)
 
-  onMounted(() => null)
+  function fillAudioNodes() {
+    const { fftSize } = { ...defaultOptions, ...options }
+    const masterContext = Howler.ctx
+    const masterGainNode = Howler.masterGain
+
+    if (masterContext) {
+      console.log('Setting up masterContext')
+      context.value = masterContext
+      analyserNode.value = new AnalyserNode(context.value, { fftSize })
+      bufferLength.value = analyserNode.value.frequencyBinCount
+      dataArray.value = new Float32Array(bufferLength.value)
+    }
+
+    if (masterGainNode) {
+      console.log('Setting up masterGainNode')
+      gainNode.value = masterGainNode
+      masterGainNode.connect(analyserNode.value)
+    }
+  }
+
+  onMounted(() => {
+    pipe().then(initialize)
+  })
 
   onUnmounted(() => {
     cleanup()
   })
 
   return {
-    // Ref Variables
+    // System Ref Variables
     instance: howl,
     sound: howl,
     howl,
+    context,
+    gainNode,
+    analyserNode,
+    bufferLength,
+    dataArray,
+
+    // Player Ref Variables
     isPlaying,
     muted,
     duration,

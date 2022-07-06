@@ -7,8 +7,10 @@
 </template>
 
 <script lang="ts" setup>
-import AudioPlayerSetup from './AudioPlayerSetup.vue'
+//import AudioPlayerSetup from './AudioPlayerSetup.vue'
 import { ISong } from '@/types/types'
+//import AudioPlayer from './AudioPlayer.vue'
+import AudioPlayerSetup from './AudioPlayerSetup.vue'
 
 const audioSources: ISong[] = [
   {

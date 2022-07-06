@@ -13,7 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
 import { IAudioPlayer } from '@/types/types'
 
 import {
@@ -25,5 +24,5 @@ import {
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { audioPlayer } = defineProps<{ audioPlayer: IAudioPlayer }>()
-const { elapsed, duration, progress, remaining } = toRefs(audioPlayer)
+const { elapsed, duration, progress, remaining } = audioPlayer
 </script>

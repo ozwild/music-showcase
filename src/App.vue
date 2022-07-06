@@ -19,8 +19,7 @@ html {
   font-size: 16px;
 }
 body {
-  background-color: #141416;
-  color: aquamarine;
-  color: cyan;
+  background: linear-gradient(white, #aaa);
+  min-height: 100vh;
 }
 </style>
