@@ -1,15 +1,30 @@
 <template>
-  <HelloWorld />
+  <SplashPresentation v-if="showSplash" @done="splashDoneHandler" />
+  <HelloWorld v-if="showApp" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
+import SplashPresentation from './components/SplashPresentation.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     HelloWorld,
+    SplashPresentation,
+  },
+  data() {
+    return {
+      showSplash: true,
+      showApp: false,
+    }
+  },
+  methods: {
+    splashDoneHandler() {
+      this.showSplash = false
+      this.showApp = true
+    },
   },
 })
 </script>
@@ -19,8 +34,6 @@ html {
   font-size: 16px;
 }
 body {
-  background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
-  //color: white;
-  min-height: 100vh;
+  margin: 0;
 }
 </style>
