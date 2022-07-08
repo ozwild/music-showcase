@@ -88,8 +88,11 @@ export function useCanvasRendering(
     //Get spectrum data
     analyser.getFloatTimeDomainData(dataArray)
 
-    canvasCtx.lineWidth = 2
+    canvasCtx.shadowColor = 'cyan'
+    canvasCtx.shadowBlur = 15
+    canvasCtx.lineWidth = 4
     canvasCtx.strokeStyle = `rgb(225, 225, 230)`
+    canvasCtx.strokeStyle = 'azure'
 
     canvasCtx.beginPath()
 
@@ -165,16 +168,19 @@ export function useCanvasRendering(
       //barHeight = dataArray[i] + height / 2
       const value = dataArray[i] + 255
       barHeight = (value / 2) * renderingHeightRation
-      const rgbIntensity = Math.floor(value * 2)
-      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 40, 50)`
+      const rgbIntensity = Math.floor(value * 2 - 200)
+      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 25)`
+      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 150)`
+      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 150)`
+      canvasCtx.fillStyle = `rgb(150, ${rgbIntensity}, 100)`
+      //canvasCtx.fillStyle = `rgb(0, 150, ${rgbIntensity})`
       canvasCtx.fillRect(posX, height - barHeight / 6, barWidth, barHeight)
 
       posX += barWidth + 1
 
-      if (rgbIntensity > maxValue.value && value !== Infinity)
-        maxValue.value = rgbIntensity
-      if (rgbIntensity < minValue.value && value !== -Infinity)
-        minValue.value = rgbIntensity
+      if (value > maxValue.value && value !== Infinity) maxValue.value = value
+      if (value < minValue.value && value !== -Infinity && value > 0)
+        minValue.value = value
     }
   }
 

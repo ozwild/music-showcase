@@ -1,45 +1,48 @@
 <template>
-  <div id="player">
-    <div class="layer background-layer">
-      <div class="layer" id="background"></div>
-      <canvas
-        class="canvas blur"
-        id="canvas-b"
-        :width="width"
-        :height="height"
-      ></canvas>
-      <canvas
-        class="canvas"
-        id="canvas-a"
-        :width="width"
-        :height="height"
-      ></canvas>
-    </div>
+  <Transition appear>
+    <div id="player">
+      <div class="layer background-layer">
+        <div class="layer" id="background"></div>
+        <canvas
+          class="canvas blur"
+          id="canvas-b"
+          :width="width"
+          :height="height"
+        ></canvas>
+        <canvas
+          class="canvas"
+          id="canvas-a"
+          :width="width"
+          :height="height"
+        ></canvas>
+      </div>
 
-    <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
+      <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
 
-    <div class="bottom-bar">
-      <div class="box">
-        <div>
+      <div class="bottom-bar">
+        <div class="box">
           <div>
-            <SongInfo :song="currentSong" />
             <div>
-              <p>MinValue: {{ minValue }}; MaxValue: {{ maxValue }}</p>
+              <SongInfo :song="currentSong" />
+              <div>
+                <p>MinValue: {{ minValue }}; MaxValue: {{ maxValue }}</p>
+              </div>
+              <a v-if="!isPlaying" href="#" @click="play">Continue</a>&nbsp;
+              <a v-if="isPlaying" href="#" @click="stop">Stop</a>&nbsp;
+              <a v-if="isPlaying" href="#" @click="pause">Pause</a>
             </div>
-            <a v-if="!isPlaying" href="#" @click="play">Continue</a>&nbsp;
-            <a v-if="isPlaying" href="#" @click="stop">Stop</a>&nbsp;
-            <a v-if="isPlaying" href="#" @click="pause">Pause</a>
           </div>
         </div>
+        <div></div>
       </div>
-      <div></div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
 .blur {
-  filter: blur(3px);
+  //filter: blur(0px) hue-rotate(30deg);
+  //filter: blur(1px) hue-rotate(310deg) saturate(2) opacity(0.4);
 }
 .layer {
   position: static;
@@ -52,17 +55,27 @@
     z-index: -1;
   }
 }
+
 #background {
   @extend .layer;
-  background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
-  background: linear-gradient(to right, aquamarine, #f2f2f2, beige, #eaeaea);
-  background: linear-gradient(to right, #ada996, #f2f2f2, beige, #eaeaea);
-  background: radial-gradient();
+
   position: fixed;
   z-index: -1;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 1920px;
+  //left: 50%;
+  //transform: translateX(-50%);
+  //min-width: 1920px;
+  background: #222
+
+  &.playing {
+    /* background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
+  background: linear-gradient(to right, aquamarine, #f2f2f2, beige, #eaeaea);
+  background: linear-gradient(to right, #ada996, #f2f2f2, beige, #eaeaea); */
+    background: radial-gradient(
+      ellipse at bottom,
+      rgb(150, 100, 100) 0%,
+      white 100%
+    );
+  }
 }
 .canvas {
   position: absolute;
@@ -154,8 +167,8 @@ function draw() {
 
 function stopDrawing() {
   setTimeout(() => {
-    isDrawingAllowed = false
-  }, 500)
+    if (!isPlaying) isDrawingAllowed = false
+  }, 1500)
 }
 
 function updateCanvasDimensions() {

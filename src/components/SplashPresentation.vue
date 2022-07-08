@@ -7,7 +7,7 @@
 
 <style lang="scss" scoped>
 #background {
-  background: radial-gradient(ellipse at bottom, #220227 0%, #000000 100%);
+  //background: radial-gradient(ellipse at bottom, #220227 0%, #000000 100%);
   /* background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea); */
   /* background: radial-gradient(
     ellipse at bottom,
@@ -49,8 +49,8 @@ h1 {
   text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: backgrounds 1s steps(6, start) infinite, shine 4s linear infinite,
-    blur 10s;
+  animation: backgrounds 650ms steps(6, start) infinite, shine 3s linear infinite,
+    blur 7s forwards;
 
   @keyframes shine {
     from {
@@ -131,8 +131,5 @@ h1 {
 </style>
 
 <script lang="ts" setup>
-const emit = defineEmits(['done'])
-setTimeout(() => {
-  emit('done')
-}, 10e3)
+
 </script>

@@ -1,32 +1,19 @@
 <template>
-  <SplashPresentation v-if="showSplash" @done="splashDoneHandler" />
-  <HelloWorld v-if="showApp" />
+  <Transition name="fade" mode="out-in" :duration="1500">
+    <SplashPresentation v-if="showSplash" />
+    <HelloWorld v-else />
+  </Transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import HelloWorld from './components/HelloWorld.vue'
 import SplashPresentation from './components/SplashPresentation.vue'
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld,
-    SplashPresentation,
-  },
-  data() {
-    return {
-      showSplash: true,
-      showApp: false,
-    }
-  },
-  methods: {
-    splashDoneHandler() {
-      this.showSplash = false
-      this.showApp = true
-    },
-  },
-})
+let showSplash = $ref(true)
+
+setTimeout(() => {
+  showSplash = false
+}, 4e3)
 </script>
 <style lang="scss">
 html {
