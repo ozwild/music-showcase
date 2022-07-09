@@ -1,14 +1,29 @@
-import { ref, Ref, unref, reactive, watch, onMounted, onUnmounted } from 'vue'
+import { ref, Ref, unref, watch, onMounted, onUnmounted } from 'vue'
+import { useMediaQueries } from '@/composables/useMediaQueries'
 import { FFTSizes } from '@/utilities/constants'
 
-function getFrequencyRegions(dataArray: Uint8Array) {
-  console.log(dataArray)
+function getDataPeaks(
+  dataArray: Uint8Array | Float32Array,
+  threshold: number
+): number[] {
+  const output = []
+  for (let index = 0; index < dataArray.length; index++) {
+    const datum = dataArray[index]
+    if (datum > threshold) {
+      output.push(datum)
+      index += 1000
+    }
+    index++
+  }
+  return output
 }
 
 export function useCanvasRendering(
   audioContext: Ref<AudioContext>,
   gainNode: Ref<GainNode>
 ) {
+  const { isOnSmallScreen: isOnSmallScreenMode } = useMediaQueries()
+
   const frequencyAnalyser: Ref<AnalyserNode> = ref(
     new AnalyserNode(unref(audioContext), { fftSize: FFTSizes.TINY })
   )
@@ -17,14 +32,15 @@ export function useCanvasRendering(
       fftSize: FFTSizes.TINY,
     })
   )
-  const isOnSmallScreenMode = ref(false)
+
   const minValue = ref(0)
   const maxValue = ref(0)
+  const avgValue = ref(0)
 
   function setAnalysers() {
     const frequencyAnalyserFFTSize = isOnSmallScreenMode.value
       ? FFTSizes.TINY
-      : FFTSizes.SMALL
+      : FFTSizes.REGULAR
 
     console.log(
       'Frequency Analyser set with FFTSize: ',
@@ -36,8 +52,8 @@ export function useCanvasRendering(
     })
 
     const timeAnalyserFFTSize = isOnSmallScreenMode.value
-      ? FFTSizes.LOW
-      : FFTSizes.MEDIUM
+      ? FFTSizes.TINY
+      : FFTSizes.REGULAR
 
     console.log('Time Analyser set with FFTSize: ', timeAnalyserFFTSize)
 
@@ -76,7 +92,92 @@ export function useCanvasRendering(
     canvasCtx.clearRect(0, 0, width, height)
   }
 
+  function canvasTint(canvasCtx: CanvasRenderingContext2D) {
+    const analyser = unref(timeAnalyser)
+    const bufferLength = analyser.frequencyBinCount
+    const dataArray = new Uint8Array(bufferLength)
+    const canvas = canvasCtx?.canvas
+    const width = canvas.width
+    const height = canvas.height
+
+    analyser.getByteFrequencyData(dataArray)
+
+    const peaks = getDataPeaks(dataArray, 110)
+    const sum = peaks.reduce((a: number, b: number) => a + b, 0)
+    const intensityAvg = sum / peaks.length / 2
+
+    /* if (intensityAvg > maxValue.value && intensityAvg !== Infinity)
+      maxValue.value = intensityAvg
+    if (
+      intensityAvg < minValue.value &&
+      intensityAvg !== -Infinity &&
+      intensityAvg !== 0
+    )
+      minValue.value = intensityAvg */
+
+    avgValue.value = intensityAvg
+
+    const canvasColorIntensity = (intensityAvg - 90) * 10
+    minValue.value = canvasColorIntensity
+    canvasCtx.fillStyle = `hsl(100, ${canvasColorIntensity}, 50)`
+    canvasCtx.fillRect(0, 0, width, height)
+  }
+
   function drawOsciloscope(canvasCtx: CanvasRenderingContext2D) {
+    const analyser = unref(timeAnalyser)
+    const bufferLength = analyser.frequencyBinCount
+    const dataArray = new Float32Array(bufferLength)
+    const canvas = canvasCtx?.canvas
+    const width = canvas.width
+    const height = canvas.height
+    const renderingHeightRation = height / 2
+
+    //Get spectrum data
+    analyser.getFloatTimeDomainData(dataArray)
+
+    canvasCtx.lineWidth = 4
+    canvasCtx.strokeStyle = 'rgba(220,180,210,0.8)'
+
+    const sliceWidth = ((width * 1) / bufferLength) * 0.8
+    let x = width / 10
+
+    canvasCtx.setTransform(1, 0, 0, 1, 0, 0)
+
+    canvasCtx.beginPath()
+    canvasCtx.moveTo(0, height / 2)
+
+    for (let i = 0; i < bufferLength; i++) {
+      /**
+       * Value is a number from -1 to +1 representing intensity (volume if you may)
+       */
+      const value = dataArray[i]
+      /**
+       * Coordinate y should be equal to value
+       */
+      let y = value
+      /**
+       * but the scale is too small compared to our canvas
+       * so we multiply it by a fraction of the canvas height
+       * in order to scale up the magnitude
+       */
+      y *= renderingHeightRation
+
+      /**
+       * And we add half of the height to rendering in the middle of our canvas
+       */
+
+      y += height / 2
+
+      canvasCtx.lineTo(x, y)
+
+      x += sliceWidth
+    }
+
+    canvasCtx.lineTo(width, height / 2)
+    canvasCtx.stroke()
+  }
+
+  function drawTensionLines(canvasCtx: CanvasRenderingContext2D) {
     const analyser = unref(timeAnalyser)
     const bufferLength = analyser.frequencyBinCount
     const dataArray = new Float32Array(bufferLength)
@@ -88,11 +189,14 @@ export function useCanvasRendering(
     //Get spectrum data
     analyser.getFloatTimeDomainData(dataArray)
 
-    canvasCtx.shadowColor = 'cyan'
-    canvasCtx.shadowBlur = 15
-    canvasCtx.lineWidth = 4
-    canvasCtx.strokeStyle = `rgb(225, 225, 230)`
-    canvasCtx.strokeStyle = 'azure'
+    /* canvasCtx.shadowColor = 'cyan'
+    canvasCtx.shadowBlur = 15 */
+    canvasCtx.lineWidth = 2
+    //canvasCtx.strokeStyle = `rgb(225, 225, 230)`
+    canvasCtx.strokeStyle = '#121212'
+    //canvasCtx.strokeStyle = 'azure'
+    canvasCtx.setTransform(0.5, -0.03, 0.01, 1, 0, height / 3)
+    canvasCtx.rotate((Math.PI / 180) * 0.01)
 
     canvasCtx.beginPath()
 
@@ -121,80 +225,137 @@ export function useCanvasRendering(
 
       y += height / 2
 
-      if (i === 0) {
-        canvasCtx.moveTo(x, y)
-      } else {
-        canvasCtx.lineTo(x, y)
-      }
+      canvasCtx.moveTo(x, y)
+
+      canvasCtx.lineTo(width / 2, height / 2)
+
+      canvasCtx.moveTo(-x, y)
+
+      //canvasCtx.lineTo(width / 2, height / 2)
+      canvasCtx.resetTransform()
 
       x += sliceWidth
     }
 
-    canvasCtx.lineTo(width, height / 2)
+    canvasCtx.lineTo(width / 2, height / 2)
     canvasCtx.stroke()
   }
 
-  function canvasTint() {
+  function drawHud(canvasCtx: CanvasRenderingContext2D) {
     const analyser = unref(frequencyAnalyser)
     const bufferLength = analyser.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
-
-    //Get spectrum data
-    analyser.getByteFrequencyData(dataArray)
-  }
-
-  function drawBars(canvasCtx: CanvasRenderingContext2D, useTimeData = false) {
-    const analyser = unref(frequencyAnalyser)
-    const bufferLength = analyser.frequencyBinCount
-    const dataArray = new Float32Array(bufferLength)
     const canvas = canvasCtx?.canvas
     const width = canvas.width
     const height = canvas.height
-    const renderingHeightRation = (height / 64) * 2.5
+    const renderingHeightRation = height
 
     //Get spectrum data
-    if (useTimeData) {
-      analyser.getFloatTimeDomainData(dataArray)
-    } else {
-      analyser.getFloatFrequencyData(dataArray)
-    }
+    analyser.getByteFrequencyData(dataArray)
 
     //Draw spectrum
-    const barWidth = (width / bufferLength) * 1.5
-    let posX = 0
+
+    const barWidth = isOnSmallScreenMode.value
+      ? (width / 2 / bufferLength) * 1
+      : (width / 1.5 / bufferLength) * 1
+    let posX = width
     let barHeight = 0
+
+    canvasCtx.setTransform(0.8, 0, 0, 3, 0, height / 8)
+    //canvasCtx.filter = 'blur(1px)'
+
+    for (let i = 0; i < bufferLength; i++) {
+      const datum = dataArray[i]
+      const value = datum / 256
+      barHeight = value * renderingHeightRation
+
+      canvasCtx.translate(0, height - height / 10)
+      canvasCtx.scale(1, -1)
+
+      canvasCtx.fillStyle = `rgba(90, 75, 83, 0.1)`
+      canvasCtx.fillRect(
+        -posX + width * 2.5,
+        height / 5 - barHeight / 2,
+        barWidth,
+        barHeight
+      ) // right wing
+
+      canvasCtx.fillStyle = `rgba(40, 35, 45, 0.3)`
+      canvasCtx.fillRect(
+        -posX + width * 2.3 - barWidth * 2,
+        height / 1.5 + barHeight,
+        barWidth,
+        -barHeight / 2
+      ) // left wing
+
+      canvasCtx.fillStyle = `rgba(60, 55, 57, 0.65)`
+      canvasCtx.fillRect(
+        posX - width + barWidth * 2,
+        height / 2 + barHeight / 1.75,
+        barWidth,
+        -barHeight / 1.5
+      ) // right wing
+
+      posX += barWidth + 1
+    }
+
+    canvasCtx.resetTransform()
+  }
+
+  function drawBars(canvasCtx: CanvasRenderingContext2D) {
+    const analyser = unref(frequencyAnalyser)
+    const bufferLength = analyser.frequencyBinCount
+    const dataArray = new Uint8Array(bufferLength)
+    const canvas = canvasCtx?.canvas
+    const width = 1024 // canvas.width
+    const height = canvas.height
+    const renderingHeightRation = height
+
+    //Get spectrum data
+    analyser.getByteFrequencyData(dataArray)
+
+    //Draw spectrum
+    const barWidth = (width / 2 / bufferLength) * 1.5
+    let posX = -width / 4
+    let barHeight = 0
+
+    canvasCtx.setTransform(1, -0.1, 0, 1, -width / 3, 0)
 
     for (let i = 0; i < bufferLength; i++) {
       //barHeight = dataArray[i] + height / 2
-      const value = dataArray[i] + 255
-      barHeight = (value / 2) * renderingHeightRation
-      const rgbIntensity = Math.floor(value * 2 - 200)
-      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 25)`
-      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 150)`
-      canvasCtx.fillStyle = `rgb(${rgbIntensity}, 0, 150)`
-      canvasCtx.fillStyle = `rgb(150, ${rgbIntensity}, 100)`
-      //canvasCtx.fillStyle = `rgb(0, 150, ${rgbIntensity})`
-      canvasCtx.fillRect(posX, height - barHeight / 6, barWidth, barHeight)
+      const datum = dataArray[i]
+      const value = datum / 256
+      barHeight = (value * renderingHeightRation) / 2
+      const rgbIntensity = datum / 2
+
+      //canvasCtx.setTransform(0.6, -0.01, 0.01, 1, 50, 0)
+      canvasCtx.fillStyle = `#121212`
+      canvasCtx.fillStyle = `rgba(0, 0, 0, 0.8)`
+      /* canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 0.95)`
+      canvasCtx.fillStyle = `rgba(${rgbIntensity}, 50, 50, 0.95)` */
+      canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 1)`
+      /**
+       * Top frequency Bars
+       */
+      canvasCtx.fillRect(
+        -posX + width / 2 - barWidth * 1.25,
+        height / 1.5,
+        barWidth,
+        -barHeight / 2
+      ) // left wing
+      canvasCtx.fillRect(posX + width, height / 2, barWidth, -barHeight / 2) // right Wing
 
       posX += barWidth + 1
-
-      if (value > maxValue.value && value !== Infinity) maxValue.value = value
-      if (value < minValue.value && value !== -Infinity && value > 0)
-        minValue.value = value
     }
+
+    canvasCtx.resetTransform()
   }
-
-  onMounted(() => {
-    window.addEventListener('resize', resizeHandler)
-  })
-
-  onUnmounted(() => {
-    window.removeEventListener('resize', resizeHandler)
-  })
 
   return {
     clearCanvas,
     drawOsciloscope,
+    drawHud,
+    drawTensionLines,
     drawBars,
     canvasTint,
     minValue,
