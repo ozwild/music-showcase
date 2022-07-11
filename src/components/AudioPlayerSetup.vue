@@ -2,14 +2,9 @@
   <Transition appear>
     <div id="player">
       <div class="layer background-layer">
-        <div class="layer" id="background" :class="{ isPlaying }"></div>
-        <canvas
-          class="canvas blur"
-          id="canvas-b"
-          :width="width"
-          :height="height"
-        ></canvas>
-        <canvas class="" id="canvas-a" :width="width" :height="height"></canvas>
+        <PlayerBackground :tempo="tempo" :audioPlayer="audioPlayerComposable" />
+        <canvas id="canvas-b" :width="width" :height="height"></canvas>
+        <canvas id="canvas-a" :width="width" :height="height"></canvas>
       </div>
 
       <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
@@ -19,6 +14,7 @@
           <div class="bar-container">
             <div class="controls">
               <SongInfo :song="currentSong" />
+              <ProgressInformation :audioPlayer="audioPlayerComposable" />
               <!-- <div>
                 <p>MinValue: {{ minValue }}; MaxValue: {{ maxValue }}</p>
               </div> -->
@@ -35,12 +31,6 @@
 </template>
 
 <style lang="scss" scoped>
-.blur {
-  //filter: blur(0px) hue-rotate(30deg);
-  //filter: blur(1px) hue-rotate(310deg) saturate(2) opacity(0.4);
-  mix-blend-mode: luminosity;
-  filter: blur(1px);
-}
 .layer {
   position: static;
   top: 0;
@@ -57,6 +47,7 @@
   @extend .layer;
 
   position: fixed;
+  transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
   z-index: -1;
   //left: 50%;
   //transform: translateX(-50%);
@@ -69,16 +60,13 @@
     ); */
 
   &.isPlaying {
-    /* background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
-  background: linear-gradient(to right, aquamarine, #f2f2f2, beige, #eaeaea);
-  background: linear-gradient(to right, #ada996, #f2f2f2, beige, #eaeaea); */
-    /* background: radial-gradient(
+    background: radial-gradient(
       ellipse at bottom,
       rgb(150, 100, 100) 0%,
       white 100%
-    ); */
-    background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
-    animation: hueRotation 4s ease-in-out infinite forwards;
+    );
+    //background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
+    //animation: hueRotation 4s ease-in-out infinite forwards;
   }
 }
 .canvas {
@@ -88,14 +76,27 @@
   z-index: -1;
 }
 
+#canvas-b {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  transform: scale(0.6, 1) translate(-112%, -79%) skew(0deg, -17deg);
+  mix-blend-mode: color-dodge;
+}
+
 #canvas-a {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: 25%;
+  top: 25%;
+  transform: scale(0.75, 0.8) translate(-60%, -108%) skew(0deg, -20deg);
+  transform: scale(0.5, 0.5) translate(-50%, -50%) skew(0deg, 0deg);
   z-index: -1;
+  mix-blend-mode: luminosity;
+  //filter: blur(0.5px);
   //mix-blend-mode: soft-light;
   //filter: blur(1px);
+  opacity: 0.4;
 }
 
 #player {
@@ -138,16 +139,17 @@ import { IAudioPlayerOptions, ISong } from '@/types/types'
 
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import { useCanvasRendering } from '@/composables/useCanvasRendering'
-//import ProgressInformation from '@/components/ProgressInformation.vue'
+import ProgressInformation from '@/components/ProgressInformation.vue'
 import SongInfo from '@/components/SongInfo.vue'
 import SongList from './SongList.vue'
+import PlayerBackground from './PlayerBackground.vue'
 //import TestVisualizer from '@/components/TestVisualizer.vue'
 
 interface IProps extends IAudioPlayerOptions {
   songs: ISong[]
 }
 
-let currentSong: ISong | null = $ref(null)
+let currentSong: ISong = $ref()
 let isDrawingAllowed: boolean = $ref(false)
 let canvasA: HTMLCanvasElement = $ref()
 let canvasACtx: CanvasRenderingContext2D | null = $ref(null)
@@ -156,9 +158,11 @@ let canvasBCtx: CanvasRenderingContext2D | null = $ref(null)
 let width: number = $ref(window.innerWidth)
 let height: number = $ref(window.innerHeight)
 let lastDrawingTimestamp: number | undefined = $ref(undefined)
-let tempoInMilliseconds: number = $ref(500)
+let tempo: number = $ref(500)
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
+
+const audioPlayerComposable = useAudioPlayer()
 
 const {
   useSound,
@@ -169,7 +173,7 @@ const {
   context,
   gainNode,
   instance: audioPlayer,
-} = $(useAudioPlayer())
+} = $(audioPlayerComposable)
 
 watch($$(audioPlayer), (value) => {
   if (value) {
@@ -194,10 +198,7 @@ const playSong = (song: ISong) => {
 }
 
 function shouldTriggerBeatDraw(now?: number) {
-  return (
-    !lastDrawingTimestamp ||
-    (now && now - lastDrawingTimestamp >= tempoInMilliseconds)
-  )
+  return !lastDrawingTimestamp || (now && now - lastDrawingTimestamp >= tempo)
 }
 
 function draw(now?: number) {
@@ -208,8 +209,8 @@ function draw(now?: number) {
   }
 
   if (canvasBCtx) {
-    //clearCanvas(canvasBCtx)
-    //drawBars(canvasBCtx)
+    clearCanvas(canvasBCtx)
+    drawBars(canvasBCtx)
   }
 
   if (shouldTriggerBeatDraw(now)) {
@@ -254,6 +255,14 @@ function registerAudioPlayerEventListeners() {
   audioPlayer.on('stop', stopHandler)
   audioPlayer.on('pause', pauseHandler)
 }
+
+watch(
+  () => currentSong,
+  (newValue: ISong) => {
+    if (!newValue) return
+    tempo = newValue.bpm
+  }
+)
 
 onMounted(() => {
   canvasA = document.getElementById('canvas-a') as HTMLCanvasElement

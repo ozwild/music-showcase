@@ -5,6 +5,7 @@ export interface ISong {
   id: string
   title: string
   url: string
+  bpm: number
 }
 
 export type AvailableEvents =

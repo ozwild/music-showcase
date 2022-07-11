@@ -102,7 +102,7 @@ export function useCanvasRendering(
 
     analyser.getByteFrequencyData(dataArray)
 
-    const peaks = getDataPeaks(dataArray, 110)
+    const peaks = getDataPeaks(dataArray, 0)
     const sum = peaks.reduce((a: number, b: number) => a + b, 0)
     const intensityAvg = sum / peaks.length / 2
 
@@ -256,12 +256,13 @@ export function useCanvasRendering(
     //Draw spectrum
 
     const barWidth = isOnSmallScreenMode.value
-      ? (width / 2 / bufferLength) * 1
-      : (width / 1.5 / bufferLength) * 1
+      ? (width / 2 / bufferLength) * 3
+      : (width / 1.5 / bufferLength) * 3
     let posX = width
     let barHeight = 0
 
-    canvasCtx.setTransform(0.8, 0, 0, 3, 0, height / 8)
+    //scale(0.75, 0.8) translate(-60%, -108%) skew(0deg, -20deg)
+    //canvasCtx.setTransform(0.8, 0, 0, 3, 0, height / 8)
     //canvasCtx.filter = 'blur(1px)'
 
     for (let i = 0; i < bufferLength; i++) {
@@ -315,7 +316,7 @@ export function useCanvasRendering(
     analyser.getByteFrequencyData(dataArray)
 
     //Draw spectrum
-    const barWidth = (width / 2 / bufferLength) * 1.5
+    const barWidth = (width / 2 / bufferLength) * 6
     let posX = -width / 4
     let barHeight = 0
 
