@@ -27,12 +27,12 @@ export const energyColors = [0, 120, 65, 23, 18, 221]
 import { watch } from 'vue'
 import { $ref, $ } from 'vue/macros'
 import { useAudioApi } from '@/composables/useAudioApi'
-import { IAudioPlayer } from '@/types/types'
+import { IAudioPlayer, ISong } from '@/types/types'
 import { FFTSizes } from '@/utilities/constants'
 
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { tempo, audioPlayer } = defineProps<{
-  tempo: number
+const { song, audioPlayer } = defineProps<{
+  song: ISong
   audioPlayer: IAudioPlayer
 }>()
 
@@ -40,13 +40,14 @@ const { isPlaying, context, gainNode } = $(audioPlayer)
 
 const {
   getAnalyser,
-  getAnalyserTimeByteData,
   getAnalyserTimeFloatData,
   getDataMax,
   getDataAverage,
 } = useAudioApi()
 
 let analyser: AnalyserNode = $ref()
+
+let tempo: number = $ref(500)
 let energyHue: number = $ref(128)
 let lastBeat: number = $ref(0)
 let barSize: number = $ref(tempo * 4)
@@ -103,6 +104,11 @@ watch(
     }
   }
 )
+
+watch(song, (newSong: ISong) => {
+  if (!newSong) return
+  tempo = newSong.meta?.bpm ?? 120
+})
 
 watch(
   () => context,

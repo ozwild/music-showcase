@@ -2,7 +2,11 @@
   <Transition appear>
     <div id="player">
       <div class="layer background-layer">
-        <PlayerBackground :tempo="tempo" :audioPlayer="audioPlayerComposable" />
+        <PlayerBackground
+          v-if="currentSong"
+          :song="currentSong"
+          :audioPlayer="audioPlayerComposable"
+        />
         <canvas id="canvas-b" :width="width" :height="height"></canvas>
         <canvas id="canvas-a" :width="width" :height="height"></canvas>
       </div>
@@ -143,7 +147,6 @@ import ProgressInformation from '@/components/ProgressInformation.vue'
 import SongInfo from '@/components/SongInfo.vue'
 import SongList from './SongList.vue'
 import PlayerBackground from './PlayerBackground.vue'
-//import TestVisualizer from '@/components/TestVisualizer.vue'
 
 interface IProps extends IAudioPlayerOptions {
   songs: ISong[]
@@ -157,8 +160,7 @@ let canvasB: HTMLCanvasElement = $ref()
 let canvasBCtx: CanvasRenderingContext2D | null = $ref(null)
 let width: number = $ref(window.innerWidth)
 let height: number = $ref(window.innerHeight)
-let lastDrawingTimestamp: number | undefined = $ref(undefined)
-let tempo: number = $ref(500)
+
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
 
@@ -197,10 +199,6 @@ const playSong = (song: ISong) => {
   useSound(song.url)
 }
 
-function shouldTriggerBeatDraw(now?: number) {
-  return !lastDrawingTimestamp || (now && now - lastDrawingTimestamp >= tempo)
-}
-
 function draw(now?: number) {
   if (canvasACtx) {
     clearCanvas(canvasACtx)
@@ -211,12 +209,6 @@ function draw(now?: number) {
   if (canvasBCtx) {
     clearCanvas(canvasBCtx)
     drawBars(canvasBCtx)
-  }
-
-  if (shouldTriggerBeatDraw(now)) {
-    //if (canvasACtx) drawTensionLines(canvasACtx)
-    //if (canvasBCtx) canvasTint(canvasBCtx)
-    lastDrawingTimestamp = now
   }
 
   if (isDrawingAllowed) requestAnimationFrame(draw)
@@ -255,14 +247,6 @@ function registerAudioPlayerEventListeners() {
   audioPlayer.on('stop', stopHandler)
   audioPlayer.on('pause', pauseHandler)
 }
-
-watch(
-  () => currentSong,
-  (newValue: ISong) => {
-    if (!newValue) return
-    tempo = newValue.bpm
-  }
-)
 
 onMounted(() => {
   canvasA = document.getElementById('canvas-a') as HTMLCanvasElement

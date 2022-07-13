@@ -5,7 +5,14 @@ export interface ISong {
   id: string
   title: string
   url: string
-  bpm: number
+  meta: ISongMeta
+}
+
+export interface ISongMeta {
+  bpm?: number
+  energy?: number
+  danceability?: number
+  happiness?: number
 }
 
 export type AvailableEvents =
