@@ -8,8 +8,20 @@
 <script lang="ts" setup>
 import HelloWorld from './components/HelloWorld.vue'
 import SplashPresentation from './components/SplashPresentation.vue'
+import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { provide } from 'vue'
+import { playerInjectionKey } from './utilities/injectionKeys'
 
-let showSplash = $ref(true)
+let showSplash = $ref(false)
+
+const player = useAudioPlayer({
+  preload: true,
+  html5: false,
+  autoPlay: false,
+  
+})
+
+provide(playerInjectionKey, player)
 
 setTimeout(() => {
   showSplash = false

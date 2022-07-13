@@ -2,11 +2,7 @@
   <Transition appear>
     <div id="player">
       <div class="layer background-layer">
-        <PlayerBackground
-          v-if="currentSong"
-          :song="currentSong"
-          :audioPlayer="audioPlayerComposable"
-        />
+        <PlayerBackground v-if="currentSong" :song="currentSong" />
         <canvas id="canvas-b" :width="width" :height="height"></canvas>
         <canvas id="canvas-a" :width="width" :height="height"></canvas>
       </div>
@@ -137,12 +133,12 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted, watch, provide, inject } from 'vue'
 import { $ref, $, $$ } from 'vue/macros'
-import { IAudioPlayerOptions, ISong } from '@/types/types'
-
-import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { IAudioPlayer, IAudioPlayerOptions, ISong } from '@/types/types'
+import { playerInjectionKey } from '@/utilities/injectionKeys'
 import { useCanvasRendering } from '@/composables/useCanvasRendering'
+
 import ProgressInformation from '@/components/ProgressInformation.vue'
 import SongInfo from '@/components/SongInfo.vue'
 import SongList from './SongList.vue'
@@ -164,7 +160,8 @@ let height: number = $ref(window.innerHeight)
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
 
-const audioPlayerComposable = useAudioPlayer()
+//const audioPlayerComposable = useAudioPlayer()
+const audioPlayerComposable = inject(playerInjectionKey) as IAudioPlayer
 
 const {
   useSound,

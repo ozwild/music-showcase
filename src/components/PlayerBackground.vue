@@ -9,91 +9,108 @@ div {
   left: 0;
   width: 100%;
   height: 100%;
-  transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
-  transition-duration: v-bind('styles.transitionDuration');
-  background: v-bind('styles.defaultBackground');
+  transition: all ease-out;
+  transition-duration: v-bind('transitionDuration');
+  background: hsl(0, 100%, 100%);
   z-index: -1;
 }
 div.isPlaying {
-  background: v-bind('styles.playingBackground');
+  background: v-bind('playingBackground');
 }
 </style>
 
-<script lang="ts">
-export const energyColors = [0, 120, 65, 23, 18, 221]
-</script>
-
 <script lang="ts" setup>
-import { watch } from 'vue'
+import { inject, onMounted, onUnmounted, toRefs, watch } from 'vue'
 import { $ref, $ } from 'vue/macros'
 import { useAudioApi } from '@/composables/useAudioApi'
-import { IAudioPlayer, ISong } from '@/types/types'
+import { IAudioPlayer, ISong, ColorSet } from '@/types/types'
 import { FFTSizes } from '@/utilities/constants'
 
+import { playerInjectionKey } from '@/utilities/injectionKeys'
+
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { song, audioPlayer } = defineProps<{
+const { song } = defineProps<{
   song: ISong
-  audioPlayer: IAudioPlayer
 }>()
+const audioPlayer = inject(playerInjectionKey) as IAudioPlayer
+const { isPlaying, instance: audioPlayerInstance, spawnAnalyser } = audioPlayer
 
-const { isPlaying, context, gainNode } = $(audioPlayer)
-
-const { getAnalyser, getAnalyserTimeFloatData, getDataMax, getDataAverage } =
-  useAudioApi()
+const { getAnalyserTimeFloatData, getDataMax } = useAudioApi()
 
 let analyser: AnalyserNode = $ref()
+let shouldRun: boolean = $ref(false)
+let tempo: number = $ref(120)
 
-let tempo: number = $ref(500)
 let lastBeat: number = $ref(0)
-let barSize: number = $ref(tempo * 4)
-let beatSize: number = $ref(barSize * 4)
-let styles: Record<string, string> = $ref({
-  defaultBackground: `hsl(0, 100%, 100%)`,
-  playingBackground: `hsl(0, 100%, 100%)`,
-  transitionDuration: `${barSize / 2}ms`,
+let tempoInMilliseconds: number = $computed(() => 60e3 / tempo)
+let barSize: number = $computed(() => tempoInMilliseconds * 4)
+let beatSize: number = $computed(() => tempoInMilliseconds * 4)
+
+let transitionDuration = $computed(() => `${barSize / 4}ms`)
+let baseColorSet: ColorSet = $ref([0, 100, 100])
+let colorSet: ColorSet = $ref(baseColorSet)
+let playingBackground = $computed(() => {
+  const [hue, saturation, luminance] = colorSet
+  return `hsl(${hue}, ${saturation}%, ${luminance}%)`
 })
 
-function getPaletteFromSongKey() {
-  return ['red', 'purple', 'blue']
+function updateAnalyser() {
+  analyser = spawnAnalyser({
+    fftSize: FFTSizes.LOW,
+    minDecibels: -50,
+    maxDecibels: -12,
+  })
 }
 
-function getHue(soundLevel: number) {
-  const palette = getPaletteFromSongKey()
-  const percentileFactor = Math.floor(soundLevel * 10 * 3) / 10
-  const key = Math.floor(percentileFactor * palette.length)
-  console.log(`Palette key: ${key}  with percentile ${percentileFactor}`)
-  return palette[key]
+function updateMusicalVariables() {
+  console.log(`updating time variables using song: ${song.title}`)
+  tempo = song.meta?.bpm ?? 120
+  baseColorSet = getBaseColorValuesForMusicalScale(song.meta?.key)
 }
 
-function getIntensity(): number {
-  const base = 20
-  const minimumRange = 10
-  const happinessRange = song.meta?.happiness || 20
-  const danceabilityRange = song.meta?.energy || 15
-  const range = minimumRange + happinessRange + danceabilityRange
-  return base + Math.random() * range
+function getBaseColorValuesForMusicalScale(musicalKey = '') {
+  switch (musicalKey) {
+    default:
+      return [0, 80, 90]
+  }
 }
 
-function getSaturation(): number {
-  const base = 30
+function getSaturation(soundLevel: number): number {
+  const energy = song.meta?.energy ?? 40
+  const energyFactor = 40
+  const energyRange = (energy / 100) * energyFactor
+
+  const base = 15 + energy / 4
   const minimumRange = 0
-  const happinessRange = song.meta?.happiness || 30
-  const danceabilityRange = song.meta?.energy || 20
-  const range = minimumRange + happinessRange + danceabilityRange
-  return base + Math.random() * range
+
+  return base + soundLevel * (minimumRange + energyRange)
 }
 
-function getColor() {
+function getLuminosity(soundLevel: number): number {
+  const happiness = song.meta?.happiness ?? 40
+  const danceability = song.meta?.danceability ?? 40
+  const average = (happiness + danceability) / 2
+
+  const songFactorsRangeRatio = 40
+  const songFactorsRange = (average / 100) * songFactorsRangeRatio
+
+  const base = 20 + average / 4
+  const minimumRange = 10
+
+  return base + soundLevel * (minimumRange + songFactorsRange)
+}
+
+function getUpdatedColor() {
   const dataSnapshot: Float32Array = getAnalyserTimeFloatData(analyser)
   const maxDataValue: number = getDataMax(dataSnapshot)
-  const hue = getHue(maxDataValue)
-  const saturation = getSaturation()
-  const intensity = getIntensity()
-
+  console.log(dataSnapshot, maxDataValue)
+  const [hue] = baseColorSet
+  const saturation = getSaturation(maxDataValue)
+  const luminosity = getLuminosity(maxDataValue)
   console.log(
-    `Color Levels: hue:${hue}; saturation: ${saturation}; intensity: ${intensity}; maxTimeValue: ${maxDataValue};`
+    `Color Levels: hue:${hue}; saturation: ${saturation}; intensity: ${luminosity}; maxTimeValue: ${maxDataValue};`
   )
-  return `hsl(${hue}, 50%, ${intensity}% )`
+  return [hue, saturation, luminosity]
 }
 
 /**
@@ -107,11 +124,11 @@ function getColor() {
 function beat(now?: number) {
   if (now) {
     if (!lastBeat || now - lastBeat > beatSize) {
-      styles.playingBackground = getColor()
+      colorSet = getUpdatedColor()
       lastBeat = now
     }
   }
-  if (isPlaying) requestAnimationFrame(beat)
+  if (shouldRun) requestAnimationFrame(beat)
 }
 
 function testPeaks() {
@@ -119,24 +136,21 @@ function testPeaks() {
   beat()
 }
 
-watch(
-  () => isPlaying,
-  (_isPlaying) => {
-    if (_isPlaying) {
-      setTimeout(beat, 300)
-    }
+watch(isPlaying, (_isPlaying) => {
+  console.log('isPlaying changed')
+  if (_isPlaying) {
+    shouldRun = true
+    setTimeout(beat, 200)
+  } else {
+    setTimeout(() => {
+      shouldRun = false
+    }, 200)
   }
-)
-
-watch(song, (newSong: ISong) => {
-  if (!newSong) return
-  tempo = newSong.meta?.bpm ?? 120
 })
 
-watch(
-  () => context,
-  () => {
-    analyser = getAnalyser(context, gainNode, FFTSizes.REGULAR)
-  }
-)
+watch(audioPlayerInstance, (v) => {
+  console.log('howl instance changed', v)
+  updateAnalyser()
+  updateMusicalVariables()
+})
 </script>

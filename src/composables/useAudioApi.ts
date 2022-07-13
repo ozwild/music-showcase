@@ -17,15 +17,21 @@ function getDataPeaks(
 }
 
 export function useAudioApi() {
-  function getAnalyser(
+  // @todo remove this function
+  /* function getAnalyser(
     context: AudioContext | Ref<AudioContext>,
     sourceNode: AudioNode,
     fftSize: number
   ): AnalyserNode {
-    const analyser = new AnalyserNode(unref(context), { fftSize })
+    const analyser = new AnalyserNode(unref(context), {
+      fftSize,
+      minDecibels: -50,
+      maxDecibels: -12,
+    })
     sourceNode.connect(analyser)
+    console.log(context, sourceNode, analyser)
     return analyser
-  }
+  } */
 
   function getAnalyserFrequencyByteData(
     analyserNode: AnalyserNode
@@ -53,6 +59,7 @@ export function useAudioApi() {
   }
 
   function getAnalyserTimeFloatData(analyserNode: AnalyserNode): Float32Array {
+    console.log(analyserNode)
     const bufferLength = analyserNode.frequencyBinCount
     const dataArray = new Float32Array(bufferLength)
     analyserNode.getFloatTimeDomainData(dataArray)
@@ -75,7 +82,7 @@ export function useAudioApi() {
   }
 
   return {
-    getAnalyser,
+    //getAnalyser,
     getAnalyserFrequencyByteData,
     getAnalyserFrequencyFloatData,
     getAnalyserTimeByteData,

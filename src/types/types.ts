@@ -10,10 +10,13 @@ export interface ISong {
 
 export interface ISongMeta {
   bpm?: number
+  key?: string
   energy?: number
   danceability?: number
   happiness?: number
 }
+
+export type ColorSet = number[]
 
 export type AvailableEvents =
   | 'load'
@@ -80,6 +83,9 @@ export interface IAudioPlayer {
   setRate: (value: number) => void
   setSeek: (value: number) => void
   setProgress: (value: number) => void
+  spawnAnalyser: (options?: AnalyserOptions) => AnalyserNode
+  initialize: (options?: IAudioPlayerOptions) => void
+  getHowler: () => Ref<Howl | null>
 }
 
 export interface IEmits {
