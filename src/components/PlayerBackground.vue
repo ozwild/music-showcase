@@ -38,17 +38,12 @@ const { song, audioPlayer } = defineProps<{
 
 const { isPlaying, context, gainNode } = $(audioPlayer)
 
-const {
-  getAnalyser,
-  getAnalyserTimeFloatData,
-  getDataMax,
-  getDataAverage,
-} = useAudioApi()
+const { getAnalyser, getAnalyserTimeFloatData, getDataMax, getDataAverage } =
+  useAudioApi()
 
 let analyser: AnalyserNode = $ref()
 
 let tempo: number = $ref(500)
-let energyHue: number = $ref(128)
 let lastBeat: number = $ref(0)
 let barSize: number = $ref(tempo * 4)
 let beatSize: number = $ref(barSize * 4)
@@ -57,6 +52,49 @@ let styles: Record<string, string> = $ref({
   playingBackground: `hsl(0, 100%, 100%)`,
   transitionDuration: `${barSize / 2}ms`,
 })
+
+function getPaletteFromSongKey() {
+  return ['red', 'purple', 'blue']
+}
+
+function getHue(soundLevel: number) {
+  const palette = getPaletteFromSongKey()
+  const percentileFactor = Math.floor(soundLevel * 10 * 3) / 10
+  const key = Math.floor(percentileFactor * palette.length)
+  console.log(`Palette key: ${key}  with percentile ${percentileFactor}`)
+  return palette[key]
+}
+
+function getIntensity(): number {
+  const base = 20
+  const minimumRange = 10
+  const happinessRange = song.meta?.happiness || 20
+  const danceabilityRange = song.meta?.energy || 15
+  const range = minimumRange + happinessRange + danceabilityRange
+  return base + Math.random() * range
+}
+
+function getSaturation(): number {
+  const base = 30
+  const minimumRange = 0
+  const happinessRange = song.meta?.happiness || 30
+  const danceabilityRange = song.meta?.energy || 20
+  const range = minimumRange + happinessRange + danceabilityRange
+  return base + Math.random() * range
+}
+
+function getColor() {
+  const dataSnapshot: Float32Array = getAnalyserTimeFloatData(analyser)
+  const maxDataValue: number = getDataMax(dataSnapshot)
+  const hue = getHue(maxDataValue)
+  const saturation = getSaturation()
+  const intensity = getIntensity()
+
+  console.log(
+    `Color Levels: hue:${hue}; saturation: ${saturation}; intensity: ${intensity}; maxTimeValue: ${maxDataValue};`
+  )
+  return `hsl(${hue}, 50%, ${intensity}% )`
+}
 
 /**
  * Add additional properties to songs
@@ -69,22 +107,8 @@ let styles: Record<string, string> = $ref({
 function beat(now?: number) {
   if (now) {
     if (!lastBeat || now - lastBeat > beatSize) {
-      const dataSnapshot: Float32Array = getAnalyserTimeFloatData(analyser)
-      const maxDataValue: number = getDataMax(dataSnapshot)
-      const averageDataValue: number = getDataAverage(dataSnapshot)
-
-      const colorIndex = Math.floor(Math.random() * energyColors.length)
-      const luminosityIndex = maxDataValue * 2 * 100
-      const hueIndex = luminosityIndex * 360
-      energyHue = energyColors[colorIndex] as number
-      styles.playingBackground = `hsl(${hueIndex}, 50%, ${luminosityIndex}% )`
+      styles.playingBackground = getColor()
       lastBeat = now
-
-      console.log('max data value', maxDataValue)
-      console.log('average data value', averageDataValue)
-      console.log('last beat assignation', lastBeat)
-      console.log('hue', energyHue)
-      console.log('luminosityIndex', luminosityIndex)
     }
   }
   if (isPlaying) requestAnimationFrame(beat)
@@ -97,9 +121,8 @@ function testPeaks() {
 
 watch(
   () => isPlaying,
-  (newValue) => {
-    console.log('is playing watcher:', newValue)
-    if (newValue) {
+  (_isPlaying) => {
+    if (_isPlaying) {
       setTimeout(beat, 300)
     }
   }

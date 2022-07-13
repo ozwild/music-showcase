@@ -170,7 +170,6 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
       console.error('Unable to start. Source is required')
       return
     }
-    console.log(source.value)
 
     const initializationOptions = { ...defaultOptions, ...options }
 
@@ -178,8 +177,6 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
       ...initializationOptions,
       src: unref(source) as string,
     })
-
-    console.log('howl initialization', howl.value)
 
     duration.value = howl.value.duration()
 
@@ -243,7 +240,6 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
   }
 
   const play = () => {
-    console.log('play', howl.value)
     howl.value?.play()
   }
   const pause = () => howl.value?.pause()

@@ -5,7 +5,7 @@
     "url": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Special%20K%2028052022.mp3",
     "meta": {
       "bpm": 159,
-      "key": "C#",
+      "key": "C# Major",
       "energy": 94,
       "danceability": 40,
       "happiness": 36
@@ -14,43 +14,85 @@
   {
     "id": "special_needs",
     "title": "Special Needs",
-    "bpm": 178,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Placebo%20-%20Special%20needs%2010052022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Placebo%20-%20Special%20needs%2010052022.mp3",
+    "meta": {
+      "bpm": 89,
+      "key": "Ab Minor",
+      "energy": 57,
+      "danceability": 30,
+      "happiness": 4
+    }
   },
   {
     "id": "every_you_every_me",
     "title": "Every you, every me",
-    "bpm": 133,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Every%20You%20Every%20Me%2028052022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Every%20You%20Every%20Me%2028052022.mp3",
+    "meta": {
+      "bpm": 133,
+      "key": "Bb Major",
+      "energy": 92,
+      "danceability": 48,
+      "happiness": 17
+    }
   },
   {
     "id": "faust_arp",
     "title": "Faust Arp",
-    "bpm": 105,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Faust%20Arp%2006012022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Faust%20Arp%2006012022.mp3",
+    "meta": {
+      "bpm": 105,
+      "key": "Ab Minor",
+      "energy": 29,
+      "danceability": 34,
+      "happiness": 23
+    }
   },
   {
     "id": "exit_music_for_a_film",
     "title": "Exit music (for a film)",
-    "bpm": 122,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Exit%20Music%20(for%20a%20film)%2031052022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Exit%20Music%20(for%20a%20film)%2031052022.mp3",
+    "meta": {
+      "bpm": 122,
+      "key": "E Minor",
+      "energy": 28,
+      "danceability": 29,
+      "happiness": 20
+    }
   },
   {
     "id": "knives_out",
     "title": "Knives out",
-    "bpm": 137,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Knives%20Out%2006012022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Knives%20Out%2006012022.mp3",
+    "meta": {
+      "bpm": 137,
+      "key": "D Minor",
+      "energy": 68,
+      "danceability": 43,
+      "happiness": 18
+    }
   },
   {
     "id": "nothings_impossible",
     "title": "Nothing's Impossible",
-    "bpm": 110,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Nothing's%20Impossible%2031052022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Nothing's%20Impossible%2031052022.mp3",
+    "meta": {
+      "bpm": 110,
+      "key": "A Major",
+      "energy": 56,
+      "danceability": 52,
+      "happiness": 4
+    }
   },
   {
     "id": "dream_on",
     "title": "Dream on",
-    "bpm": 128,
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Dream%20On%2030052022.mp3"
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Dream%20On%2030052022.mp3",
+    "meta": {
+      "bpm": 128,
+      "key": "Bb Minor",
+      "energy": 49,
+      "danceability": 76,
+      "happiness": 72
+    }
   }
 ]

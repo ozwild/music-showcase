@@ -42,11 +42,6 @@ export function useCanvasRendering(
       ? FFTSizes.TINY
       : FFTSizes.REGULAR
 
-    console.log(
-      'Frequency Analyser set with FFTSize: ',
-      frequencyAnalyserFFTSize
-    )
-
     frequencyAnalyser.value = new AnalyserNode(unref(audioContext), {
       fftSize: frequencyAnalyserFFTSize,
     })
@@ -54,8 +49,6 @@ export function useCanvasRendering(
     const timeAnalyserFFTSize = isOnSmallScreenMode.value
       ? FFTSizes.TINY
       : FFTSizes.REGULAR
-
-    console.log('Time Analyser set with FFTSize: ', timeAnalyserFFTSize)
 
     timeAnalyser.value = new AnalyserNode(unref(audioContext), {
       fftSize: timeAnalyserFFTSize,

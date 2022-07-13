@@ -63,7 +63,6 @@ export function useAudioApi() {
     const peaks = getDataPeaks(dataArray, -Infinity)
     const sum = peaks.reduce((a: number, b: number) => a + b, 0)
     const count = peaks.length
-    console.log('Sum, Count: ', sum, count)
     return sum / count
   }
 
