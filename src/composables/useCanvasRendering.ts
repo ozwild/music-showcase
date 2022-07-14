@@ -39,7 +39,7 @@ export function useCanvasRendering(
 
   function setAnalysers() {
     const frequencyAnalyserFFTSize = isOnSmallScreenMode.value
-      ? FFTSizes.TINY
+      ? FFTSizes.REGULAR
       : FFTSizes.REGULAR
 
     frequencyAnalyser.value = new AnalyserNode(unref(audioContext), {
@@ -47,7 +47,7 @@ export function useCanvasRendering(
     })
 
     const timeAnalyserFFTSize = isOnSmallScreenMode.value
-      ? FFTSizes.TINY
+      ? FFTSizes.REGULAR
       : FFTSizes.REGULAR
 
     timeAnalyser.value = new AnalyserNode(unref(audioContext), {
@@ -128,13 +128,15 @@ export function useCanvasRendering(
     //Get spectrum data
     analyser.getFloatTimeDomainData(dataArray)
 
-    canvasCtx.lineWidth = 4
+    canvasCtx.lineWidth = 1
     canvasCtx.strokeStyle = 'rgba(220,180,210,0.8)'
+    canvasCtx.strokeStyle = 'rgba(22,18, 10,0.8)'
+    //canvasCtx.strokeStyle = 'black'
 
     const sliceWidth = ((width * 1) / bufferLength) * 0.8
     let x = width / 10
 
-    canvasCtx.setTransform(1, 0, 0, 1, 0, 0)
+    //canvasCtx.setTransform(1, 0, 0, 1, 0, 0)
 
     canvasCtx.beginPath()
     canvasCtx.moveTo(0, height / 2)
@@ -250,7 +252,7 @@ export function useCanvasRendering(
 
     const barWidth = isOnSmallScreenMode.value
       ? (width / 2 / bufferLength) * 3
-      : (width / 1.5 / bufferLength) * 3
+      : (width / 1 / bufferLength) * 1.5
     let posX = width
     let barHeight = 0
 
@@ -301,43 +303,44 @@ export function useCanvasRendering(
     const bufferLength = analyser.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
     const canvas = canvasCtx?.canvas
-    const width = 1024 // canvas.width
+    const width = canvas.width
     const height = canvas.height
-    const renderingHeightRation = height
+    const renderingHeightRation = height / 2
 
     //Get spectrum data
     analyser.getByteFrequencyData(dataArray)
 
     //Draw spectrum
-    const barWidth = (width / 2 / bufferLength) * 6
-    let posX = -width / 4
+    const barWidth = (width / bufferLength) * 1
+    let posX = 0
     let barHeight = 0
 
-    canvasCtx.setTransform(1, -0.1, 0, 1, -width / 3, 0)
+    //canvasCtx.setTransform(1, -0.1, 0, 1, -width / 3, 0)
 
     for (let i = 0; i < bufferLength; i++) {
       //barHeight = dataArray[i] + height / 2
       const datum = dataArray[i]
       const value = datum / 256
-      barHeight = (value * renderingHeightRation) / 2
+      barHeight = value * renderingHeightRation
       const rgbIntensity = datum / 2
 
       //canvasCtx.setTransform(0.6, -0.01, 0.01, 1, 50, 0)
       canvasCtx.fillStyle = `#121212`
-      canvasCtx.fillStyle = `rgba(0, 0, 0, 0.8)`
+      canvasCtx.fillStyle = `rgb(0, 0, 0)`
+      canvasCtx.fillStyle = 'rgb(22,18, 10)'
       /* canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 0.95)`
       canvasCtx.fillStyle = `rgba(${rgbIntensity}, 50, 50, 0.95)` */
-      canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 1)`
+      //canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 1)`
       /**
        * Top frequency Bars
        */
-      canvasCtx.fillRect(
+      /* canvasCtx.fillRect(
         -posX + width / 2 - barWidth * 1.25,
         height / 1.5,
         barWidth,
         -barHeight / 2
-      ) // left wing
-      canvasCtx.fillRect(posX + width, height / 2, barWidth, -barHeight / 2) // right Wing
+      ) */ // left wing
+      canvasCtx.fillRect(posX + width, height, barWidth, -barHeight) // right Wing
 
       posX += barWidth + 1
     }
