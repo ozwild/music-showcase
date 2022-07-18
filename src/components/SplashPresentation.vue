@@ -7,18 +7,6 @@
 
 <style lang="scss" scoped>
 #background {
-  //background: radial-gradient(ellipse at bottom, #220227 0%, #000000 100%);
-  /* background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea); */
-  /* background: radial-gradient(
-    ellipse at bottom,
-    #ada996,
-    #f2f2f2,
-    #dbdbdb,
-    #eaeaea
-  ); */
-
-  //background: #ada996;
-  //background: azure;
   position: absolute;
   height: 100vh;
   width: 100vw;
@@ -32,7 +20,7 @@ h1 {
   font-family: 'Montserrat', sans-serif;
   text-align: justify;
   font-size: 11vmax;
-  //font-size: 21vmin;
+
   letter-spacing: 1vw;
   position: absolute;
   top: 50%;
@@ -40,17 +28,13 @@ h1 {
   transform: translate(-50%, -50%);
   color: white;
   background-image: url('https://i.pinimg.com/originals/9f/9c/c5/9f9cc5217bb04790e5fb852b665ca2ff.jpg');
-  // background:url('https://i.pinimg.com/originals/9f/9c/c5/9f9cc5217bb04790e5fb852b665ca2ff.jpg');
-  //background: url('https://thumbs.dreamstime.com/b/tropical-flower-pattern-seamless-flowers-blossom-flowers-nature-background-vector-illustration-61142748.jpg');
-  //background: url('https://cdn.pixabay.com/photo/2021/03/19/06/19/vector-pattern-6106662_1280.png');
-  //background: url('https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcm0zMDQtcGF0dGVybi1ibHVlLWthdGllLTA1LnBuZw.png?s=kj9AQK61sXHJRuyDzRRYCMh0ZOU_voi8XX4XRVQfVys');
   background-size: auto 200%;
   background-clip: text;
   text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: backgrounds 650ms steps(6, start) infinite, shine 3s linear infinite,
-    blur 7s forwards;
+  animation: backgrounds 650ms steps(6, start) infinite,
+    shine 3s linear infinite, blur 7s forwards;
 
   @keyframes shine {
     from {
@@ -62,10 +46,6 @@ h1 {
   }
 
   @keyframes backgrounds {
-    /* 0% {
-      background-image: url('https://i.pinimg.com/originals/9f/9c/c5/9f9cc5217bb04790e5fb852b665ca2ff.jpg');
-    } */
-
     16.66% {
       background-image: url('https://cdn.pixabay.com/photo/2021/03/19/06/19/vector-pattern-6106662_1280.png');
     }
@@ -130,6 +110,4 @@ h1 {
 }
 </style>
 
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>

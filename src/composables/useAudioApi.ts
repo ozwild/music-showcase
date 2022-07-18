@@ -1,5 +1,3 @@
-import { Ref, unref } from 'vue'
-
 function getDataPeaks(
   dataArray: Uint8Array | Float32Array,
   threshold: number
@@ -17,22 +15,6 @@ function getDataPeaks(
 }
 
 export function useAudioApi() {
-  // @todo remove this function
-  /* function getAnalyser(
-    context: AudioContext | Ref<AudioContext>,
-    sourceNode: AudioNode,
-    fftSize: number
-  ): AnalyserNode {
-    const analyser = new AnalyserNode(unref(context), {
-      fftSize,
-      minDecibels: -50,
-      maxDecibels: -12,
-    })
-    sourceNode.connect(analyser)
-    console.log(context, sourceNode, analyser)
-    return analyser
-  } */
-
   function getAnalyserFrequencyByteData(
     analyserNode: AnalyserNode
   ): Uint8Array {

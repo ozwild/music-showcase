@@ -1,4 +1,4 @@
-import { ref, Ref, unref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, Ref, unref, watch } from 'vue'
 import { useMediaQueries } from '@/composables/useMediaQueries'
 import { FFTSizes } from '@/utilities/constants'
 
@@ -99,15 +99,6 @@ export function useCanvasRendering(
     const sum = peaks.reduce((a: number, b: number) => a + b, 0)
     const intensityAvg = sum / peaks.length / 2
 
-    /* if (intensityAvg > maxValue.value && intensityAvg !== Infinity)
-      maxValue.value = intensityAvg
-    if (
-      intensityAvg < minValue.value &&
-      intensityAvg !== -Infinity &&
-      intensityAvg !== 0
-    )
-      minValue.value = intensityAvg */
-
     avgValue.value = intensityAvg
 
     const canvasColorIntensity = (intensityAvg - 90) * 10
@@ -131,12 +122,9 @@ export function useCanvasRendering(
     canvasCtx.lineWidth = 1
     canvasCtx.strokeStyle = 'rgba(220,180,210,0.8)'
     canvasCtx.strokeStyle = 'rgba(22,18, 10,0.8)'
-    //canvasCtx.strokeStyle = 'black'
 
     const sliceWidth = ((width * 1) / bufferLength) * 0.8
     let x = width / 10
-
-    //canvasCtx.setTransform(1, 0, 0, 1, 0, 0)
 
     canvasCtx.beginPath()
     canvasCtx.moveTo(0, height / 2)
@@ -184,12 +172,10 @@ export function useCanvasRendering(
     //Get spectrum data
     analyser.getFloatTimeDomainData(dataArray)
 
-    /* canvasCtx.shadowColor = 'cyan'
-    canvasCtx.shadowBlur = 15 */
     canvasCtx.lineWidth = 2
-    //canvasCtx.strokeStyle = `rgb(225, 225, 230)`
+
     canvasCtx.strokeStyle = '#121212'
-    //canvasCtx.strokeStyle = 'azure'
+
     canvasCtx.setTransform(0.5, -0.03, 0.01, 1, 0, height / 3)
     canvasCtx.rotate((Math.PI / 180) * 0.01)
 
@@ -226,7 +212,6 @@ export function useCanvasRendering(
 
       canvasCtx.moveTo(-x, y)
 
-      //canvasCtx.lineTo(width / 2, height / 2)
       canvasCtx.resetTransform()
 
       x += sliceWidth
@@ -255,10 +240,6 @@ export function useCanvasRendering(
       : (width / 1 / bufferLength) * 1.5
     let posX = width
     let barHeight = 0
-
-    //scale(0.75, 0.8) translate(-60%, -108%) skew(0deg, -20deg)
-    //canvasCtx.setTransform(0.8, 0, 0, 3, 0, height / 8)
-    //canvasCtx.filter = 'blur(1px)'
 
     for (let i = 0; i < bufferLength; i++) {
       const datum = dataArray[i]
@@ -311,36 +292,20 @@ export function useCanvasRendering(
     analyser.getByteFrequencyData(dataArray)
 
     //Draw spectrum
-    const barWidth = (width / bufferLength) * 1
+    const barWidth = (width / 2 / bufferLength) * 6
     let posX = 0
     let barHeight = 0
 
-    //canvasCtx.setTransform(1, -0.1, 0, 1, -width / 3, 0)
+    canvasCtx.setTransform(1, 0, 0, 1, -width, 0)
 
     for (let i = 0; i < bufferLength; i++) {
-      //barHeight = dataArray[i] + height / 2
       const datum = dataArray[i]
       const value = datum / 256
-      barHeight = value * renderingHeightRation
-      const rgbIntensity = datum / 2
+      barHeight = -value * renderingHeightRation
 
-      //canvasCtx.setTransform(0.6, -0.01, 0.01, 1, 50, 0)
-      canvasCtx.fillStyle = `#121212`
-      canvasCtx.fillStyle = `rgb(0, 0, 0)`
-      canvasCtx.fillStyle = 'rgb(22,18, 10)'
-      /* canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 0.95)`
-      canvasCtx.fillStyle = `rgba(${rgbIntensity}, 50, 50, 0.95)` */
-      //canvasCtx.fillStyle = `rgba(${rgbIntensity}, ${rgbIntensity}, ${rgbIntensity}, 1)`
-      /**
-       * Top frequency Bars
-       */
-      /* canvasCtx.fillRect(
-        -posX + width / 2 - barWidth * 1.25,
-        height / 1.5,
-        barWidth,
-        -barHeight / 2
-      ) */ // left wing
-      canvasCtx.fillRect(posX + width, height, barWidth, -barHeight) // right Wing
+      canvasCtx.fillStyle = `#dededf`
+
+      canvasCtx.fillRect(posX + width, height, barWidth, barHeight) // right Wing
 
       posX += barWidth + 1
     }

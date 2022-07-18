@@ -3,10 +3,13 @@
     <div id="player">
       <div class="layer background-layer">
         <div class="canvas-background"></div>
-        <canvas id="canvas-d" :width="width" :height="height"></canvas>
+        <div class="canvas-background-gradient"></div>
+        <!-- <canvas id="canvas-d" :width="width" :height="height"></canvas> -->
         <canvas id="canvas-c" :width="width" :height="height"></canvas>
-        <canvas id="canvas-b" :width="width" :height="height"></canvas>
+
         <canvas id="canvas-a" :width="width" :height="height"></canvas>
+
+        <canvas id="canvas-b" :width="width" :height="height"></canvas>
       </div>
 
       <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
@@ -45,33 +48,6 @@
   }
 }
 
-#background {
-  @extend .layer;
-
-  position: fixed;
-  transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
-  z-index: -1;
-  //left: 50%;
-  //transform: translateX(-50%);
-  //min-width: 1920px;
-  /* background: #222;
-  background: radial-gradient(
-      ellipse at bottom,
-      rgb(150, 100, 100) 0%,
-      white 100%
-    ); */
-
-  &.isPlaying {
-    background: radial-gradient(
-      ellipse at bottom,
-      rgb(150, 100, 100) 0%,
-      white 100%
-    );
-    //background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea);
-    //animation: hueRotation 4s ease-in-out infinite forwards;
-  }
-}
-
 .canvas-background {
   position: fixed;
   top: 0;
@@ -79,66 +55,50 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-  background: linear-gradient(0deg, cyan, transparent, transparent);
-  mix-blend-mode: multiply;
+  transition: background 2s;
+  background: aqua;
+  background: fuchsia;
+  background: yellow;
+  background: chartreuse;
 }
 
-#canvas-b {
+.canvas-background-gradient {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
-  //transform: scale(0.6, 1) translate(-112%, -79%) skew(0deg, -17deg);
-  transform: perspective(100px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-  transform-origin: 250px;
-  //mix-blend-mode: color-dodge;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(0deg, black, #999, transparent, #efefff, white);
 }
 
 #canvas-a {
   position: fixed;
   left: 5%;
-  top: 35%;
-  // transform: scale(0.75, 0.8) translate(-60%, -108%) skew(0deg, -20deg);
-  // transform: scale(0.5, 0.5) translate(-50%, -50%) skew(0deg, 0deg);
-  transform: perspective(10px) rotateX(10deg) rotateY(0deg) rotateZ(-90deg);
-  transform: perspective(0.001px) rotateX(1deg) rotateY(0deg) rotateZ(-90deg)
-    scale3d(0.75, 0.7, 1);
-  transform: perspective(14px) rotateX(8deg) rotateY(0deg) rotateZ(-270deg)
-    translate3d(0vh, 0vh, 1vh);
-  //transform-origin: 250px;
+  bottom: 0;
+  transform: perspective(29px) rotateX(36deg) rotateY(0deg) rotateZ(-270deg)
+    translateZ(0px);
   z-index: 50;
-  background: azure;
-  mix-blend-mode: luminosity;
   mix-blend-mode: plus-lighter;
-  filter: invert(1);
-  //filter: blur(0.5px);
-  //mix-blend-mode: soft-light;
-  //filter: blur(1px);
-  // opacity: 0.4;
+  background: slategray;
+}
+
+#canvas-b {
+  position: absolute;
+  bottom: -18vh;
+  left: 0;
+  z-index: 100;
+  mix-blend-mode: lighten;
 }
 
 #canvas-c {
   position: fixed;
   left: -25%;
-  top: 10%;
-  /* transform: perspective(75px) rotateX(35deg) rotateY(120deg) rotateZ(250deg)
-    scale3d(0.75, 0.7, 1) translate3d(33vh, 0vh, -21vh); */
-  transform: perspective(255px) rotateX(-20deg) rotateY(180deg) rotateZ(180deg)
-    scale3d(0.75, 0.7, 1) translate3d(-55vh, -4vh, -10vh);
+  top: -24%;
   z-index: 10;
-  mix-blend-mode: lighten;
-  filter: blur(1px);
-}
-
-#canvas-d {
-  position: fixed;
-  left: 0%;
-  top: 10%;
-  transform: perspective(75px) rotateX(35deg) rotateY(-90deg) rotateZ(-250deg)
-    scale3d(0.75, 0.7, 1) translate3d(33vh, 0vh, -21vh);
-  z-index: 11;
+  transform: perspective(90px) rotateX(-18deg) rotateY(-0.2deg) rotateZ(0deg)
+    translate3d(20vw, 0vh, 1vh);
   mix-blend-mode: plus-lighter;
-  opacity: 0.5;
 }
 
 #player {
@@ -197,15 +157,13 @@ let canvasB: HTMLCanvasElement = $ref()
 let canvasBCtx: CanvasRenderingContext2D | null = $ref(null)
 let canvasC: HTMLCanvasElement = $ref()
 let canvasCCtx: CanvasRenderingContext2D | null = $ref(null)
-let canvasD: HTMLCanvasElement = $ref()
-let canvasDCtx: CanvasRenderingContext2D | null = $ref(null)
+
 let width: number = $ref(window.innerWidth)
 let height: number = $ref(window.innerHeight)
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
 
-//const audioPlayerComposable = useAudioPlayer()
 const audioPlayerComposable = inject(playerInjectionKey) as IAudioPlayer
 
 const {
@@ -225,16 +183,10 @@ watch($$(audioPlayer), (value) => {
   }
 })
 
-const {
-  clearCanvas,
-  canvasTint,
-  drawBars,
-  drawOsciloscope,
-  drawHud,
-  drawTensionLines,
-  minValue,
-  maxValue,
-} = useCanvasRendering($$(context), $$(gainNode))
+const { clearCanvas, drawBars, drawOsciloscope, drawHud } = useCanvasRendering(
+  $$(context),
+  $$(gainNode)
+)
 
 const playSong = (song: ISong) => {
   currentSong = song
@@ -252,12 +204,6 @@ function draw(now?: number) {
     clearCanvas(canvasCCtx)
     drawHud(canvasCCtx)
     drawOsciloscope(canvasCCtx)
-  }
-
-  if (canvasDCtx) {
-    clearCanvas(canvasDCtx)
-    drawHud(canvasDCtx)
-    drawOsciloscope(canvasDCtx)
   }
 
   if (canvasBCtx) {
@@ -307,8 +253,6 @@ onMounted(() => {
   canvasACtx = canvasA.getContext('2d')
   canvasC = document.getElementById('canvas-c') as HTMLCanvasElement
   canvasCCtx = canvasC.getContext('2d')
-  canvasD = document.getElementById('canvas-d') as HTMLCanvasElement
-  canvasDCtx = canvasD.getContext('2d')
 
   canvasB = document.getElementById('canvas-b') as HTMLCanvasElement
   canvasBCtx = canvasB.getContext('2d')
