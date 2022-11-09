@@ -21,7 +21,7 @@ div.isPlaying {
 
 <script lang="ts" setup>
 import { inject, onMounted, onUnmounted, toRefs, watch } from 'vue'
-import { $ref, $ } from 'vue/macros'
+import { $ref, $, $$ } from 'vue/macros'
 import { useAudioApi } from '@/composables/useAudioApi'
 import { IAudioPlayer, ISong, ColorSet } from '@/types/types'
 import { FFTSizes } from '@/utilities/constants'
@@ -32,10 +32,24 @@ import { playerInjectionKey } from '@/utilities/injectionKeys'
 const { song } = defineProps<{
   song: ISong
 }>()
-const audioPlayer = inject(playerInjectionKey) as IAudioPlayer
-const { isPlaying, instance: audioPlayerInstance, spawnAnalyser } = audioPlayer
+const audioPlayerComposable = inject(playerInjectionKey) as IAudioPlayer
+const {
+  isPlaying,
+  instance: audioPlayerInstance,
+  context,
+  gainNode,
+  analyserNode: internalAnalyserNode,
+  getAnalyser,
+  spawnAnalyser,
+} = $(audioPlayerComposable)
 
-const { getAnalyserTimeFloatData, getDataMax } = useAudioApi()
+const {
+  getAnalyserTimeFloatData,
+  getAnalyserTimeByteData,
+  getAnalyserFrequencyByteData,
+  getAnalyserFrequencyFloatData,
+  getDataMax,
+} = useAudioApi($$(context), $$(gainNode))
 
 let analyser: AnalyserNode = $ref()
 let shouldRun: boolean = $ref(false)
@@ -44,7 +58,8 @@ let tempo: number = $ref(120)
 let lastBeat: number = $ref(0)
 let tempoInMilliseconds: number = $computed(() => 60e3 / tempo)
 let barSize: number = $computed(() => tempoInMilliseconds * 4)
-let beatSize: number = $computed(() => tempoInMilliseconds * 4)
+// @TODO change coeficient back to 4
+let beatSize: number = $computed(() => tempoInMilliseconds * 16)
 
 let transitionDuration = $computed(() => `${barSize / 4}ms`)
 let baseColorSet: ColorSet = $ref([0, 100, 100])
@@ -63,7 +78,7 @@ function updateAnalyser() {
 }
 
 function updateMusicalVariables() {
-  console.log(`updating time variables using song: ${song.title}`)
+  console.log(`updating time variables using song: ${song.title}`, song)
   tempo = song.meta?.bpm ?? 120
   baseColorSet = getBaseColorValuesForMusicalScale(song.meta?.key)
 }
@@ -101,14 +116,18 @@ function getLuminosity(soundLevel: number): number {
 }
 
 function getUpdatedColor() {
-  const dataSnapshot: Float32Array = getAnalyserTimeFloatData(analyser)
-  const maxDataValue: number = getDataMax(dataSnapshot)
-  console.log(dataSnapshot, maxDataValue)
+  const analyserNode = getAnalyser()
+  console.log('ANALYSER', analyserNode, internalAnalyserNode)
+  const timeSnapshot: Uint8Array = getAnalyserTimeByteData()
+  const frequencySnapshot: Uint8Array = getAnalyserFrequencyByteData()
+  const maxDataValue: number = getDataMax(timeSnapshot)
+  console.log(timeSnapshot, maxDataValue)
+  console.log('FREQUENCY SNAPSHOT', frequencySnapshot)
   const [hue] = baseColorSet
   const saturation = getSaturation(maxDataValue)
   const luminosity = getLuminosity(maxDataValue)
   console.log(
-    `Color Levels: hue:${hue}; saturation: ${saturation}; intensity: ${luminosity}; maxTimeValue: ${maxDataValue};`
+    `Color Levels: [${hue}, ${saturation}, ${luminosity}], with max: ${maxDataValue}`
   )
   return [hue, saturation, luminosity]
 }
@@ -122,6 +141,7 @@ function getUpdatedColor() {
  */
 
 function beat(now?: number) {
+  console.log('BEAT')
   if (now) {
     if (!lastBeat || now - lastBeat > beatSize) {
       colorSet = getUpdatedColor()
@@ -136,7 +156,7 @@ function testPeaks() {
   beat()
 }
 
-watch(isPlaying, (_isPlaying) => {
+watch($$(isPlaying), (_isPlaying) => {
   console.log('isPlaying changed')
   if (_isPlaying) {
     shouldRun = true
@@ -148,7 +168,7 @@ watch(isPlaying, (_isPlaying) => {
   }
 })
 
-watch(audioPlayerInstance, (v) => {
+watch($$(audioPlayerInstance), (v) => {
   console.log('howl instance changed', v)
   updateAnalyser()
   updateMusicalVariables()

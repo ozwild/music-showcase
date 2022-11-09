@@ -1,3 +1,6 @@
+import { ref, Ref, unref, watch } from 'vue'
+import { FFTSizes } from '@/utilities/constants'
+
 function getDataPeaks(
   dataArray: Uint8Array | Float32Array,
   threshold: number
@@ -14,34 +17,69 @@ function getDataPeaks(
   return output
 }
 
-export function useAudioApi() {
-  function getAnalyserFrequencyByteData(
-    analyserNode: AnalyserNode
-  ): Uint8Array {
+export function useAudioApi(
+  audioContext: Ref<AudioContext>,
+  gainNode: Ref<GainNode>
+) {
+  const frequencyAnalyser: Ref<AnalyserNode> = ref(
+    new AnalyserNode(unref(audioContext), { fftSize: FFTSizes.TINY })
+  )
+  const timeAnalyser: Ref<AnalyserNode> = ref(
+    new AnalyserNode(unref(audioContext), {
+      fftSize: FFTSizes.TINY,
+    })
+  )
+
+  function setAnalysers() {
+    const frequencyAnalyserFFTSize = FFTSizes.REGULAR
+
+    frequencyAnalyser.value = new AnalyserNode(unref(audioContext), {
+      fftSize: frequencyAnalyserFFTSize,
+    })
+
+    const timeAnalyserFFTSize = FFTSizes.REGULAR
+
+    timeAnalyser.value = new AnalyserNode(unref(audioContext), {
+      fftSize: timeAnalyserFFTSize,
+    })
+
+    gainNode.value.connect(frequencyAnalyser.value).connect(timeAnalyser.value)
+  }
+
+  watch(audioContext, () => {
+    setAnalysers()
+  })
+
+  function getAnalyserFrequencyByteData(): Uint8Array {
+    //analyserNode: AnalyserNode
+    const analyserNode = unref(frequencyAnalyser)
     const bufferLength = analyserNode.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
     analyserNode.getByteFrequencyData(dataArray)
     return dataArray
   }
 
-  function getAnalyserFrequencyFloatData(
-    analyserNode: AnalyserNode
-  ): Float32Array {
+  function getAnalyserFrequencyFloatData(): Float32Array {
+    //analyserNode: AnalyserNode
+    const analyserNode = unref(frequencyAnalyser)
     const bufferLength = analyserNode.frequencyBinCount
     const dataArray = new Float32Array(bufferLength)
     analyserNode.getFloatFrequencyData(dataArray)
     return dataArray
   }
 
-  function getAnalyserTimeByteData(analyserNode: AnalyserNode): Uint8Array {
+  function getAnalyserTimeByteData(): Uint8Array {
+    //analyserNode: AnalyserNode
+    const analyserNode = unref(timeAnalyser)
     const bufferLength = analyserNode.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
     analyserNode.getByteTimeDomainData(dataArray)
     return dataArray
   }
 
-  function getAnalyserTimeFloatData(analyserNode: AnalyserNode): Float32Array {
-    console.log(analyserNode)
+  function getAnalyserTimeFloatData(): Float32Array {
+    // analyserNode: AnalyserNode
+    const analyserNode = unref(timeAnalyser)
     const bufferLength = analyserNode.frequencyBinCount
     const dataArray = new Float32Array(bufferLength)
     analyserNode.getFloatTimeDomainData(dataArray)

@@ -30,6 +30,8 @@ const howl: Ref<Howl | null> = ref(null)
 const playerOptions: Ref<IAudioPlayerOptions> = ref({})
 const context: Ref<AudioContext> = ref(new AudioContext())
 const gainNode: Ref<GainNode> = ref(new GainNode(context.value))
+const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(context.value))
+gainNode.value.connect(analyserNode.value)
 const source: Ref<string | null> = ref(null)
 const duration: Ref<number> = ref(0)
 const isPlaying: Ref<boolean> = ref(false)
@@ -129,6 +131,14 @@ const remaining = computed(() => {
   return duration.value - seek.value
 })
 
+function getAnalyser() {
+  return analyserNode.value
+}
+
+function getContext() {
+  return context.value
+}
+
 function spawnAnalyser(options = {} as AnalyserOptions) {
   const analyser = new AnalyserNode(context.value, options)
   gainNode.value.connect(analyser)
@@ -171,7 +181,7 @@ function cleanup(resetSettings = false) {
 
 function start() {
   if (!source.value) {
-    console.error('Unable to start. Source is required')
+    // console.error('Unable to start. Source is required')
     return
   }
 
@@ -229,7 +239,7 @@ function reset() {
 }
 
 function restart() {
-  return pipe().then(reset).then(start).then(fillAudioNodes)
+  return pipe().then(reset).then(start) //.then(fillAudioNodes)
 }
 
 const useSound = (url: string) => {
@@ -281,7 +291,7 @@ function fillAudioNodes() {
 }
 
 function getHowler() {
-  return howl
+  return Howler
 }
 
 export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
@@ -301,6 +311,7 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
     howl,
     context,
     gainNode,
+    analyserNode,
 
     // Player Ref Variables
     isPlaying,
@@ -331,6 +342,8 @@ export function useAudioPlayer(options?: IAudioPlayerOptions): IAudioPlayer {
 
     // Advanced
     initialize,
+    getAnalyser,
+    getContext,
     spawnAnalyser,
     getHowler,
   }

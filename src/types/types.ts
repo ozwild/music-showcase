@@ -1,5 +1,5 @@
 import { Ref } from 'vue'
-import { Howl } from 'howler'
+import { Howler, Howl } from 'howler'
 
 export interface ISong {
   id: string
@@ -71,6 +71,7 @@ export interface IAudioPlayer {
   remaining: Ref<number>
   context: Ref<AudioContext>
   gainNode: Ref<GainNode>
+  analyserNode: Ref<AnalyserNode>
   useSound: (source: string) => void
   play: () => void
   pause: () => void
@@ -83,9 +84,11 @@ export interface IAudioPlayer {
   setRate: (value: number) => void
   setSeek: (value: number) => void
   setProgress: (value: number) => void
+  getAnalyser: () => AnalyserNode
+  getContext: () => AudioContext
   spawnAnalyser: (options?: AnalyserOptions) => AnalyserNode
   initialize: (options?: IAudioPlayerOptions) => void
-  getHowler: () => Ref<Howl | null>
+  getHowler: () => typeof Howler
 }
 
 export interface IEmits {
