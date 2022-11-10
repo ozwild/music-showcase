@@ -1,6 +1,16 @@
-import AudioMotionAnalyzer, { GradientOptions } from 'audiomotion-analyzer'
+import AudioMotionAnalyzer, {
+  GradientOptions,
+  Options,
+} from 'audiomotion-analyzer'
 
-const options = {
+interface ConstructorOptions extends Options {
+  audioCtx?: AudioContext
+  connectSpeakers?: boolean
+  fsElement?: HTMLElement
+  source?: HTMLMediaElement | AudioNode
+}
+
+const defaults = {
   alphaBars: false,
   // audioCtx: undefined, // constructor only
   barSpace: 0.1,
@@ -13,7 +23,7 @@ const options = {
   height: undefined,
   ledBars: false,
   lineWidth: 2,
-  loRes: false,
+  loRes: true,
   lumiBars: false,
   maxDecibels: -20,
   maxFreq: 16000,
@@ -21,10 +31,10 @@ const options = {
   minFreq: 50,
   mirror: -1,
   mode: 10,
-  onCanvasDraw: drawCallback,
+  onCanvasDraw: undefined,
   onCanvasResize: undefined,
   outlineBars: false,
-  overlay: false,
+  overlay: true,
   radial: false,
   reflexAlpha: 0.15,
   reflexBright: 1,
@@ -34,12 +44,12 @@ const options = {
   showFPS: false,
   showLeds: false, // DEPRECATED - use ledBars instead
   showPeaks: true,
-  showScaleX: false,
+  showScaleX: true,
   showScaleY: false,
   smoothing: 0.2,
   spinSpeed: 0,
   splitGradient: true,
-  start: true,
+  start: false,
   stereo: true,
   useCanvas: true,
   volume: 1,
@@ -58,28 +68,27 @@ const outrunGradient: GradientOptions = {
   ],
 }
 
-function drawCallback(instance: AudioMotionAnalyzer) {
-  const ctx = instance.canvasCtx,
-    baseSize = (instance.isFullscreen ? 40 : 20) * instance.pixelRatio
-
-  // use the 'energy' value to increase the font size and make the logo pulse to the beat
-  /* ctx.font = `${
-    baseSize + instance.getEnergy() * 25 * instance.pixelRatio
-  }px Orbitron, sans-serif` */
-
-  ctx.font = `${baseSize * 3 * instance.pixelRatio}px Orbitron, sans-serif`
-
-  ctx.fillStyle = '#fff8'
-  ctx.textAlign = 'center'
-  const x = instance.canvas.width - baseSize * 5
-  const y = baseSize * 3
-  ctx.fillText('Ozwild', x, y)
+const lightGradient: GradientOptions = {
+  bgColor: '#efe',
+  colorStops: [
+    { pos: 0, color: 'rgb( 0, 32, 188 )' },
+    { pos: 0.182, color: 'rgb( 5, 171, 137 )' },
+    { pos: 0.364, color: 'rgb( 57, 196, 12 )' },
+    { pos: 0.525, color: 'rgb( 122, 175, 0 )' },
+    { pos: 0.688, color: 'rgb( 181, 151, 8 )' },
+    { pos: 1, color: 'rgb( 220, 45, 0 )' },
+  ],
 }
 
-function spawnVisualizer(container: HTMLElement) {
-  const audioMotion = new AudioMotionAnalyzer(container, options)
+function spawnVisualizer(container: HTMLElement, options: ConstructorOptions) {
+  const audioMotion = new AudioMotionAnalyzer(container, {
+    ...defaults,
+    ...options,
+  })
   audioMotion.registerGradient('outrun', outrunGradient)
-  audioMotion.gradient = 'outrun'
+  audioMotion.registerGradient('light', lightGradient)
+  //audioMotion.gradient = 'outrun'
+  audioMotion.gradient = 'light'
   return audioMotion
 }
 

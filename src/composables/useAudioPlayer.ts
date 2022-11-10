@@ -26,11 +26,18 @@ const defaultOptions: IAudioPlayerOptions = {
   xhr: undefined,
 }
 
+const mainContext = new AudioContext()
+const mainGain = new GainNode(mainContext)
+
+Howler.ctx = mainContext
+Howler.masterGain = mainGain
+
 const howl: Ref<Howl | null> = ref(null)
 const playerOptions: Ref<IAudioPlayerOptions> = ref({})
 const context: Ref<AudioContext> = ref(Howler.ctx)
 const gainNode: Ref<GainNode> = ref(Howler.masterGain)
-const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(context.value))
+
+const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(Howler.ctx))
 gainNode.value.connect(analyserNode.value)
 const source: Ref<string | null> = ref(null)
 const duration: Ref<number> = ref(0)

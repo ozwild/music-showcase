@@ -1,6 +1,60 @@
 <template>
-  <div>
+  <div class="list-container" :class="{ lightTheme }">
     <ol class="list">
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
+      <li
+        class="li"
+        :class="{ active: currentSong?.id === song.id }"
+        v-for="song in songs"
+        :key="song.id"
+        @click="$emit('click', song)"
+      >
+        {{ song.title }}
+      </li>
       <li
         class="li"
         :class="{ active: currentSong?.id === song.id }"
@@ -15,10 +69,34 @@
 </template>
 
 <style lang="scss" scoped>
+.list-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 100;
+
+  &.lightTheme {
+    .li {
+      background: black;
+      color: snow;
+
+      &.active {
+        background: white;
+        color: black;
+      }
+    }
+  }
+}
 .list {
+  .li {
+    filter: opacity(0.12);
+  }
   &:hover {
     .li:not(:hover) {
-      filter: opacity(0.18);
+      filter: opacity(0.38);
+    }
+    .li:hover {
+      filter: opacity(1);
     }
   }
 }
@@ -30,14 +108,14 @@
   font-size: xx-large;
   transform: scale(0.7);
   cursor: pointer;
-  transition: all 0.6s;
+  transition: all 0.75s;
   &.active {
     background: black;
     color: white;
   }
   &:hover {
     transform: scale(1);
-    transition: all 0.3s;
+    transition: all 0.2s;
     z-index: 1000;
   }
 }
@@ -49,6 +127,7 @@ import { ISong } from '@/types/types'
 interface IProps {
   songs: ISong[]
   currentSong: ISong | null
+  lightTheme: boolean
 }
 
 // eslint-disable-next-line vue/no-setup-props-destructure
