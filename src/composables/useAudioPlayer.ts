@@ -28,8 +28,8 @@ const defaultOptions: IAudioPlayerOptions = {
 
 const howl: Ref<Howl | null> = ref(null)
 const playerOptions: Ref<IAudioPlayerOptions> = ref({})
-const context: Ref<AudioContext> = ref(new AudioContext())
-const gainNode: Ref<GainNode> = ref(new GainNode(context.value))
+const context: Ref<AudioContext> = ref(Howler.ctx)
+const gainNode: Ref<GainNode> = ref(Howler.masterGain)
 const analyserNode: Ref<AnalyserNode> = ref(new AnalyserNode(context.value))
 gainNode.value.connect(analyserNode.value)
 const source: Ref<string | null> = ref(null)
@@ -277,7 +277,7 @@ const setSeek = (value: number) =>
 const setProgress = (value: number) =>
   setSeek(clamp(value, 0, 1) * duration.value)
 
-function fillAudioNodes() {
+/* function fillAudioNodes() {
   const masterContext = Howler.ctx
   const masterGainNode = Howler.masterGain
 
@@ -288,7 +288,7 @@ function fillAudioNodes() {
   if (masterGainNode) {
     gainNode.value = masterGainNode
   }
-}
+} */
 
 function getHowler() {
   return Howler

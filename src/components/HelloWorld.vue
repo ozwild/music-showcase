@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
     <h1>Palencia | Oskar \ Algren / Ozwild</h1>
-
     <AudioPlayerSetup :songs="audioSources" />
   </div>
 </template>
