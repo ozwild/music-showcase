@@ -1,18 +1,44 @@
 <template>
   <Transition name="fade" mode="out-in" :duration="1500">
     <SplashPresentation v-if="showSplash" />
-    <HelloWorld v-else />
+    <AudioPlayerSetup v-else :songs="audioSources" />
   </Transition>
 </template>
 
 <script lang="ts" setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, provide } from 'vue'
+import { ISong } from '@/types/types'
+import AudioPlayerSetup from '@/components/AudioPlayerSetup.vue'
 import SplashPresentation from './components/SplashPresentation.vue'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
-import { provide } from 'vue'
-import { playerInjectionKey } from './utilities/injectionKeys'
 
-let showSplash = $ref(false)
+import {
+  playerInjectionKey,
+  lightThemeInjectionKey,
+} from './utilities/injectionKeys'
+
+import {
+  getDefaultLightThemeValue,
+  saveDefaultLightThemeValue,
+} from '@/utilities/utilities'
+
+import songs from '@/songs.json'
+
+const audioSources: ISong[] = songs
+
+let showSplash = $ref(true)
+
+const lightTheme = ref(getDefaultLightThemeValue())
+
+function toggleLightTheme() {
+  lightTheme.value = !lightTheme.value
+  saveDefaultLightThemeValue(lightTheme.value)
+}
+
+provide(lightThemeInjectionKey, {
+  lightTheme,
+  toggleLightTheme,
+})
 
 const player = useAudioPlayer({
   preload: true,

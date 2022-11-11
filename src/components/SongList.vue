@@ -79,21 +79,22 @@
   &.light-theme {
     .list {
       .li {
-        filter: opacity(0.38);
+        filter: opacity(0.18);
         background: yellow;
         color: crimson;
 
         &.active {
+          filter: opacity(0.8);
           background: crimson;
           color: lightpink;
         }
       }
       &:hover {
         .li:not(:hover) {
-          filter: opacity(0.18);
+          filter: opacity(0.28);
         }
         .li:hover {
-          //filter: opacity(1);
+          filter: opacity(1);
         }
       }
     }
@@ -110,9 +111,10 @@
     }
     &:hover {
       .li:not(:hover):not(.active) {
-        filter: opacity(0.08);
+        filter: opacity(0.18);
       }
       .li:hover {
+        filter: opacity(1);
       }
     }
   }
@@ -141,16 +143,20 @@
 </style>
 
 <script lang="ts" setup>
-import { ISong } from '@/types/types'
+import { inject } from 'vue'
+import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
+import { ILightThemeInjection, ISong } from '@/types/types'
 
 interface IProps {
   songs: ISong[]
   currentSong: ISong | null
-  lightTheme: boolean
 }
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
+
+const { lightTheme } = inject(lightThemeInjectionKey) as ILightThemeInjection
+
 defineEmits<{
   (e: 'click', song: ISong): void
 }>()

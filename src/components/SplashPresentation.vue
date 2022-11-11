@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="background"></div>
+    <div id="background" :class="{ ['light-theme']: lightTheme }"></div>
     <h1>OzWorks</h1>
   </div>
 </template>
@@ -14,7 +14,12 @@
 }
 
 @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
-
+#background {
+  background-color: black;
+  &.light-theme {
+    background-color: white;
+  }
+}
 h1 {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
@@ -110,4 +115,10 @@ h1 {
 }
 </style>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { inject } from 'vue'
+import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
+import { ILightThemeInjection } from '@/types/types'
+
+const { lightTheme } = inject(lightThemeInjectionKey) as ILightThemeInjection
+</script>

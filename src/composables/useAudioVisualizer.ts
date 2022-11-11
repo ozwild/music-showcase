@@ -1,3 +1,5 @@
+// @ref https://audiomotion.dev/#/
+
 import AudioMotionAnalyzer, {
   GradientOptions,
   Options,

@@ -1,6 +1,11 @@
 import { Ref } from 'vue'
 import { Howler, Howl } from 'howler'
 
+export interface ILightThemeInjection {
+  lightTheme: Ref<boolean>
+  toggleLightTheme: () => void
+}
+
 export interface ISong {
   id: string
   title: string

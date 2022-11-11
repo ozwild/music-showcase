@@ -16,20 +16,17 @@
         class="layer layer-2"
         :class="{ ['light-theme']: lightTheme, ['video-mode']: isOnVideoMode }"
       >
-        <div
-          id="visualization-container"
-          :class="{
-            ['light-theme']: lightTheme,
-            ['video-mode']: isOnVideoMode,
-          }"
-          ref="visualizationContainer"
-        />
-        <SongList
-          :songs="songs"
-          :currentSong="currentSong"
-          :lightTheme="lightTheme"
-          @click="playSong"
-        />
+        <Transition>
+          <div
+            id="visualization-container"
+            :class="{
+              ['light-theme']: lightTheme,
+              ['video-mode']: isOnVideoMode,
+            }"
+            ref="visualizationContainer"
+          />
+        </Transition>
+        <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
       </div>
 
       <div class="layer layer-3" v-if="currentSong && isOnVideoMode">
@@ -70,7 +67,7 @@
                 autoplay
               ></audio>
               <button @click="toggleLoRes">Lo Res.</button>
-              <button @click="toggleTheme">Theme</button>
+              <button @click="toggleAppTheme">Theme</button>
             </div>
           </div>
         </div>
@@ -200,21 +197,25 @@ video.background-video {
 </style>
 
 <script lang="ts" setup>
-import { ref, Ref, provide, Transition, onMounted, watch } from 'vue'
+import { ref, Ref, inject, Transition, onMounted, watch } from 'vue'
 import { $ref } from 'vue/macros'
 import AudioMotionAnalyzer from 'audiomotion-analyzer'
-import { IAudioPlayerOptions, ISong } from '@/types/types'
-
-import ProgressInformation from '@/components/ProgressInformation.vue'
 import SongInfo from '@/components/SongInfo.vue'
-import SongList from './SongList.vue'
+import SongList from '@/components/SongList.vue'
+import ProgressInformation from '@/components/ProgressInformation.vue'
 import { useAudioVisualizer } from '@/composables/useAudioVisualizer'
+import { IAudioPlayerOptions, ISong, ILightThemeInjection } from '@/types/types'
+import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
 
 interface IProps extends IAudioPlayerOptions {
   songs: ISong[]
 }
 
 const { spawn } = useAudioVisualizer()
+const { lightTheme, toggleLightTheme } = inject(
+  lightThemeInjectionKey
+) as ILightThemeInjection
+
 const visualizationContainer: HTMLElement = $ref()
 const audioElement: HTMLMediaElement = $ref()
 const videoElement: HTMLMediaElement = $ref()
@@ -225,7 +226,7 @@ let videoLoaded = $ref(false)
 let audioLoaded = $ref(false)
 let currentSong: ISong = $ref()
 let previousSong: ISong = $ref()
-let lightTheme = $ref(false)
+//let lightTheme = $ref(false)
 let isOnVideoMode = $ref(false)
 
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -251,10 +252,10 @@ function toggleLoRes() {
   }
 }
 
-function toggleTheme() {
-  lightTheme = !lightTheme
+function toggleAppTheme() {
+  toggleLightTheme()
   if (visualizer.value) {
-    visualizer.value.gradient = lightTheme ? 'light' : 'outrun'
+    visualizer.value.gradient = lightTheme.value ? 'light' : 'outrun'
     //visualizer.value.loRes = lightTheme
   }
 }
@@ -271,6 +272,7 @@ function loadedDataHandler(e: Event) {
   if (!visualizerLoaded) {
     console.log('SPAWNING A NEW VISUALIZER')
     visualizer.value = spawn(visualizationContainer as HTMLElement, {})
+    visualizer.value.gradient = lightTheme.value ? 'light' : 'outrun'
     visualizerLoaded = true
   }
 
