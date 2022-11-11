@@ -1,5 +1,5 @@
 <template>
-  <div class="list-container" :class="{ lightTheme }">
+  <div class="list-container" :class="{ ['light-theme']: lightTheme }">
     <ol class="list">
       <li
         class="li"
@@ -70,38 +70,55 @@
 
 <style lang="scss" scoped>
 .list-container {
-  max-height: 80vh;
+  max-height: calc(80vh - 5em);
   overflow-y: auto;
   position: relative;
   z-index: 100;
+  top: 5em;
 
-  &.lightTheme {
+  &.light-theme {
+    .list {
+      .li {
+        filter: opacity(0.38);
+        background: yellow;
+        color: crimson;
+
+        &.active {
+          background: crimson;
+          color: lightpink;
+        }
+      }
+      &:hover {
+        .li:not(:hover) {
+          filter: opacity(0.18);
+        }
+        .li:hover {
+          //filter: opacity(1);
+        }
+      }
+    }
+  }
+
+  .list {
     .li {
-      background: black;
-      color: snow;
-
+      filter: opacity(0.08);
+      background: yellow;
+      color: crimson;
       &.active {
-        background: white;
-        color: black;
+        filter: opacity(0.8);
+      }
+    }
+    &:hover {
+      .li:not(:hover):not(.active) {
+        filter: opacity(0.08);
+      }
+      .li:hover {
       }
     }
   }
 }
-.list {
-  .li {
-    filter: opacity(0.12);
-  }
-  &:hover {
-    .li:not(:hover) {
-      filter: opacity(0.38);
-    }
-    .li:hover {
-      filter: opacity(1);
-    }
-  }
-}
+
 .li {
-  background: white;
   padding: 2px 15px 6px 4px;
   display: inline flow-root list-item;
   display: inline-flex;
@@ -111,10 +128,12 @@
   transition: all 0.75s;
   &.active {
     background: black;
+    transform: scale(0.7) rotatez(-3deg);
     color: white;
   }
-  &:hover {
-    transform: scale(1);
+  &:hover:not(.active) {
+    filter: opacity(1);
+    transform: scale(1) rotatez(-3deg);
     transition: all 0.2s;
     z-index: 1000;
   }

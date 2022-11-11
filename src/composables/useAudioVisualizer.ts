@@ -3,6 +3,8 @@ import AudioMotionAnalyzer, {
   Options,
 } from 'audiomotion-analyzer'
 
+import { FFTSizes } from '@/utilities/constants'
+
 interface ConstructorOptions extends Options {
   audioCtx?: AudioContext
   connectSpeakers?: boolean
@@ -16,7 +18,7 @@ const defaults = {
   barSpace: 0.1,
   bgAlpha: 0.7,
   connectSpeakers: true, // constructor only
-  fftSize: 4096,
+  fftSize: FFTSizes.MEDIUM,
   fillAlpha: 0,
   fsElement: undefined, // constructor only
   gradient: 'prism',
@@ -44,9 +46,9 @@ const defaults = {
   showFPS: false,
   showLeds: false, // DEPRECATED - use ledBars instead
   showPeaks: true,
-  showScaleX: true,
+  showScaleX: false,
   showScaleY: false,
-  smoothing: 0.2,
+  smoothing: 0.1,
   spinSpeed: 0,
   splitGradient: true,
   start: false,
@@ -87,8 +89,7 @@ function spawnVisualizer(container: HTMLElement, options: ConstructorOptions) {
   })
   audioMotion.registerGradient('outrun', outrunGradient)
   audioMotion.registerGradient('light', lightGradient)
-  //audioMotion.gradient = 'outrun'
-  audioMotion.gradient = 'light'
+  audioMotion.gradient = 'outrun'
   return audioMotion
 }
 

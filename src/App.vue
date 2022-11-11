@@ -12,7 +12,7 @@ import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import { provide } from 'vue'
 import { playerInjectionKey } from './utilities/injectionKeys'
 
-let showSplash = $ref(true)
+let showSplash = $ref(false)
 
 const player = useAudioPlayer({
   preload: true,

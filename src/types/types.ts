@@ -5,6 +5,7 @@ export interface ISong {
   id: string
   title: string
   url: string
+  isVideo?: boolean
   meta: ISongMeta
 }
 

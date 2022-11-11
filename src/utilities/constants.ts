@@ -3,6 +3,7 @@ export const FFTSizes = {
   SMALL: 512,
   REGULAR: 1024,
   LOW: 2048,
-  MEDIUM: 8192,
+  MEDIUM: 4096,
+  LARGE: 8192,
   HIGH: 16384,
 }
