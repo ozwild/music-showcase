@@ -79,22 +79,26 @@
   &.light-theme {
     .list {
       .li {
-        filter: opacity(0.18);
+        filter: opacity(0.38);
         background: yellow;
-        color: crimson;
+        background: lightyellow;
+        color: gray;
 
         &.active {
           filter: opacity(0.8);
-          background: crimson;
-          color: lightpink;
+          background: black;
+          color: yellow;
         }
       }
       &:hover {
-        .li:not(:hover) {
+        .li:not(:hover):not(.active) {
           filter: opacity(0.28);
         }
         .li:hover {
           filter: opacity(1);
+          &:not(.active) {
+            color: black;
+          }
         }
       }
     }
@@ -102,11 +106,13 @@
 
   .list {
     .li {
-      filter: opacity(0.08);
-      background: yellow;
-      color: crimson;
+      filter: opacity(0.28);
+      background: darkorchid;
+      color: darkorange;
       &.active {
-        filter: opacity(0.8);
+        filter: opacity(0.9);
+        background: orange;
+        color: white;
       }
     }
     &:hover {
@@ -128,6 +134,7 @@
   transform: scale(0.7);
   cursor: pointer;
   transition: all 0.75s;
+  font-weight: bold;
   &.active {
     background: black;
     transform: scale(0.7) rotatez(-3deg);
@@ -136,7 +143,7 @@
   &:hover:not(.active) {
     filter: opacity(1);
     transform: scale(1) rotatez(-3deg);
-    transition: all 0.2s;
+    transition: all 0.25s;
     z-index: 1000;
   }
 }

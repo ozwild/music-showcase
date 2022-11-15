@@ -1,5 +1,6 @@
 import { Ref } from 'vue'
 import { Howler, Howl } from 'howler'
+import AudioMotionAnalyzer from 'audiomotion-analyzer'
 
 export interface ILightThemeInjection {
   lightTheme: Ref<boolean>

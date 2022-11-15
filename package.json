@@ -13,6 +13,7 @@
     "audiomotion-analyzer": "^3.6.0",
     "d3": "^7.6.1",
     "howler": "^2.2.3",
+    "material-symbols": "^0.2.15",
     "uuid": "^8.3.2",
     "vue": "^3.2.13",
     "vue-eslint-parser": "^9.0.3"

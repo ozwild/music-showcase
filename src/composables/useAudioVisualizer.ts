@@ -27,7 +27,7 @@ const defaults = {
   height: undefined,
   ledBars: false,
   lineWidth: 2,
-  loRes: true,
+  loRes: false,
   lumiBars: false,
   maxDecibels: -20,
   maxFreq: 16000,
@@ -44,7 +44,7 @@ const defaults = {
   reflexBright: 1,
   reflexFit: true,
   reflexRatio: 0.4,
-  showBgColor: true,
+  showBgColor: false,
   showFPS: false,
   showLeds: false, // DEPRECATED - use ledBars instead
   showPeaks: true,
@@ -62,6 +62,7 @@ const defaults = {
 
 const outrunGradient: GradientOptions = {
   bgColor: '#101',
+  //dir: 'h',
   colorStops: [
     { pos: 0, color: 'rgb( 255, 223, 67 )' },
     { pos: 0.182, color: 'rgb( 250, 84, 118 )' },
@@ -84,6 +85,16 @@ const lightGradient: GradientOptions = {
   ],
 }
 
+const lightRainbow: GradientOptions = {
+  bgColor: '#efe',
+  dir: 'h',
+  colorStops: [
+    { pos: 0, color: 'rgb( 255, 223, 167 )' },
+    { pos: 0.525, color: 'rgb( 72, 68, 73 )' },
+    { pos: 0.688, color: 'rgb( 24, 26, 27 )' },
+  ],
+}
+
 function spawnVisualizer(container: HTMLElement, options: ConstructorOptions) {
   const audioMotion = new AudioMotionAnalyzer(container, {
     ...defaults,
@@ -91,7 +102,7 @@ function spawnVisualizer(container: HTMLElement, options: ConstructorOptions) {
   })
   audioMotion.registerGradient('outrun', outrunGradient)
   audioMotion.registerGradient('light', lightGradient)
-  audioMotion.gradient = 'outrun'
+  audioMotion.registerGradient('light-rainbow', lightRainbow)
   return audioMotion
 }
 

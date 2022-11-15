@@ -26,7 +26,7 @@ import songs from '@/songs.json'
 
 const audioSources: ISong[] = songs
 
-let showSplash = $ref(true)
+let showSplash = $ref(false)
 
 const lightTheme = ref(getDefaultLightThemeValue())
 

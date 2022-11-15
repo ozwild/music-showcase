@@ -8,9 +8,7 @@
       <div
         class="layer layer-1"
         :class="{ ['light-theme']: lightTheme, ['video-mode']: isOnVideoMode }"
-      >
-        <div v-if="!lightTheme" class="layer foreground"></div>
-      </div>
+      ></div>
 
       <div
         class="layer layer-2"
@@ -26,14 +24,34 @@
             ref="visualizationContainer"
           />
         </Transition>
+        <div
+          class="layer foreground"
+          :class="{
+            ['light-theme']: lightTheme,
+            ['video-mode']: isOnVideoMode,
+          }"
+        ></div>
         <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
       </div>
 
       <div class="layer layer-3" v-if="currentSong && isOnVideoMode">
         <div class="video-player-wrapper">
-          <div class="layer backdrop"></div>
+          <div
+            class="layer backdrop"
+            :class="{
+              ['light-theme']: lightTheme,
+              ['video-mode']: isOnVideoMode,
+            }"
+          ></div>
           <div class="video-player-container">
-            <video
+            <VideoPlayer
+              :song="currentSong"
+              @canplay="loadedVideoDataHandler"
+              @pause="pausedHandler"
+              @ended="endedHandler"
+              @play="playHandler"
+            />
+            <!-- <video
               ref="videoElement"
               class="video-player"
               :src="currentSong?.url"
@@ -44,7 +62,7 @@
               @play="playHandler"
               controls
               autoplay
-            ></video>
+            ></video> -->
           </div>
         </div>
       </div>
@@ -59,7 +77,7 @@
                 ref="audioElement"
                 :src="currentSong?.url"
                 crossOrigin="anonymous"
-                @canplay="loadedDataHandler"
+                @canplay="loadedAudioDataHandler"
                 @pause="pausedHandler"
                 @ended="endedHandler"
                 @play="playHandler"
@@ -94,7 +112,15 @@
 .layer-2 {
   z-index: 100;
   &.video-mode {
-    //filter: blur(3px) opacity(0.6);
+    filter: opacity(0.6);
+    mix-blend-mode: hard-light;
+    //background-color: orangered;
+
+    &.light-theme {
+      filter: opacity(1);
+      mix-blend-mode: luminosity;
+      background-color: initial;
+    }
   }
 }
 .layer-3 {
@@ -108,6 +134,10 @@
   background-color: #040405;
   &.light-theme {
     background-color: white;
+
+    &.video-mode {
+      background-color: initial;
+    }
   }
   &.video-mode {
     background-color: #040405;
@@ -115,7 +145,27 @@
 }
 .foreground {
   background-color: #040405;
-  mix-blend-mode: hue;
+  mix-blend-mode: darken;
+  opacity: 0.2;
+  background: radial-gradient(
+    ellipse at bottom,
+    black,
+    darkblue,
+    darkviolet,
+    darkorchid
+  );
+
+  &.light-theme {
+    opacity: 0.3;
+    mix-blend-mode: hard-light;
+    background: radial-gradient(
+      ellipse at bottom,
+      white,
+      wheat,
+      gold,
+      goldenrod
+    );
+  }
 }
 #visualization-container {
   position: fixed;
@@ -125,21 +175,12 @@
   height: 100vh;
   top: 0;
   left: 0;
-  //filter: blur(3px) opacity(0.5);
-  /* &.light-theme {
-    filter: blur(3px);
-  } */
 
   canvas {
     width: 100%;
   }
 }
-video.background-video {
-  position: fixed;
-  top: 0;
-  filter: blur(1px) opacity(0.6);
-  filter: opacity(0.5) contrast(1.2);
-}
+
 .video-player-wrapper {
   position: fixed;
   z-index: 10000;
@@ -150,11 +191,15 @@ video.background-video {
   .layer.backdrop {
     background: black;
     filter: opacity(0.4);
+    &.light-theme {
+      background: powderblue;
+    }
   }
   .video-player-container {
     display: flex;
-    padding: 2em;
+    padding: 1em;
     background: black;
+    background-color: rgba(200, 200, 200, 0.2);
     border-radius: 4px;
     position: absolute;
     top: 50%;
@@ -164,7 +209,7 @@ video.background-video {
     video.video-player {
       position: relative;
       display: block;
-      width: 64%;
+      width: 100%;
       filter: contrast(1.3) brightness(1.1) saturate(1.2);
     }
   }
@@ -197,11 +242,12 @@ video.background-video {
 </style>
 
 <script lang="ts" setup>
-import { ref, Ref, inject, Transition, onMounted, watch } from 'vue'
+import { ref, Ref, inject, watch, provide } from 'vue'
 import { $ref } from 'vue/macros'
 import AudioMotionAnalyzer from 'audiomotion-analyzer'
 import SongInfo from '@/components/SongInfo.vue'
 import SongList from '@/components/SongList.vue'
+import VideoPlayer from '@/components/VideoPlayer.vue'
 import ProgressInformation from '@/components/ProgressInformation.vue'
 import { useAudioVisualizer } from '@/composables/useAudioVisualizer'
 import { IAudioPlayerOptions, ISong, ILightThemeInjection } from '@/types/types'
@@ -218,16 +264,15 @@ const { lightTheme, toggleLightTheme } = inject(
 
 const visualizationContainer: HTMLElement = $ref()
 const audioElement: HTMLMediaElement = $ref()
-const videoElement: HTMLMediaElement = $ref()
-//const backgroundVideoElement: HTMLMediaElement = $ref()
-let visualizer: Ref<AudioMotionAnalyzer | null> = ref(null)
-let visualizerLoaded = $ref(false)
+const videoElement = $ref()
 let videoLoaded = $ref(false)
 let audioLoaded = $ref(false)
 let currentSong: ISong = $ref()
 let previousSong: ISong = $ref()
-//let lightTheme = $ref(false)
 let isOnVideoMode = $ref(false)
+
+let visualizer: Ref<AudioMotionAnalyzer | null> = ref(null)
+let visualizerLoaded = $ref(false)
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { songs = [] } = defineProps<IProps>()
@@ -255,7 +300,7 @@ function toggleLoRes() {
 function toggleAppTheme() {
   toggleLightTheme()
   if (visualizer.value) {
-    visualizer.value.gradient = lightTheme.value ? 'light' : 'outrun'
+    visualizer.value.gradient = lightTheme.value ? 'light-rainbow' : 'outrun'
     //visualizer.value.loRes = lightTheme
   }
 }
@@ -266,15 +311,28 @@ function resetPlaybackEnvironment() {
   videoLoaded = false
 }
 
-function loadedDataHandler(e: Event) {
-  console.log('AUDIO LOADED', e, visualizer.value?.connectedSources)
-
+function initializeVisualizer() {
   if (!visualizerLoaded) {
-    console.log('SPAWNING A NEW VISUALIZER')
     visualizer.value = spawn(visualizationContainer as HTMLElement, {})
-    visualizer.value.gradient = lightTheme.value ? 'light' : 'outrun'
+    visualizer.value.gradient = lightTheme.value ? 'light-rainbow' : 'outrun'
     visualizerLoaded = true
   }
+}
+
+function loadedVideoDataHandler(e: Event, element: HTMLMediaElement) {
+  initializeVisualizer()
+  console.log('AUDIO LOADED', element)
+  if (previousSong?.isVideo !== currentSong?.isVideo) {
+    resetPlaybackEnvironment()
+  }
+  if (!videoLoaded) {
+    visualizer.value?.connectInput(element)
+    videoLoaded = true
+  }
+}
+
+function loadedAudioDataHandler() {
+  initializeVisualizer()
 
   if (previousSong?.isVideo !== currentSong?.isVideo) {
     resetPlaybackEnvironment()
@@ -283,23 +341,7 @@ function loadedDataHandler(e: Event) {
   if (!audioLoaded && audioElement) {
     visualizer.value?.connectInput(audioElement)
     audioLoaded = true
-    /* setTimeout(() => {
-      visualizer.value?.connectInput(audioElement)
-      audioLoaded = true
-    }, 500) */
   }
-
-  if (!videoLoaded && videoElement) {
-    visualizer.value?.connectInput(videoElement)
-    videoLoaded = true
-    /* setTimeout(() => {
-      visualizer.value?.connectInput(videoElement)
-      videoLoaded = true
-    }, 500) */
-  }
-
-  //visualizer.value?.disconnectInput()
-  //visualizer.value?.connectInput(element as HTMLMediaElement)
 }
 
 watch(
