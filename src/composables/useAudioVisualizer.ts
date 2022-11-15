@@ -20,13 +20,13 @@ const defaults = {
   barSpace: 0.1,
   bgAlpha: 0.7,
   connectSpeakers: true, // constructor only
-  fftSize: FFTSizes.MEDIUM,
+  fftSize: FFTSizes.REGULAR,
   fillAlpha: 0,
   fsElement: undefined, // constructor only
   gradient: 'prism',
   height: undefined,
   ledBars: false,
-  lineWidth: 2,
+  lineWidth: 1,
   loRes: false,
   lumiBars: false,
   maxDecibels: -20,

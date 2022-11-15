@@ -1,8 +1,10 @@
 <template>
-  <Transition name="fade" mode="out-in" :duration="1500">
-    <SplashPresentation v-if="showSplash" />
-    <AudioPlayerSetup v-else :songs="audioSources" />
-  </Transition>
+  <div>
+    <Transition name="fade" mode="out-in" :duration="1500">
+      <SplashPresentation v-if="showSplash" />
+      <AudioPlayerSetup v-else :songs="audioSources" />
+    </Transition>
+  </div>
 </template>
 
 <script lang="ts" setup>

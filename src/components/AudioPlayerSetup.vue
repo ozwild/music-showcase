@@ -8,7 +8,15 @@
       <div
         class="layer layer-1"
         :class="{ ['light-theme']: lightTheme, ['video-mode']: isOnVideoMode }"
-      ></div>
+      >
+        <div
+          class="layer foreground"
+          :class="{
+            ['light-theme']: lightTheme,
+            ['video-mode']: isOnVideoMode,
+          }"
+        ></div>
+      </div>
 
       <div
         class="layer layer-2"
@@ -24,13 +32,8 @@
             ref="visualizationContainer"
           />
         </Transition>
-        <div
-          class="layer foreground"
-          :class="{
-            ['light-theme']: lightTheme,
-            ['video-mode']: isOnVideoMode,
-          }"
-        ></div>
+        <AnimatedTree />
+
         <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
       </div>
 
@@ -144,27 +147,22 @@
   }
 }
 .foreground {
-  background-color: #040405;
-  mix-blend-mode: darken;
-  opacity: 0.2;
-  background: radial-gradient(
+  background-size: 400% 400%;
+  background-size: 200% 150%;
+  background-image: radial-gradient(
     ellipse at bottom,
     black,
-    darkblue,
     darkviolet,
     darkorchid
   );
+  filter: saturate(2) opacity(0.15);
+  background-position: center 75%;
 
   &.light-theme {
-    opacity: 0.3;
-    mix-blend-mode: hard-light;
-    background: radial-gradient(
-      ellipse at bottom,
-      white,
-      wheat,
-      gold,
-      goldenrod
-    );
+    background-image: radial-gradient(ellipse at bottom, white, wheat, gold);
+    // background-image: radial-gradient(ellipse at bottom, white, violet, orchid);
+    // background-image: radial-gradient(ellipse at bottom, white, chartreuse, lime);
+    filter: saturate(2) opacity(0.25);
   }
 }
 #visualization-container {
@@ -249,6 +247,7 @@ import SongInfo from '@/components/SongInfo.vue'
 import SongList from '@/components/SongList.vue'
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import ProgressInformation from '@/components/ProgressInformation.vue'
+import AnimatedTree from '@/components/AnimatedTree.vue'
 import { useAudioVisualizer } from '@/composables/useAudioVisualizer'
 import { IAudioPlayerOptions, ISong, ILightThemeInjection } from '@/types/types'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'

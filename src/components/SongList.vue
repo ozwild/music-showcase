@@ -80,14 +80,13 @@
     .list {
       .li {
         filter: opacity(0.38);
-        background: yellow;
         background: lightyellow;
         color: gray;
 
         &.active {
           filter: opacity(0.8);
           background: black;
-          color: yellow;
+          color: white;
         }
       }
       &:hover {
