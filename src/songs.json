@@ -1,5 +1,41 @@
 [
   {
+    "id": "jigsaw_falling_into_place",
+    "title": "Jigsaw Falling into Place",
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Jigsaw%20Falling%20Into%20Place.mp3",
+    "meta": {
+      "bpm": 150,
+      "key": "F Minor",
+      "energy": 72,
+      "danceability": 44,
+      "happiness": 39
+    }
+  },
+  {
+    "id": "paranoid_android",
+    "title": "Paranoid Android",
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Paranoid%20Android.mp3",
+    "meta": {
+      "bpm": 150,
+      "key": "F Minor",
+      "energy": 72,
+      "danceability": 44,
+      "happiness": 39
+    }
+  },
+  {
+    "id": "bullet_with_butterfly_wings",
+    "title": "Bullet with Butterfly Wings",
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Smashing%20Pumpkins%20-%20Bullet%20with%20Butterfly%20Wings.mp3",
+    "meta": {
+      "bpm": 150,
+      "key": "F Minor",
+      "energy": 72,
+      "danceability": 44,
+      "happiness": 39
+    }
+  },
+  {
     "id": "judith",
     "title": "Judith",
     "url": "https://storage.googleapis.com/ozwild_test_bucket/VID_20190813_150251.mp4",
@@ -46,6 +82,18 @@
       "energy": 92,
       "danceability": 48,
       "happiness": 17
+    }
+  },
+  {
+    "id": "2+2=5",
+    "title": "2 + 2 = 5",
+    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%202%20%2B%202%20%3D%205.mp3",
+    "meta": {
+      "bpm": 150,
+      "key": "F Minor",
+      "energy": 72,
+      "danceability": 44,
+      "happiness": 39
     }
   },
   {

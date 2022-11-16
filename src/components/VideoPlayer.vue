@@ -1,20 +1,20 @@
 <template>
   <div class="media-player">
     <div
-      v-if="!videoTinyMode"
+      v-if="!minimized"
       class="layer backdrop"
       :class="{
         ['light-theme']: lightTheme,
       }"
     ></div>
 
-    <div class="container" :class="{ minimized: videoTinyMode }">
+    <div class="container" :class="{ minimized: minimized }">
       <div
         class="main"
-        :class="{ minimized: videoTinyMode, ['light-theme']: lightTheme }"
+        :class="{ minimized: minimized, ['light-theme']: lightTheme }"
       >
         <video
-          :class="{ minimized: videoTinyMode }"
+          :class="{ minimized: minimized }"
           :src="song.url"
           crossorigin="anonymous"
           ref="videoElement"
@@ -24,11 +24,37 @@
           @pause="pauseHandler"
           @ended="$emit('ended')"
           @canplay="canPlayHandler"
-        >
-          <!-- fallback content here -->
-        </video>
-        <div class="top-bar">
-          <div v-if="!videoTinyMode" class="icon-button" @click="minimize">
+        ></video>
+
+        <div class="controls" ref="controlsElement">
+          <div
+            role="button"
+            class="icon-button control play"
+            aria-label="play pause button"
+            @click="playPauseToggle"
+          >
+            <span v-if="!isPlaying" class="material-symbols-sharp">
+              play_arrow
+            </span>
+            <span v-if="isPlaying" class="material-symbols-sharp"> pause </span>
+          </div>
+          <div class="icon-button control stop" aria-label="stop"></div>
+          <div class="timer">
+            <div></div>
+            <span aria-label="timer">00:00</span>
+          </div>
+          <div class="icon-button control rwd" aria-label="rewind">
+            <span class="material-symbols-sharp"> history </span>
+          </div>
+          <div class="icon-button control fwd" aria-label="fast forward">
+            <span class="material-symbols-sharp"> update </span>
+          </div>
+          <div
+            v-if="!minimized"
+            class="icon-button float"
+            role="button"
+            @click="minimize"
+          >
             <span class="button-back"></span>
             <span
               class="material-symbols-sharp minimize-button"
@@ -37,7 +63,12 @@
             >
           </div>
 
-          <div v-if="videoTinyMode" class="icon-button" @click="expand">
+          <div
+            v-if="minimized"
+            class="icon-button float"
+            role="button"
+            @click="expand"
+          >
             <span class="button-back"></span>
             <span
               class="material-symbols-sharp minimize-button"
@@ -45,30 +76,6 @@
               >expand_less</span
             >
           </div>
-        </div>
-        <div class="controls" ref="controlsElement">
-          <button
-            class="play"
-            data-icon="P"
-            aria-label="play pause toggle"
-            @click="playPauseToggle"
-          >
-            <span v-if="!isPlaying" class="material-symbols-sharp">
-              play_arrow
-            </span>
-            <span v-if="isPlaying" class="material-symbols-sharp"> pause </span>
-          </button>
-          <button class="stop" data-icon="S" aria-label="stop"></button>
-          <div class="timer">
-            <div></div>
-            <span aria-label="timer">00:00</span>
-          </div>
-          <button class="rwd" data-icon="B" aria-label="rewind">
-            <span class="material-symbols-sharp"> history </span>
-          </button>
-          <button class="fwd" data-icon="F" aria-label="fast forward">
-            <span class="material-symbols-sharp"> update </span>
-          </button>
         </div>
       </div>
     </div>
@@ -106,38 +113,21 @@
   z-index: 1500;
   bottom: 0;
   left: 50%;
-  /* width: 100vw;
-      height: 100vh; */
   display: flex;
-  padding: 1em;
+  //padding: 1em;
   border-radius: 4px;
-  //top: 50%;
-  //left: 50%;
   transform: translate(-50%, -40vh);
   mix-blend-mode: hard-light;
-  //position: relative;
-  //transition: all 0.2s;
   width: 75vmin;
   pointer-events: all;
 
   &.minimized {
     width: 240px;
-    //position: initial;
-    //transform: unset;
     transform: translate(-50%, -5em);
   }
 
   .main {
-    //position: relative;
-    //display: block;
-    //width: 100%;
-    //filter: contrast(1.3) brightness(1.1) saturate(1.2);
-  }
-
-  .main {
-    filter: grayscale(0.3) contrast(1.3);
-    filter: grayscale(0.3) contrast(1.3) brightness(1.1) saturate(1.2);
-    display: flex;
+    display: grid;
     background-image: linear-gradient(
       45deg,
       white,
@@ -147,6 +137,8 @@
     );
     background-size: 200%;
     box-shadow: 2px 4px 12px -4px rgb(0 0 0 / 70%);
+    filter: grayscale(0.3) contrast(1.3);
+    filter: grayscale(0.3) contrast(1.3) brightness(1.1) saturate(1.2);
 
     &.light-theme {
       background-image: linear-gradient(
@@ -156,14 +148,6 @@
         rgba(90, 200, 50, 0.3),
         black
       );
-      &.minimized {
-        border: 4px solid white;
-      }
-    }
-
-    &.minimized {
-      border: 4px solid rgba(200, 200, 150, 0.4);
-      border-radius: 4px;
     }
 
     video {
@@ -176,36 +160,45 @@
       }
     }
 
-    .top-bar {
+    .controls {
+      background-color: black;
       display: flex;
-      flex-direction: column;
-      background: transparent;
-      position: absolute;
-      top: -1em;
-      right: -1.1em;
+      width: 100%;
     }
 
-    &.minimized {
-      .top-bar {
-        top: -1em;
-        right: -1.1em;
+    &.light-theme {
+      .icon-button {
+        &.float {
+          color: black;
+          .button-back {
+            background: rgba(180, 1750, 150, 0);
+          }
+          &:hover {
+            .button-back {
+              animation: pulse-light 1s cubic-bezier(0.075, 0.82, 0.165, 1)
+                infinite;
+            }
+          }
+        }
+      }
+    }
+
+    &.light-theme {
+      .controls {
+        background-color: wheat;
+        background: rgba(200, 200, 200, 0.7);
+        .icon-button {
+          &.control {
+            color: black;
+          }
+        }
       }
     }
 
     &.light-theme {
       .icon-button {
-        .material-symbols-sharp {
+        &.float {
           color: black;
-        }
-        .button-back {
-          background: rgba(250, 250, 250, 0.7);
-        }
-
-        &:hover {
-          .button-back {
-            animation: pulse-light 1s cubic-bezier(0.075, 0.82, 0.165, 1)
-              infinite;
-          }
         }
       }
     }
@@ -213,80 +206,84 @@
     .icon-button {
       position: relative;
       cursor: pointer;
-      margin: 0.25em 0.25em;
+
+      &.float {
+        color: white;
+        .material-symbols-sharp {
+          border-radius: 50%;
+        }
+        .button-back {
+          background: rgba(200, 200, 230, 0);
+          border-radius: 50%;
+          width: 3em;
+          height: 3em;
+          display: block;
+          top: -0.5em;
+          left: -0.5em;
+          position: absolute;
+          z-index: 0;
+          transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+          transform: scale(0.65);
+        }
+
+        &:hover {
+          .button-back {
+            animation: pulse-dark 1s cubic-bezier(0.075, 0.82, 0.165, 1)
+              infinite;
+          }
+        }
+      }
+    }
+
+    .icon-button {
+      &.control {
+        padding: 0 0.5em;
+        text-align: center;
+        opacity: 0.65;
+        color: white;
+        transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
 
       .material-symbols-sharp {
         position: relative;
-        border-radius: 50%;
         z-index: 1;
-        color: white;
+        color: inherit;
         font-size: 2em;
       }
 
-      .button-back {
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 50%;
-        width: 3em;
-        height: 3em;
-        display: block;
-        top: -0.5em;
-        left: -0.5em;
-        position: absolute;
-        z-index: 0;
-        transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-        transform: scale(0.75);
-      }
-
       &:hover {
-        .button-back {
-          animation: pulse-dark 1s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+        &.control {
+          opacity: 0.9;
         }
-      }
-
-      &::after {
-        content: '';
       }
     }
 
     &.minimized {
       .icon-button {
+        &.float {
+          .button-back {
+            width: 2em;
+            height: 2em;
+            top: -0.25em;
+            left: -0.25em;
+          }
+        }
         .material-symbols-sharp {
           font-size: 1.5em;
         }
-        .button-back {
-          width: 2em;
-          height: 2em;
-          top: -0.25em;
-          left: -0.25em;
-        }
       }
-    }
-
-    .controls {
-      visibility: hidden;
-      //opacity: 0.5;
-      width: 400px;
-      border-radius: 10px;
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      margin-left: -200px;
-      background-color: black;
-      box-shadow: 3px 3px 5px black;
-      transition: 1s all;
-      display: flex;
     }
   }
 }
 
 .material-symbols-sharp {
-  font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' -25, 'opsz' 40;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 
 @keyframes pulse-dark {
   from {
-    background: rgba(0, 0, 0, 0.4);
-    transform: scale(0.5);
+    background: rgba(85, 25, 90, 0);
+    transform: scale(0.65);
     box-shadow: 0 0 12px -2px rgba(200, 0, 200, 1);
   }
   to {
@@ -298,14 +295,12 @@
 
 @keyframes pulse-light {
   from {
-    background: rgba(0, 0, 0, 0.4);
-    transform: scale(0.5);
-    box-shadow: 0 0 12px -2px rgba(200, 0, 200, 1);
+    background: rgba(200, 200, 230, 0);
+    transform: scale(0.65);
   }
   to {
-    background: wheat;
+    background: rgba(200, 200, 230, 1);
     transform: scale(1);
-    box-shadow: 0 0 12px -6px rgba(200, 0, 200, 1);
   }
 }
 
@@ -315,12 +310,8 @@
 }
 
 .timer {
-  line-height: 38px;
-  font-size: 10px;
-  font-family: monospace;
-  text-shadow: 1px 1px 0px black;
   color: white;
-  flex: 5;
+  flex: 2 auto;
   position: relative;
 }
 
@@ -357,7 +348,7 @@ const controlsElement: HTMLElement = $ref()
 const { lightTheme } = inject(lightThemeInjectionKey) as ILightThemeInjection
 
 let isPlaying = $ref(false)
-let videoTinyMode = $ref(false)
+let minimized = $ref(false)
 let audioOnlyMode = $ref(false)
 
 const emit = defineEmits<{
@@ -405,10 +396,10 @@ function playPauseToggle() {
 }
 
 function minimize() {
-  videoTinyMode = true
+  minimized = true
 }
 
 function expand() {
-  videoTinyMode = false
+  minimized = false
 }
 </script>

@@ -10,60 +10,6 @@
       >
         {{ song.title }}
       </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
-      <li
-        class="li"
-        :class="{ active: currentSong?.id === song.id }"
-        v-for="song in songs"
-        :key="song.id"
-        @click="$emit('click', song)"
-      >
-        {{ song.title }}
-      </li>
     </ol>
   </div>
 </template>
