@@ -37,38 +37,15 @@
         <SongList :songs="songs" :currentSong="currentSong" @click="playSong" />
       </div>
 
-      <div class="layer layer-3" v-if="currentSong && isOnVideoMode">
-        <div class="video-player-wrapper">
-          <div
-            class="layer backdrop"
-            :class="{
-              ['light-theme']: lightTheme,
-              ['video-mode']: isOnVideoMode,
-            }"
-          ></div>
-          <div class="video-player-container">
-            <VideoPlayer
-              :song="currentSong"
-              @canplay="loadedVideoDataHandler"
-              @pause="pausedHandler"
-              @ended="endedHandler"
-              @play="playHandler"
-            />
-            <!-- <video
-              ref="videoElement"
-              class="video-player"
-              :src="currentSong?.url"
-              crossorigin="anonymous"
-              @canplay="loadedDataHandler"
-              @pause="pausedHandler"
-              @ended="endedHandler"
-              @play="playHandler"
-              controls
-              autoplay
-            ></video> -->
-          </div>
-        </div>
-      </div>
+      <VideoPlayer
+        v-if="currentSong && isOnVideoMode"
+        class="media-player"
+        :song="currentSong"
+        @canplay="loadedVideoDataHandler"
+        @pause="pausedHandler"
+        @ended="endedHandler"
+        @play="playHandler"
+      />
 
       <div class="bottom-bar layer-4">
         <div class="box">
@@ -99,17 +76,10 @@
 </template>
 
 <style lang="scss">
-.layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
 .layer-1 {
   z-index: 50;
   &.video-mode {
-    filter: opacity(0.4);
+    //filter: opacity(0.4);
   }
 }
 .layer-2 {
@@ -126,8 +96,8 @@
     }
   }
 }
-.layer-3 {
-  z-index: 500;
+.media-player {
+  z-index: 350;
 }
 .layer-4 {
   z-index: 500;
@@ -175,41 +145,8 @@
   left: 0;
 
   canvas {
-    width: 100%;
-  }
-}
-
-.video-player-wrapper {
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  .layer.backdrop {
-    background: black;
-    filter: opacity(0.4);
-    &.light-theme {
-      background: powderblue;
-    }
-  }
-  .video-player-container {
-    display: flex;
-    padding: 1em;
-    background: black;
-    background-color: rgba(200, 200, 200, 0.2);
-    border-radius: 4px;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    video.video-player {
-      position: relative;
-      display: block;
-      width: 100%;
-      filter: contrast(1.3) brightness(1.1) saturate(1.2);
-    }
+    width: 100%;
   }
 }
 
@@ -263,7 +200,7 @@ const { lightTheme, toggleLightTheme } = inject(
 
 const visualizationContainer: HTMLElement = $ref()
 const audioElement: HTMLMediaElement = $ref()
-const videoElement = $ref()
+
 let videoLoaded = $ref(false)
 let audioLoaded = $ref(false)
 let currentSong: ISong = $ref()

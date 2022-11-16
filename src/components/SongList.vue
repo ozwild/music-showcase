@@ -80,13 +80,13 @@
     .list {
       .li {
         filter: opacity(0.38);
-        background: lightyellow;
+        //background: lightyellow;
         color: gray;
 
         &.active {
           filter: opacity(0.8);
-          background: black;
-          color: white;
+          color: black;
+          background: ghostwhite;
         }
       }
       &:hover {
@@ -106,12 +106,11 @@
   .list {
     .li {
       filter: opacity(0.28);
-      background: darkorchid;
-      color: darkorange;
+      color: antiquewhite;
       &.active {
         filter: opacity(0.9);
-        background: orange;
         color: white;
+        //color: chartreuse;
       }
     }
     &:hover {
@@ -134,10 +133,9 @@
   cursor: pointer;
   transition: all 0.75s;
   font-weight: bold;
+  line-height: 0.9;
   &.active {
-    background: black;
     transform: scale(0.7) rotatez(-3deg);
-    color: white;
   }
   &:hover:not(.active) {
     filter: opacity(1);
