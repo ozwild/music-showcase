@@ -118,23 +118,30 @@
 }
 .foreground {
   background-size: 400% 400%;
-  background-size: 200% 150%;
-  background-image: radial-gradient(
-    ellipse at bottom,
-    black,
-    darkviolet,
-    darkorchid
+  background-image: linear-gradient(
+    -45deg,
+    #0f0c29,
+    #302b63,
+    darkorchid,
+    #24243e,
+    cyan
   );
-  filter: saturate(2) opacity(0.15);
-  background-position: center 75%;
+
+  background-image: linear-gradient(-45deg, #1d0817, #432b63, #30243e);
+  filter: saturate(1.3) opacity(0.75);
+  background-position: center 100%;
+  background-position: 0% 50%;
+  animation: gradient 18s 4s ease infinite;
 
   &.light-theme {
-    background-image: radial-gradient(ellipse at bottom, white, wheat, gold);
-    // background-image: radial-gradient(ellipse at bottom, white, violet, orchid);
-    // background-image: radial-gradient(ellipse at bottom, white, chartreuse, lime);
-    filter: saturate(2) opacity(0.25);
+    filter: saturate(1) opacity(0.5);
+    background-image: linear-gradient(-45deg, white, wheat, gold);
+    background-image: linear-gradient(-45deg, #e0eafc, #cfdef3);
+    background-image: linear-gradient(-45deg, #70e1f5, #ffd194);
+    background-image: linear-gradient(-45deg, #2bc0e4, #eaecc6);
   }
 }
+
 #visualization-container {
   position: fixed;
   z-index: 0;
@@ -172,6 +179,18 @@
     position: fixed;
     bottom: 2vh;
     left: 5vw;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 </style>

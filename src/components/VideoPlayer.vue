@@ -23,6 +23,7 @@
           @pause="pauseHandler"
           @ended="$emit('ended')"
           @canplay="canPlayHandler"
+          @loadedmetadata="videoPlayerLoadHandler"
         ></video>
 
         <div class="overlay" @click="playPauseToggle"></div>
@@ -147,9 +148,9 @@
   top: 50%;
   left: 50%;
   display: flex;
-  border-radius: 4px;
   transform: translate(-50%, -50%);
   pointer-events: all;
+  overflow: hidden;
 
   &.minimized {
     //width: 240px;
@@ -173,8 +174,6 @@
   .main {
     display: grid;
     box-shadow: 2px 4px 12px -4px rgb(0 0 0 / 70%);
-    background-image: linear-gradient(45deg, black, #111);
-    overflow: hidden;
     width: 75vmin;
 
     @media screen and (max-width: 540px) {
@@ -198,7 +197,7 @@
       width: 100%;
 
       @media screen and (max-width: 540px) {
-        transform: scale(1.5) translateY(-2%);
+        transform: scale(2) translateY(-2%);
         height: 100%;
       }
     }
@@ -448,7 +447,6 @@
 import { computed, onMounted, watch, inject } from 'vue'
 import 'material-symbols'
 import { ISong, ILightThemeInjection } from '@/types/types'
-import { debounce } from '@/utilities/utilities'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
 import { formatDuration, formatElapsed } from '@/utilities/format'
 
@@ -479,15 +477,13 @@ const emit = defineEmits<{
 
 const progressPercentage = computed(() => (currentTime / duration) * 100)
 
-watch(videoElement, () => {
-  emit('canplay', videoElement)
-})
-
 function canPlayHandler() {
-  console.log('CAN PLAY TRIGGERED')
-
   duration = videoElement.duration
   videoElement.addEventListener('timeupdate', timeUpdateHandler)
+}
+
+function videoPlayerLoadHandler() {
+  emit('canplay', videoElement)
 }
 
 function timeUpdateHandler() {

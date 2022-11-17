@@ -56,7 +56,7 @@ class Branch {
     this.vel += dif * 0.1
     this.spawn += this.vel
 
-    $.strokeStyle = 'hsla(' + (u % 360) + ',100%,50%,1)'
+    $.strokeStyle = 'hsla(' + (u % 360) + ',80%,50%,0.9)'
     $.lineWidth = 1
     $.beginPath()
     $.rotate(this.ang + (Math.sin(this.sway * this.mult) * Math.PI) / 128)

@@ -89,9 +89,9 @@ const lightRainbow: GradientOptions = {
   bgColor: '#efe',
   dir: 'h',
   colorStops: [
-    { pos: 0, color: 'rgb( 255, 223, 167 )' },
+    { pos: 0, color: 'rgb( 255, 223, 220 )' },
     { pos: 0.525, color: 'rgb( 72, 68, 73 )' },
-    { pos: 0.688, color: 'rgb( 24, 26, 27 )' },
+    { pos: 0.688, color: 'rgb( 0, 24, 27 )' },
   ],
 }
 
