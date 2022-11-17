@@ -1,3 +1,5 @@
+import { debounce as tsDebounce } from 'ts-debounce'
+
 const LOCAL_STORAGE_KEYS = {
   LIGHT_THEME: 'light-theme-default-value',
 }
@@ -23,4 +25,8 @@ export function getDefaultLightThemeValue() {
 
 export function saveDefaultLightThemeValue(value: boolean) {
   localStorage.setItem(LOCAL_STORAGE_KEYS.LIGHT_THEME, value.toString())
+}
+
+export function debounce(fn: () => void) {
+  return tsDebounce(fn, 200)
 }

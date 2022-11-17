@@ -255,7 +255,7 @@ function initializeVisualizer() {
   }
 }
 
-function loadedVideoDataHandler(e: Event, element: HTMLMediaElement) {
+function loadedVideoDataHandler(element: HTMLMediaElement) {
   initializeVisualizer()
   console.log('AUDIO LOADED', element)
   if (previousSong?.isVideo !== currentSong?.isVideo) {

@@ -18,7 +18,6 @@
           :src="song.url"
           crossorigin="anonymous"
           ref="videoElement"
-          controls
           autoplay
           @play="playHandler"
           @pause="pauseHandler"
@@ -26,7 +25,15 @@
           @canplay="canPlayHandler"
         ></video>
 
-        <div class="controls" ref="controlsElement">
+        <div class="overlay" @click="playPauseToggle"></div>
+
+        <div class="controls" ref="controlsElement" v-if="videoElement">
+          <div class="timeline">
+            <div
+              class="fill"
+              :style="{ width: `${progressPercentage}%` }"
+            ></div>
+          </div>
           <div
             role="button"
             class="icon-button control play"
@@ -40,32 +47,45 @@
           </div>
           <div class="icon-button control stop" aria-label="stop"></div>
           <div class="timer">
-            <div></div>
-            <span aria-label="timer">00:00</span>
+            <span aria-label="timer">{{
+              `${formatElapsed(currentTime)} / ${formatDuration(duration)}`
+            }}</span>
           </div>
-          <div class="icon-button control rwd" aria-label="rewind">
-            <span class="material-symbols-sharp"> history </span>
+          <div
+            v-if="!skipBackwardDisabled && !minimized"
+            class="icon-button control rwd"
+            aria-label="rewind"
+            @click="skipBackward"
+            @dblclick="() => false"
+          >
+            <span class="material-symbols-sharp"> replay_10 </span>
+            <span class="icon-tooltip">Back 10s</span>
           </div>
-          <div class="icon-button control fwd" aria-label="fast forward">
-            <span class="material-symbols-sharp"> update </span>
+          <div
+            v-if="!skipForwardDisabled && !minimized"
+            class="icon-button control fwd"
+            aria-label="fast forward"
+            @click="skipForward"
+          >
+            <span class="material-symbols-sharp"> forward_10 </span>
+            <span class="icon-tooltip">Skip 10s</span>
           </div>
           <div
             v-if="!minimized"
-            class="icon-button float"
+            class="icon-button control"
             role="button"
             @click="minimize"
           >
             <span class="button-back"></span>
-            <span
-              class="material-symbols-sharp minimize-button"
-              title="Minimizar"
-              >expand_more</span
-            >
+            <span class="material-symbols-sharp minimize-button"
+              >picture_in_picture_alt
+            </span>
+            <span class="icon-tooltip">Minimizar</span>
           </div>
 
           <div
             v-if="minimized"
-            class="icon-button float"
+            class="icon-button control"
             role="button"
             @click="expand"
           >
@@ -73,8 +93,21 @@
             <span
               class="material-symbols-sharp minimize-button"
               title="Expandir"
-              >expand_less</span
-            >
+              >open_in_new
+            </span>
+          </div>
+
+          <div
+            v-if="!minimized"
+            class="icon-button control"
+            role="button"
+            @click="fullscreen"
+          >
+            <span class="button-back"></span>
+            <span class="material-symbols-sharp minimize-button"
+              >fullscreen
+            </span>
+            <span class="icon-tooltip">Fullscreen</span>
           </div>
         </div>
       </div>
@@ -111,59 +144,147 @@
 .container {
   position: fixed;
   z-index: 1500;
-  bottom: 0;
+  top: 50%;
   left: 50%;
   display: flex;
-  //padding: 1em;
   border-radius: 4px;
-  transform: translate(-50%, -40vh);
-  mix-blend-mode: hard-light;
-  width: 75vmin;
+  transform: translate(-50%, -50%);
   pointer-events: all;
 
   &.minimized {
-    width: 240px;
+    //width: 240px;
     transform: translate(-50%, -5em);
+    top: unset;
+    bottom: 0;
+
+    .main {
+      @media screen and (max-width: 540px) {
+        width: 240px;
+        height: auto;
+
+        video {
+          transform: scale(1.5) translateY(-2%);
+          //height: auto;
+        }
+      }
+    }
   }
 
   .main {
     display: grid;
-    background-image: linear-gradient(
-      45deg,
-      white,
-      rgba(200, 0, 200, 0.2),
-      rgba(0, 200, 200, 0.2),
-      rgba(0, 0, 0, 0.5)
-    );
-    background-size: 200%;
     box-shadow: 2px 4px 12px -4px rgb(0 0 0 / 70%);
-    filter: grayscale(0.3) contrast(1.3);
-    filter: grayscale(0.3) contrast(1.3) brightness(1.1) saturate(1.2);
+    background-image: linear-gradient(45deg, black, #111);
+    overflow: hidden;
+    width: 75vmin;
 
-    &.light-theme {
-      background-image: linear-gradient(
-        45deg,
-        white,
-        rgba(200, 120, 50, 0.25),
-        rgba(90, 200, 50, 0.3),
-        black
-      );
+    @media screen and (max-width: 540px) {
+      width: 100vmin;
+      height: 100vmin;
     }
 
-    video {
-      filter: grayscale(0.5);
-      mix-blend-mode: luminosity;
-      width: 75vmin;
+    &.minimized {
+      width: 240px;
 
-      &.minimized {
-        width: 240px;
+      video {
+        transform: scale(1.5) translateY(-2%);
+        height: 100%;
       }
     }
 
-    .controls {
-      background-color: black;
-      display: flex;
+    &.light-theme {
+    }
+
+    video {
       width: 100%;
+
+      @media screen and (max-width: 540px) {
+        transform: scale(1.5) translateY(-2%);
+        height: 100%;
+      }
+    }
+
+    &:hover {
+      .overlay,
+      .controls {
+        opacity: 1;
+      }
+    }
+
+    .overlay {
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.1),
+        transparent,
+        transparent
+      );
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity 0.24s;
+      opacity: 0;
+    }
+
+    .controls {
+      display: flex;
+      width: calc(100% - 2em);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      margin: 0.5em 1em;
+      opacity: 0;
+      transition: opacity 0.24s;
+
+      .timeline {
+        position: absolute;
+        top: -15px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: rgba(255, 255, 255, 0.2);
+        z-index: 2;
+        .fill {
+          position: absolute;
+          background-color: rgba(255, 255, 255, 0.4);
+          left: 0;
+          top: 0;
+          width: 0;
+          height: 4px;
+          //margin: 4px 0;
+        }
+      }
+
+      .timer {
+        color: white;
+        flex: 2 auto;
+        position: relative;
+
+        span {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+            sans-serif;
+          position: absolute;
+          z-index: 3;
+          left: 19px;
+          line-height: 33px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    &:hover .controls,
+    &:focus-within .controls {
+      opacity: 1;
+    }
+
+    &.light-theme {
+      .timer {
+        span {
+          color: darkslategray;
+        }
+      }
     }
 
     &.light-theme {
@@ -185,11 +306,11 @@
 
     &.light-theme {
       .controls {
-        background-color: wheat;
-        background: rgba(200, 200, 200, 0.7);
+        //background-color: wheat;
+        //background: rgba(200, 200, 200, 0.7);
         .icon-button {
           &.control {
-            color: black;
+            //color: black;
           }
         }
       }
@@ -237,11 +358,34 @@
 
     .icon-button {
       &.control {
+        position: relative;
         padding: 0 0.5em;
         text-align: center;
-        opacity: 0.65;
+        opacity: 0.85;
         color: white;
-        transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-shadow: 0 1px rgb(0 0 0 / 40%);
+        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        .icon-tooltip {
+          visibility: hidden;
+          position: absolute;
+          font-size: 0.8em;
+          font-family: system-ui;
+          background: rgba(40, 40, 40, 0.85);
+          border-radius: 4px;
+          padding: 0.25em 0.5em;
+          white-space: nowrap;
+          bottom: 0;
+          left: 1em;
+          transform: translate(-50%, -4.5em);
+          transition: all 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        &:hover {
+          .icon-tooltip {
+            visibility: visible;
+          }
+        }
       }
 
       .material-symbols-sharp {
@@ -249,6 +393,7 @@
         z-index: 1;
         color: inherit;
         font-size: 2em;
+        user-select: none;
       }
 
       &:hover {
@@ -303,40 +448,15 @@
     transform: scale(1);
   }
 }
-
-.player:hover .controls,
-.player:focus-within .controls {
-  opacity: 1;
-}
-
-.timer {
-  color: white;
-  flex: 2 auto;
-  position: relative;
-}
-
-.timer div {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.2);
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 38px;
-  z-index: 2;
-}
-
-.timer span {
-  position: absolute;
-  z-index: 3;
-  left: 19px;
-}
 </style>
 
 <script lang="ts" setup>
 import { computed, onMounted, watch, inject } from 'vue'
 import 'material-symbols'
 import { ISong, ILightThemeInjection } from '@/types/types'
+import { debounce } from '@/utilities/utilities'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
+import { formatDuration, formatElapsed } from '@/utilities/format'
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { song } = defineProps<{
@@ -346,52 +466,83 @@ const { song } = defineProps<{
 const videoElement: HTMLMediaElement = $ref()
 const controlsElement: HTMLElement = $ref()
 const { lightTheme } = inject(lightThemeInjectionKey) as ILightThemeInjection
+const skipSize = $ref(10)
 
 let isPlaying = $ref(false)
+let duration = $ref(0)
+let currentTime = $ref(0)
 let minimized = $ref(false)
+let skipBackwardDisabled = $ref(true)
+let skipForwardDisabled = $ref(true)
 let audioOnlyMode = $ref(false)
 
 const emit = defineEmits<{
   (e: 'play', event: Event): void
   (e: 'pause', event: Event): void
   (e: 'ended', event: Event): void
-  (e: 'canplay', event: Event, videoElement: HTMLMediaElement): void
+  (e: 'canplay', videoElement: HTMLMediaElement): void
 }>()
 
-watch(
-  () => song,
-  () => {
-    audioOnlyMode = !song?.isVideo
-  }
-)
+const progressPercentage = computed(() => (currentTime / duration) * 100)
 
-onMounted(() => {
-  videoElement.removeAttribute('controls')
-  controlsElement.style.visibility = 'visible'
+watch(videoElement, () => {
+  emit('canplay', videoElement)
 })
 
-function canPlayHandler(e: Event) {
-  emit('canplay', e, videoElement)
+function canPlayHandler() {
+  console.log('CAN PLAY TRIGGERED')
+
+  duration = videoElement.duration
+  videoElement.addEventListener('timeupdate', timeUpdateHandler)
+}
+
+function timeUpdateHandler() {
+  currentTime = videoElement.currentTime
+  updateSkipDisables()
+}
+
+function updateSkipDisables() {
+  skipBackwardDisabled = currentTime <= 0
+  skipForwardDisabled = currentTime >= duration
 }
 
 function playHandler(e: Event) {
   isPlaying = true
   emit('play', e)
-  console.log('2WATCH ISPLAYING', videoElement)
 }
 
 function pauseHandler(e: Event) {
   isPlaying = false
   emit('pause', e)
-  console.log('2WATCH ISPLAYING', videoElement)
 }
 
 function playPauseToggle() {
-  //console.log(isPlaying.value, videoElement.paused)
   if (isPlaying) {
     videoElement.pause()
   } else {
     videoElement.play()
+  }
+}
+
+function skipForward() {
+  const { currentTime, duration } = videoElement
+
+  if (currentTime + skipSize < duration) {
+    videoElement.currentTime += skipSize
+  } else {
+    videoElement.currentTime = duration
+    videoElement.pause()
+  }
+}
+
+function skipBackward() {
+  const { currentTime } = videoElement
+
+  if (currentTime - skipSize > 0) {
+    videoElement.currentTime -= skipSize
+  } else {
+    videoElement.currentTime = 0
+    videoElement.pause()
   }
 }
 
@@ -401,5 +552,9 @@ function minimize() {
 
 function expand() {
   minimized = false
+}
+
+function fullscreen() {
+  videoElement.requestFullscreen()
 }
 </script>
