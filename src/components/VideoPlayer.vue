@@ -28,7 +28,7 @@
         <div class="overlay" @click="playPauseToggle"></div>
 
         <div class="controls" ref="controlsElement" v-if="videoElement">
-          <div class="timeline">
+          <div class="timeline" @click="timelineClickHandler">
             <div
               class="fill"
               :style="{ width: `${progressPercentage}%` }"
@@ -245,6 +245,7 @@
         height: 4px;
         background-color: rgba(255, 255, 255, 0.2);
         z-index: 2;
+        cursor: pointer;
         .fill {
           position: absolute;
           background-color: rgba(255, 255, 255, 0.4);
@@ -252,6 +253,7 @@
           top: 0;
           width: 0;
           height: 4px;
+          pointer-events: none;
           //margin: 4px 0;
         }
       }
@@ -277,14 +279,6 @@
     &:hover .controls,
     &:focus-within .controls {
       opacity: 1;
-    }
-
-    &.light-theme {
-      .timer {
-        span {
-          color: darkslategray;
-        }
-      }
     }
 
     &.light-theme {
@@ -521,6 +515,19 @@ function playPauseToggle() {
     videoElement.pause()
   } else {
     videoElement.play()
+  }
+}
+
+function timelineClickHandler(e: MouseEvent) {
+  const { offsetX } = e
+  const { clientWidth } = e.target as Element
+
+  const wasPlaying = isPlaying
+
+  if (offsetX && clientWidth) {
+    if (wasPlaying) videoElement.pause()
+    videoElement.currentTime = (offsetX / clientWidth) * duration
+    if (wasPlaying) videoElement.play()
   }
 }
 
