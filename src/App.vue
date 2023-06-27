@@ -1,73 +1,35 @@
-<template>
-  <div>
-    <Transition name="fade" mode="out-in" :duration="1500">
-      <SplashPresentation v-if="showSplash" />
-      <AudioPlayerSetup v-else :songs="audioSources" />
-    </Transition>
-  </div>
-</template>
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import { useSongsStore } from './stores/SongBankStore'
+import songs from './data/songs.json'
 
-<script lang="ts" setup>
-import { ref, provide } from 'vue'
-import { ISong } from '@/types/types'
-import AudioPlayerSetup from '@/components/AudioPlayerSetup.vue'
-import SplashPresentation from './components/SplashPresentation.vue'
-import { useAudioPlayer } from '@/composables/useAudioPlayer'
-
-import {
-  playerInjectionKey,
-  lightThemeInjectionKey,
-} from './utilities/injectionKeys'
-
-import {
-  getDefaultLightThemeValue,
-  saveDefaultLightThemeValue,
-} from '@/utilities/utilities'
-
-import songs from '@/songs.json'
-
-const audioSources: ISong[] = songs
-
-let showSplash = $ref(false)
-
-const lightTheme = ref(getDefaultLightThemeValue())
-
-function toggleLightTheme() {
-  lightTheme.value = !lightTheme.value
-  saveDefaultLightThemeValue(lightTheme.value)
-}
-
-provide(lightThemeInjectionKey, {
-  lightTheme,
-  toggleLightTheme,
+const songsStore = useSongsStore()
+songsStore.$patch({
+  allSongs: songs,
+  songs,
 })
-
-const player = useAudioPlayer({
-  preload: true,
-  html5: false,
-  autoPlay: false,
-})
-
-provide(playerInjectionKey, player)
-
-setTimeout(() => {
-  showSplash = false
-}, 4e3)
 </script>
+
 <style lang="scss">
-html {
-  font-family: monospace;
-  font-size: 16px;
+:root {
+  --oz-app-bars: rgb(32, 0, 51);
 }
+
+// @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
+
+html {
+  font-family: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 14px;
+}
+
 body {
   margin: 0;
 }
-
-.layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
 </style>
+
+<template>
+  <RouterView />
+</template>

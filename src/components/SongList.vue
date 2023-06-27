@@ -95,7 +95,8 @@
 <script lang="ts" setup>
 import { inject } from 'vue'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
-import { ILightThemeInjection, ISong } from '@/types/types'
+import { ILightThemeInjection } from '@/types/types'
+import { ISong } from '@/data/types'
 
 interface IProps {
   songs: ISong[]

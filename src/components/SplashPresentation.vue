@@ -13,7 +13,6 @@
   margin: 0;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 #background {
   background-color: black;
   &.light-theme {

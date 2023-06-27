@@ -205,7 +205,8 @@ import VideoPlayer from '@/components/VideoPlayer.vue'
 import ProgressInformation from '@/components/ProgressInformation.vue'
 import AnimatedTree from '@/components/AnimatedTree.vue'
 import { useAudioVisualizer } from '@/composables/useAudioVisualizer'
-import { IAudioPlayerOptions, ISong, ILightThemeInjection } from '@/types/types'
+import { IAudioPlayerOptions, ILightThemeInjection } from '@/types/types'
+import { ISong } from '@/data/types'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
 
 interface IProps extends IAudioPlayerOptions {

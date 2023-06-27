@@ -23,7 +23,8 @@ div.isPlaying {
 import { inject, onMounted, onUnmounted, toRefs, watch } from 'vue'
 import { $ref, $, $$ } from 'vue/macros'
 import { useAudioApi } from '@/composables/useAudioApi'
-import { IAudioPlayer, ISong, ColorSet } from '@/types/types'
+import { IAudioPlayer, ColorSet } from '@/types/types'
+import { ISong } from '@/data/types'
 import { FFTSizes } from '@/utilities/constants'
 
 import { playerInjectionKey } from '@/utilities/injectionKeys'

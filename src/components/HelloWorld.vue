@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ISong } from '@/types/types'
+import { ISong } from '@/data/types'
 import AudioPlayerSetup from './AudioPlayerSetup.vue'
 
-import songs from '@/songs.json'
+import songs from '@/data/songs.json'
 
 const audioSources: ISong[] = songs
 </script>

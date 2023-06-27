@@ -2,7 +2,8 @@
   {
     "id": "jigsaw_falling_into_place",
     "title": "Jigsaw Falling into Place",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Jigsaw%20Falling%20Into%20Place.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Jigsaw%20Falling%20Into%20Place.mp3",
     "meta": {
       "bpm": 150,
       "key": "F Minor",
@@ -14,7 +15,8 @@
   {
     "id": "paranoid_android",
     "title": "Paranoid Android",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Paranoid%20Android.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Paranoid%20Android.mp3",
     "meta": {
       "bpm": 150,
       "key": "F Minor",
@@ -26,7 +28,8 @@
   {
     "id": "bullet_with_butterfly_wings",
     "title": "Bullet with Butterfly Wings",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Smashing%20Pumpkins%20-%20Bullet%20with%20Butterfly%20Wings.mp3",
+    "albumArtist": "Smashing Pumpkins",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Smashing%20Pumpkins%20-%20Bullet%20with%20Butterfly%20Wings.mp3",
     "meta": {
       "bpm": 150,
       "key": "F Minor",
@@ -38,7 +41,8 @@
   {
     "id": "judith",
     "title": "Judith",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/VID_20190813_150251.mp4",
+    "albumArtist": "A Perfect Circle",
+    "videoUrl": "https://storage.googleapis.com/ozwild_test_bucket/VID_20190813_150251.mp4",
     "isVideo": true,
     "meta": {
       "bpm": 159,
@@ -51,7 +55,8 @@
   {
     "id": "special_k",
     "title": "Special K",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Special%20K%2028052022.mp3",
+    "albumArtist": "Placebo",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Special%20K%2028052022.mp3",
     "meta": {
       "bpm": 159,
       "key": "C# Major",
@@ -63,7 +68,8 @@
   {
     "id": "special_needs",
     "title": "Special Needs",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Placebo%20-%20Special%20needs%2010052022.mp3",
+    "albumArtist": "Placebo",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Placebo%20-%20Special%20needs%2010052022.mp3",
     "meta": {
       "bpm": 89,
       "key": "Ab Minor",
@@ -75,7 +81,8 @@
   {
     "id": "every_you_every_me",
     "title": "Every you, every me",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Every%20You%20Every%20Me%2028052022.mp3",
+    "albumArtist": "Placebo",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Every%20You%20Every%20Me%2028052022.mp3",
     "meta": {
       "bpm": 133,
       "key": "Bb Major",
@@ -87,7 +94,8 @@
   {
     "id": "2+2=5",
     "title": "2 + 2 = 5",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%202%20%2B%202%20%3D%205.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%202%20%2B%202%20%3D%205.mp3",
     "meta": {
       "bpm": 150,
       "key": "F Minor",
@@ -99,7 +107,8 @@
   {
     "id": "faust_arp",
     "title": "Faust Arp",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Faust%20Arp%2006012022.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Faust%20Arp%2006012022.mp3",
     "meta": {
       "bpm": 105,
       "key": "Ab Minor",
@@ -111,7 +120,8 @@
   {
     "id": "exit_music_for_a_film",
     "title": "Exit music (for a film)",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Exit%20Music%20(for%20a%20film)%2031052022.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Exit%20Music%20(for%20a%20film)%2031052022.mp3",
     "meta": {
       "bpm": 122,
       "key": "E Minor",
@@ -123,7 +133,8 @@
   {
     "id": "knives_out",
     "title": "Knives out",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Knives%20Out%2006012022.mp3",
+    "albumArtist": "Radiohead",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Knives%20Out%2006012022.mp3",
     "meta": {
       "bpm": 137,
       "key": "D Minor",
@@ -135,7 +146,8 @@
   {
     "id": "nothings_impossible",
     "title": "Nothing's Impossible",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Nothing's%20Impossible%2031052022.mp3",
+    "albumArtist": "Depeche Mode",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Nothing's%20Impossible%2031052022.mp3",
     "meta": {
       "bpm": 110,
       "key": "A Major",
@@ -147,7 +159,8 @@
   {
     "id": "dream_on",
     "title": "Dream on",
-    "url": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Dream%20On%2030052022.mp3",
+    "albumArtist": "Depeche Mode",
+    "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Dream%20On%2030052022.mp3",
     "meta": {
       "bpm": 128,
       "key": "Bb Minor",

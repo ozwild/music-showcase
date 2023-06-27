@@ -90,7 +90,7 @@ import { $ref } from 'vue/macros'
 import SongInfo from '@/components/SongInfo.vue'
 
 import { FFTSizes } from '@/composables/useAnalizer'
-import { IAudioPlayerOptions, ISong } from '@/types/types'
+import { IAudioPlayerOptions, ISong } from '@/data/types'
 
 interface IProps extends IAudioPlayerOptions {
   songs: ISong[]

@@ -7,22 +7,6 @@ export interface ILightThemeInjection {
   toggleLightTheme: () => void
 }
 
-export interface ISong {
-  id: string
-  title: string
-  url: string
-  isVideo?: boolean
-  meta: ISongMeta
-}
-
-export interface ISongMeta {
-  bpm?: number
-  key?: string
-  energy?: number
-  danceability?: number
-  happiness?: number
-}
-
 export type ColorSet = number[]
 
 export type AvailableEvents =
