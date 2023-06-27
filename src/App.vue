@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useSongsStore } from './stores/SongBankStore'
+
 import songs from './data/songs.json'
+import GlobalPlayer from './components/GlobalPlayer.vue'
 
 const songsStore = useSongsStore()
 songsStore.$patch({
-  allSongs: songs,
   songs,
 })
 </script>
@@ -31,5 +32,6 @@ body {
 </style>
 
 <template>
+  <GlobalPlayer />
   <RouterView />
 </template>

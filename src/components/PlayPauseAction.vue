@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ISong } from '@/data/types'
-defineProps<{ song: ISong; shouldBeVisible: boolean }>()
+import { usePlayerStore } from '@/stores/PlayerStore'
+
+const playerStore = usePlayerStore()
+
+const props = defineProps<{ song: ISong; shouldBeVisible: boolean }>()
+
+function clickHandler() {
+  playerStore.$state.currentSong = props.song
+}
 </script>
 
 <style lang="scss" scoped>
@@ -11,7 +19,13 @@ defineProps<{ song: ISong; shouldBeVisible: boolean }>()
 
 <template>
   <transition name="el-fade-in-linear">
-    <el-icon v-show="shouldBeVisible" class="action" :size="20" color="#67C23A">
+    <el-icon
+      v-show="shouldBeVisible"
+      class="action"
+      :size="20"
+      color="#67C23A"
+      @click="clickHandler"
+    >
       <VideoPlay />
     </el-icon>
   </transition>

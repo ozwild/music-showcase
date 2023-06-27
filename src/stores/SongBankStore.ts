@@ -2,24 +2,24 @@ import { defineStore } from 'pinia'
 import { ISong } from '@/data/types'
 
 interface IState {
-  allSongs: ISong[]
   songs: ISong[]
   filterBy: string
 }
 
 export const useSongsStore = defineStore('songs', {
   state: (): IState => ({
-    allSongs: [],
     songs: [],
     filterBy: '',
   }),
-  actions: {
-    filter(filterBy: string) {
-      this.filterBy = filterBy
-      const regex = new RegExp(filterBy, 'i')
-      this.songs = this.allSongs.filter(
+  getters: {
+    getSongById: (state) => (id: string) =>
+      state.songs.find((song) => song.id === id),
+    filteredSongs: (state) => {
+      const regex = new RegExp(state.filterBy, 'i')
+      return state.songs.filter(
         (song) => regex.test(song.title) || regex.test(song.albumArtist)
       )
     },
   },
+  actions: {},
 })

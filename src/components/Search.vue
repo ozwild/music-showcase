@@ -8,7 +8,8 @@ const searchInput = ref(songStore.filterBy)
 const { debounce } = useDebounce()
 
 watch(searchInput, (newSearchInput) => {
-  debounce(() => songStore.filter(newSearchInput))
+  // debounce(() => songStore.filter(newSearchInput))
+  debounce(() => songStore.filterBy = newSearchInput, 300)
 })
 </script>
 <template>

@@ -1,10 +1,16 @@
-import { ref } from 'vue'
+import { ISong } from '@/data/types'
 import { defineStore } from 'pinia'
 
-export const usePlayerStore = defineStore('player', () => {
-  const isPlaying = ref(false)
+interface IState {
+  isPlaying: boolean
+  wantsVideo: boolean
+  currentSong: ISong | null
+}
 
-  return {
-    isPlaying,
-  }
+export const usePlayerStore = defineStore('player', {
+  state: (): IState => ({
+    isPlaying: false,
+    wantsVideo: true,
+    currentSong: null,
+  }),
 })

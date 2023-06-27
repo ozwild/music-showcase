@@ -6,9 +6,12 @@ import MainLayout from '@/layouts/MainLayout.vue'
 const songStore = useSongsStore()
 const route = useRoute()
 
-const songs = songStore.songs
+// const songs = songStore.songs
 const songId = route.params.song
-const [song] = songs.filter((song) => song.id === songId)
+
+// SongRoute beforeEnter rule ensures this Page always will get a song
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const song = songStore.getSongById(songId as string)!
 </script>
 
 <template>
@@ -17,4 +20,3 @@ const [song] = songs.filter((song) => song.id === songId)
     <video v-if="song.videoUrl" :src="song.videoUrl" />
   </MainLayout>
 </template>
-@/stores/SongBankStore

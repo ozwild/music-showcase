@@ -10,9 +10,8 @@ export default {
     const songStore = useSongsStore()
 
     const { song: songId } = to.params
-    const songs = songStore.songs
 
-    const [song] = songs.filter((song) => song.id === songId)
+    const song = songStore.getSongById(songId as string)
 
     if (!song) {
       console.log('redirect')

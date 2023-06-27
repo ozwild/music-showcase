@@ -8,7 +8,7 @@ const songsStore = useSongsStore()
 </script>
 
 <style lang="scss" scoped>
-.list-move, /* apply transition to moving elements */
+.list-move,
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -20,8 +20,6 @@ const songsStore = useSongsStore()
   transform: translateX(30px);
 }
 
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
 .list-leave-active {
   position: absolute;
 }
@@ -36,7 +34,7 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.songs"
+        v-for="song in songsStore.filteredSongs"
         :key="song.id"
         :song="song"
       />
@@ -48,7 +46,7 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.songs"
+        v-for="song in songsStore.filteredSongs"
         :key="song.id"
         :song="song"
       />
@@ -60,11 +58,10 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.songs"
+        v-for="song in songsStore.filteredSongs"
         :key="song.id"
         :song="song"
       />
     </TransitionGroup>
   </MainLayout>
 </template>
-@/stores/SongBankStore
