@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import MainLayout from '@/layouts/MainLayout.vue'
 import SongListItem from '@/templates/SongListItem.vue'
-
 import { useSongsStore } from '@/stores/SongBankStore'
 
 const songsStore = useSongsStore()

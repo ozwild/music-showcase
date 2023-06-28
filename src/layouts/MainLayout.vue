@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HeaderBar from './Header.vue'
 import FooterBar from './Footer.vue'
+import PlayerOverlay from '@/components/PlayerOverlay.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -13,12 +14,19 @@ import FooterBar from './Footer.vue'
 
 <template>
   <el-container direction="vertical">
-    <el-scrollbar max-height="95vh">
+    <!-- <el-scrollbar max-height="calc(100% - 120px)">
       <HeaderBar />
       <el-main class="main-container">
         <slot></slot>
       </el-main>
+      <PlayerOverlay />
       <FooterBar />
-    </el-scrollbar>
+    </el-scrollbar> -->
+    <HeaderBar />
+    <el-main class="main-container">
+      <slot></slot>
+    </el-main>
+    <PlayerOverlay />
+    <FooterBar />
   </el-container>
 </template>

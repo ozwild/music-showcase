@@ -1,0 +1,35 @@
+{
+  "Outrun": {
+    "bgColor": "#101",
+    "colorStops": [
+      { "pos": 0, "color": "rgb( 255, 223, 67 )" },
+      { "pos": 0.182, "color": "rgb( 250, 84, 118 )" },
+      { "pos": 0.364, "color": "rgb( 198, 59, 243 )" },
+      { "pos": 0.525, "color": "rgb( 133, 80, 255 )" },
+      { "pos": 0.688, "color": "rgb( 74, 104, 247 )" },
+      { "pos": 1, "color": "rgb( 35, 210, 255 )" }
+    ]
+  },
+
+  "Light": {
+    "bgColor": "#efe",
+    "colorStops": [
+      { "pos": 0, "color": "rgb( 0, 32, 188 )" },
+      { "pos": 0.182, "color": "rgb( 5, 171, 137 )" },
+      { "pos": 0.364, "color": "rgb( 57, 196, 12 )" },
+      { "pos": 0.525, "color": "rgb( 122, 175, 0 )" },
+      { "pos": 0.688, "color": "rgb( 181, 151, 8 )" },
+      { "pos": 1, "color": "rgb( 220, 45, 0 )" }
+    ]
+  },
+
+  "LightRainbow": {
+    "bgColor": "#efe",
+    "dir": "h",
+    "colorStops": [
+      { "pos": 0, "color": "rgb( 255, 223, 220 )" },
+      { "pos": 0.525, "color": "rgb( 72, 68, 73 )" },
+      { "pos": 0.688, "color": "rgb( 0, 24, 27 )" }
+    ]
+  }
+}

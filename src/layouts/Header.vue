@@ -13,6 +13,9 @@ const goHome = () => {
   display: flex;
   align-items: center;
   box-shadow: var(--el-box-shadow-light);
+  position: relative;
+  z-index: 1000;
+
   .header-base {
     width: 100%;
 
