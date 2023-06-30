@@ -1,35 +1,67 @@
 <script setup lang="ts">
 import { usePlayerStore } from '@/stores/PlayerStore'
-import { ref, watch } from 'vue'
 
 const playerStore = usePlayerStore()
-const mediaElement = ref(null)
+const audio = $ref(document.createElement('audio'))
+const video = $ref(document.createElement('video'))
 
-watch(mediaElement, () => {
-  playerStore.$state.mediaElement = mediaElement.value
+playerStore.$subscribe((mutation, { currentSong }) => {
+  if (currentSong) {
+    const {
+      source: { audio: audioUrl, video: videoUrl },
+    } = currentSong
+
+    console.log('SOURCE CHANGED', currentSong)
+
+    if (audioUrl) {
+      audio.src = audioUrl
+    } else {
+      audio.src = ''
+      audio.removeAttribute('src')
+    }
+
+    if (videoUrl) {
+      video.src = videoUrl
+    } else {
+      video.src = ''
+      video.removeAttribute('src')
+    }
+
+    console.log('state', audioUrl, videoUrl)
+  }
 })
+
+document.body.append(audio, video)
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 video {
   position: fixed;
   right: 12px;
   bottom: 12px;
   width: 240px;
   z-index: 2000;
+  z-index: 10000;
+  position: fixed;
+  display: block;
+  top: 100px;
+  right: 100px;
+}
+
+audio {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  width: 240px;
+  z-index: 2000;
+  z-index: 10000;
+  position: fixed;
+  display: block;
+  top: 100px;
+  left: 100px;
 }
 </style>
 
 <template>
-  <video
-    ref="mediaElement"
-    :src="
-      playerStore.currentSong?.audioUrl ??
-      playerStore.currentSong?.videoUrl ??
-      ''
-    "
-    crossOrigin="anonymous"
-    controls
-    autoplay
-  ></video>
+  <div class="container"></div>
 </template>

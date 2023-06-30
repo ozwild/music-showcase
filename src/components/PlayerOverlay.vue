@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Analyzer from '@/analizer/Analyzer.vue'
+//import Analyzer from '@/analizer/Analyzer.vue'
 import { useAnalyzerStore } from '@/stores/AnalyzerStore'
 import { useAppStore } from '@/stores/AppStore'
 
@@ -74,7 +74,7 @@ appStore.$subscribe((mutation, { showPlayerOverlay }) => {
 <template>
   <transition name="el-zoom-in-bottom">
     <div v-show="appStore.showPlayerOverlay" class="container">
-      <div class="analyzer-panel"><Analyzer /></div>
+      <!-- <div class="analyzer-panel"><Analyzer /></div> -->
       <div class="background-dark-overlay"></div>
       <div class="background-reflection-overlay"></div>
       <el-row>

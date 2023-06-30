@@ -5,7 +5,6 @@ interface IState {
   isPlaying: boolean
   wantsVideo: boolean
   currentSong: ISong | null
-  mediaElement: HTMLVideoElement | null
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -13,6 +12,5 @@ export const usePlayerStore = defineStore('player', {
     isPlaying: false,
     wantsVideo: true,
     currentSong: null,
-    mediaElement: null,
   }),
 })

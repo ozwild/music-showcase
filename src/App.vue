@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+
 import { useSongsStore } from './stores/SongBankStore'
+import { useData } from './composables/useData'
+import { useMediaShell } from './composables/useMediaShell'
+import data from './data/DATA.json'
 
-import songs from './data/songs.json'
-import GlobalPlayer from './components/GlobalPlayer.vue'
-
+const { parseData } = useData()
 const songsStore = useSongsStore()
-songsStore.$patch({
-  songs,
-})
+const parsedData = parseData(data)
+
+songsStore.loadData(parsedData)
+
+useMediaShell()
 </script>
 
 <style lang="scss">
@@ -16,7 +20,6 @@ songsStore.$patch({
   --oz-app-bars: rgb(32, 0, 51);
 }
 
-// @import url('https://fonts.googleapis.com/css?family=Montserrat:900');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
 
 html {
@@ -29,9 +32,41 @@ html {
 body {
   margin: 0;
 }
+
+video {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  width: 480px;
+  z-index: 2000;
+  z-index: 10000;
+  position: fixed;
+  display: block;
+  top: 100px;
+  right: 100px;
+}
+
+audio {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  width: 460px;
+  z-index: 2000;
+  z-index: 10000;
+  position: fixed;
+  display: block;
+  top: 340px;
+  left: 100px;
+}
+
+canvas.video-canvas {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 1000;
+}
 </style>
 
 <template>
-  <GlobalPlayer />
   <RouterView />
 </template>

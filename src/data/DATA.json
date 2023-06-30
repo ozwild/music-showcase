@@ -1,0 +1,432 @@
+{
+  "songs": [
+    {
+      "id": "077287d4-ca48-467d-a21f-ff00eb27a1b0",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Jigsaw falling into place",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "key": "F Minor",
+      "bpm": 150,
+      "energy": 72,
+      "danceability": 44,
+      "happiness": 39,
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Jigsaw%20Falling%20Into%20Place.mp3"
+    },
+    {
+      "id": "56ed9b50-f125-47f0-9f1c-824b59587b0e",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Paranoid android",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "key": "F Minor",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Paranoid%20Android.mp3"
+    },
+    {
+      "id": "774f4397-4feb-4b81-a648-55fd853f3772",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Bullet with butterfly wings",
+      "albumArtistId": "smashing_pumpkins",
+      "albumArtist": "Smashing Pumpkins",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Smashing%20Pumpkins%20-%20Bullet%20with%20Butterfly%20Wings.mp3"
+    },
+    {
+      "id": "34099fde-2839-4547-8b3a-2d9c187e139e",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Judith",
+      "albumArtistId": "a_perfect_circle",
+      "albumArtist": "A Perfect Circle",
+      "videoUrl": "https://storage.googleapis.com/ozwild_test_bucket/VID_20190813_150251.mp4"
+    },
+    {
+      "id": "b83b9c84-1bd4-453e-aedc-2202330f5eee",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Special K",
+      "albumArtistId": "placebo",
+      "albumArtist": "Placebo",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Special%20K%2028052022.mp3"
+    },
+    {
+      "id": "06cd6be2-e0f1-4abf-bc72-fd48ff139e54",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Special Needs",
+      "albumArtistId": "placebo",
+      "albumArtist": "Placebo",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Placebo%20-%20Special%20needs%2010052022.mp3"
+    },
+    {
+      "id": "041c3496-0a03-471d-9fe3-1750c5a5149d",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Every you,  every me",
+      "albumArtistId": "placebo",
+      "albumArtist": "Placebo",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Palencia%20-%20Every%20You%20Every%20Me%2028052022.mp3"
+    },
+    {
+      "id": "186d181c-b6cd-4ad4-9efb-eebfc236152f",
+      "draft": 0,
+      "type": "vocal",
+      "title": "2 + 2 = 5",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%202%20%2B%202%20%3D%205.mp3"
+    },
+    {
+      "id": "83c518e6-7a04-4e5c-ac73-a45e752e541a",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Faust Arp",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Faust%20Arp%2006012022.mp3"
+    },
+    {
+      "id": "9a1f3d9e-26f0-44af-8f8f-0884e3e52dd9",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Exit Music (for a film)",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Exit%20Music%20(for%20a%20film)%2031052022.mp3"
+    },
+    {
+      "id": "00e3dc91-5392-42c8-8e46-7386b77b65a8",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Knives out",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Radiohead%20-%20Knives%20Out%2006012022.mp3"
+    },
+    {
+      "id": "40d2793f-3ec1-4c6b-921f-e75ddeb1cb48",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Nothing's impossible",
+      "albumArtistId": "depeche_mode",
+      "albumArtist": "Depeche Mode",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Nothing's%20Impossible%2031052022.mp3"
+    },
+    {
+      "id": "eaff8dc7-7ebe-4b62-a967-d27e1bb6dd74",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Dream on",
+      "albumArtistId": "depeche_mode",
+      "albumArtist": "Depeche Mode",
+      "audioUrl": "https://storage.googleapis.com/ozwild_test_bucket/Depeche%20Mode%20-%20Dream%20On%2030052022.mp3"
+    },
+    {
+      "id": "c9b367f2-06b6-4868-add9-68006e3d78af",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Como quisiera decirte",
+      "albumArtistId": "los_angeles_negros",
+      "albumArtist": "Los Angeles Negros",
+      "year": 1970,
+      "key": "E Minor",
+      "bpm": 93,
+      "energy": 29,
+      "danceability": 64,
+      "happiness": 25,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/c9b367f2-06b6-4868-add9-68006e3d78af.mp3",
+      "videoUrl": "https://storage.googleapis.com/oskarwild_media/video/box/c9b367f2-06b6-4868-add9-68006e3d78af.mp4"
+    },
+    {
+      "id": "927b7877-5b10-4134-83cd-891d9b954735",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Brianstorm",
+      "albumArtistId": "arctic_monkeys",
+      "albumArtist": "Arctic Monkeys",
+      "year": 2007,
+      "key": "C# Major",
+      "bpm": 165,
+      "energy": 98,
+      "danceability": 42,
+      "happiness": 44,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/927b7877-5b10-4134-83cd-891d9b954735.mp3"
+    },
+    {
+      "id": "e03398ec-46b7-4780-b66d-74e5b5fad403",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Ultimos dias",
+      "albumArtistId": "zoe",
+      "albumArtist": "Zoe",
+      "year": 2011,
+      "key": "C Major",
+      "bpm": 142,
+      "energy": 85,
+      "danceability": 56,
+      "happiness": 55,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/e03398ec-46b7-4780-b66d-74e5b5fad403.mp3"
+    },
+    {
+      "id": "e702aabe-cfb5-44d8-ad12-91b5218aa0c1",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Words (don't come easy)",
+      "albumArtistId": "f.r._david",
+      "albumArtist": "F.R. David",
+      "year": 1982,
+      "key": "Bb Minor",
+      "bpm": 125,
+      "energy": 79,
+      "danceability": 54,
+      "happiness": 53,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/e702aabe-cfb5-44d8-ad12-91b5218aa0c1.mp3"
+    },
+    {
+      "id": "b43b3037-8b55-4eb9-b27f-7f2b0090f30e",
+      "draft": 0,
+      "type": "full",
+      "title": "The Look",
+      "albumArtistId": "metronomy",
+      "albumArtist": "Metronomy",
+      "year": 2011,
+      "key": "A Minor",
+      "bpm": 85,
+      "energy": 54,
+      "danceability": 64,
+      "happiness": 50,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/b43b3037-8b55-4eb9-b27f-7f2b0090f30e.mp3"
+    },
+    {
+      "id": "1a59324d-1a89-4609-9a30-50d396f5c1c4",
+      "draft": 0,
+      "type": "full",
+      "title": "Every you, every me",
+      "albumArtistId": "placebo",
+      "albumArtist": "Placebo",
+      "year": 1998,
+      "key": "Bb Major",
+      "bpm": 133,
+      "energy": 92,
+      "danceability": 48,
+      "happiness": 17,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/1a59324d-1a89-4609-9a30-50d396f5c1c4.mp3"
+    },
+    {
+      "id": "a8a9cf5c-f9e2-466c-ba14-9fe6e4b72083",
+      "draft": 0,
+      "type": "vocal",
+      "title": "A wolf at the door",
+      "albumArtistId": "radiohead",
+      "albumArtist": "Radiohead",
+      "year": 2003,
+      "key": "G Major",
+      "bpm": 69,
+      "energy": 68,
+      "danceability": 42,
+      "happiness": 36,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/a8a9cf5c-f9e2-466c-ba14-9fe6e4b72083.mp3"
+    },
+    {
+      "id": "a2c9952b-3956-4099-848d-533a608b581d",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Dark necessities",
+      "albumArtistId": "red_hot_chili_peppers",
+      "albumArtist": "Red Hot Chili Peppers",
+      "year": 2016,
+      "key": "F Minor",
+      "bpm": 92,
+      "energy": 74,
+      "danceability": 70,
+      "happiness": 20,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/a2c9952b-3956-4099-848d-533a608b581d.mp3"
+    },
+    {
+      "id": "73658da7-fd05-46e5-b887-68ba7a650b20",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Otherside",
+      "albumArtistId": "red_hot_chili_peppers",
+      "albumArtist": "Red Hot Chili Peppers",
+      "year": 2001,
+      "key": "C Major",
+      "bpm": 123,
+      "energy": 80,
+      "danceability": 46,
+      "happiness": 51,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/73658da7-fd05-46e5-b887-68ba7a650b20.mp3"
+    },
+    {
+      "id": "29f8cd11-b64e-4d5a-aad4-ee64017886d2",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Parallel universe",
+      "albumArtistId": "red_hot_chili_peppers",
+      "albumArtist": "Red Hot Chili Peppers",
+      "year": 2001,
+      "key": "C Minor",
+      "bpm": 125,
+      "energy": 98,
+      "danceability": 34,
+      "happiness": 19,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/29f8cd11-b64e-4d5a-aad4-ee64017886d2.mp3"
+    },
+    {
+      "id": "f3e64a41-0f17-42b6-a321-59d6a1b27800",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Dreaming of you",
+      "albumArtistId": "the_coral",
+      "albumArtist": "The Coral",
+      "year": 2002,
+      "key": "A Minor",
+      "bpm": 199,
+      "energy": 68,
+      "danceability": 44,
+      "happiness": 97,
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/f3e64a41-0f17-42b6-a321-59d6a1b27800.mp3"
+    },
+    {
+      "id": "310608ba-9080-4a90-96fa-f0548dd87fa9",
+      "draft": 0,
+      "type": "vocal",
+      "title": "Kumbala",
+      "albumArtistId": "la_maldita_vecindad",
+      "albumArtist": "La Maldita Vecindad",
+      "audioUrl": "https://storage.googleapis.com/oskarwild_media/lossy/310608ba-9080-4a90-96fa-f0548dd87fa9.mp3"
+    }
+  ],
+  "albumArtists": [
+    {
+      "id": "los_angeles_negros",
+      "name": "Los Angeles Negros",
+      "genreId": "bolero",
+      "genero": "Bolero"
+    },
+    {
+      "id": "arctic_monkeys",
+      "name": "Arctic Monkeys",
+      "genreId": "indie_rock",
+      "genero": "Indie Rock"
+    },
+    {
+      "id": "radiohead",
+      "name": "Radiohead",
+      "genreId": "alternative_rock",
+      "genero": "Alternative Rock"
+    },
+    {
+      "id": "placebo",
+      "name": "Placebo",
+      "genreId": "alternative_rock",
+      "genero": "Alternative Rock"
+    },
+    {
+      "id": "a_perfect_circle",
+      "name": "A Perfect Circle",
+      "genreId": "alternative_rock",
+      "genero": "Alternative Rock"
+    },
+    {
+      "id": "smashing_pumpkins",
+      "name": "Smashing Pumpkins",
+      "genreId": "alternative_rock",
+      "genero": "Alternative Rock"
+    },
+    {
+      "id": "depeche_mode",
+      "name": "Depeche Mode",
+      "genreId": "new_wave",
+      "genero": "New Wave"
+    },
+    {
+      "id": "zoe",
+      "name": "Zoe",
+      "genreId": "rock_alternativo",
+      "genero": "Rock Alternativo"
+    },
+    {
+      "id": "f.r._david",
+      "name": "F.R. David",
+      "genreId": "synth_pop",
+      "genero": "Synth Pop"
+    },
+    {
+      "id": "metronomy",
+      "name": "Metronomy",
+      "genreId": "electronic_rock",
+      "genero": "Electronic Rock"
+    },
+    {
+      "id": "red_hot_chili_peppers",
+      "name": "Red Hot Chili Peppers",
+      "genreId": "funk_rock",
+      "genero": "Funk Rock"
+    },
+    {
+      "id": "the_coral",
+      "name": "The Coral",
+      "genreId": "indie_rock",
+      "genero": "Indie Rock"
+    },
+    {
+      "id": "la_maldita_vecindad",
+      "name": "La Maldita Vecindad",
+      "genreId": "rock_latino",
+      "genero": "Rock Latino"
+    }
+  ],
+  "genres": [
+    {
+      "id": "rock_alternativo",
+      "name": "Rock Alternativo"
+    },
+    {
+      "id": "indie_rock",
+      "name": "Indie Rock"
+    },
+    {
+      "id": "bolero",
+      "name": "Bolero"
+    },
+    {
+      "id": "alternative_rock",
+      "name": "Alternative Rock"
+    },
+    {
+      "id": "new_wave",
+      "name": "New Wave"
+    },
+    {
+      "id": "synth_pop",
+      "name": "Synth Pop"
+    },
+    {
+      "id": "electronic_rock",
+      "name": "Electronic Rock"
+    },
+    {
+      "id": "funk_rock",
+      "name": "Funk Rock"
+    },
+    {
+      "id": "rock_latino",
+      "name": "Rock Latino"
+    }
+  ],
+  "tags": [
+    {
+      "id": "full",
+      "name": "Full Cover",
+      "description": "Es una versión cover de una canción completa, una producción completa. Todos los instrumentos y voces fueron grabados y producidos desde cero."
+    },
+    {
+      "id": "vocal",
+      "name": "Vocal Cover",
+      "description": "Es un cover vocal de una canción. Las voces se grabaron y produjeron sobre una pista instrumental sin voz."
+    }
+  ]
+}

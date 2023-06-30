@@ -4,14 +4,18 @@ import { useAnalyzer } from './useAnalyzer'
 import { usePlayerStore } from '@/stores/PlayerStore'
 import AudioMotionAnalyzer from 'audiomotion-analyzer'
 import { useAnalyzerStore } from '@/stores/AnalyzerStore'
+import { useMediaShell } from '@/composables/useMediaShell'
 
-const container = ref(null)
-const initialized = ref(false)
-const instance: Ref<AudioMotionAnalyzer | null> = ref(null)
+//const { audio: audioElement } = useMediaShell()
 
 const { createAnalyzer } = useAnalyzer()
 const playerStore = usePlayerStore()
 const analyzerStore = useAnalyzerStore()
+
+const container = ref(null)
+const initialized = ref(false)
+const instance: Ref<AudioMotionAnalyzer | null> = ref(null)
+const analyzer = ref(createAnalyzer(document.createElement('div')))
 
 analyzerStore.$subscribe((mutation, { standby }) => {
   if (instance.value) {
@@ -20,7 +24,11 @@ analyzerStore.$subscribe((mutation, { standby }) => {
   }
 })
 
-function bootstrap(mediaElement: HTMLVideoElement | null) {
+console.log('refs', container)
+
+// container.value.append(analyzer.value)
+
+/* function bootstrap(mediaElement: HTMLVideoElement | null) {
   console.log('BOOTSTRAP ANALYZER')
   if (mediaElement && !initialized.value) {
     console.log('INITIALIZING ANALYZER')
@@ -35,19 +43,19 @@ function bootstrap(mediaElement: HTMLVideoElement | null) {
     initialized.value = true
     instance.value = analyzer
   }
-}
+} */
 
 console.log('ANALYZER BODY')
 // bootstrap(playerStore.mediaElement)
-watch(
+/* watch(
   () => container.value,
   () => {
-    if (container.value && playerStore.mediaElement) {
+    if (container.value && audioElement) {
       console.log('CONTAINER', container.value)
       bootstrap(playerStore.mediaElement)
     }
   }
-)
+) */
 /* watch(
   () => playerStore.mediaElement,
   (mediaElement) => {
@@ -55,6 +63,7 @@ watch(
     bootstrap(playerStore.mediaElement)
   }
 ) */
+
 </script>
 
 <style lang="scss" scoped>
