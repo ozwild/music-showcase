@@ -1,18 +1,11 @@
 <script setup lang="ts">
-//import Analyzer from '@/analizer/Analyzer.vue'
-import { useAnalyzerStore } from '@/stores/AnalyzerStore'
-import { useAppStore } from '@/stores/AppStore'
+import Analyzer from '@/analizer/Analyzer.vue'
+import { useSettingsStore } from '@/stores/SettingsStore'
 
-const appStore = useAppStore()
-const analyzerStore = useAnalyzerStore()
+const settings = useSettingsStore()
 
-if (appStore.showPlayerOverlay) {
-  console.log('APP STORE STATE AT OVERLAY', appStore.showPlayerOverlay)
-}
-
-appStore.$subscribe((mutation, { showPlayerOverlay }) => {
-  console.log('app store subscription', mutation, showPlayerOverlay)
-  analyzerStore.standby = !showPlayerOverlay
+settings.$subscribe((_, { showNowPlayingPanel }) => {
+  settings.runAnalyzer = !showNowPlayingPanel
 })
 </script>
 
@@ -22,16 +15,16 @@ appStore.$subscribe((mutation, { showPlayerOverlay }) => {
   bottom: 58px;
   right: auto;
   width: 100%;
-  height: 80%;
-  background-color: #121212;
+  height: calc(100% - 120px);
+  background-color: var(--el-bg-color-page);
 
   .analyzer-panel {
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: -8%;
     width: 130%;
-    height: 100%;
-    opacity: 0.7;
+    height: 100px;
+    opacity: 1;
     z-index: 1;
   }
 
@@ -44,8 +37,8 @@ appStore.$subscribe((mutation, { showPlayerOverlay }) => {
     z-index: 2;
     background-image: linear-gradient(
       180deg,
-      #111012,
-      rgba(0 0 0 / 40%),
+      var(--el-bg-color-page),
+      rgba(25 25 25 / 20%),
       transparent
     );
   }
@@ -73,10 +66,8 @@ appStore.$subscribe((mutation, { showPlayerOverlay }) => {
 
 <template>
   <transition name="el-zoom-in-bottom">
-    <div v-show="appStore.showPlayerOverlay" class="container">
-      <!-- <div class="analyzer-panel"><Analyzer /></div> -->
-      <div class="background-dark-overlay"></div>
-      <div class="background-reflection-overlay"></div>
+    <div v-show="settings.showNowPlayingPanel" class="container">
+      <div class="analyzer-panel"><Analyzer /></div>
       <el-row>
         <el-col :span="24"> Now Playing </el-col>
       </el-row>

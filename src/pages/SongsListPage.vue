@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { useMediaDataStore } from '@/stores/MediaDataStore'
 import MainLayout from '@/layouts/MainLayout.vue'
 import SongListItem from '@/templates/SongListItem.vue'
-import { useSongsStore } from '@/stores/SongBankStore'
 
-const songsStore = useSongsStore()
+const mediaDataStore = useMediaDataStore()
 </script>
 
 <style lang="scss" scoped>
@@ -33,7 +33,7 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.filteredSongs"
+        v-for="song in mediaDataStore.filteredSongs"
         :key="song.id"
         :song="song"
       />
@@ -45,7 +45,7 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.filteredSongs"
+        v-for="song in mediaDataStore.filteredSongs"
         :key="song.id"
         :song="song"
       />
@@ -57,7 +57,7 @@ const songsStore = useSongsStore()
       :gutter="0"
     >
       <SongListItem
-        v-for="song in songsStore.filteredSongs"
+        v-for="song in mediaDataStore.filteredSongs"
         :key="song.id"
         :song="song"
       />

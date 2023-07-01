@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useSongsStore } from '@/stores/SongBankStore'
+import { useMediaDataStore } from '@/stores/MediaDataStore'
 import { useDebounce } from '@/composables/useDebounce'
 
-const songStore = useSongsStore()
-const searchInput = ref(songStore.filterBy)
 const { debounce } = useDebounce()
+const mediaStore = useMediaDataStore()
+
+const searchInput = ref(mediaStore.filterBy)
 
 watch(searchInput, (newSearchInput) => {
-  // debounce(() => songStore.filter(newSearchInput))
-  debounce(() => songStore.filterBy = newSearchInput, 300)
+  debounce(() => (mediaStore.filterBy = newSearchInput), 300)
 })
 </script>
 <template>

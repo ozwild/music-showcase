@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SongLink from '@/components/SongLink.vue'
-import PlayLink from '@/components/PlayPauseAction.vue'
+import PlayLink from '@/player/PlayPauseSongAction.vue'
 import { ISong } from '@/data/types'
 import { ref } from 'vue'
 

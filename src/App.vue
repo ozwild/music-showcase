@@ -1,35 +1,18 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { useMediaDataStore } from './stores/MediaDataStore'
+import { useMediaPlayer } from './player/useMediaPlayer'
 
-import { useSongsStore } from './stores/SongBankStore'
-import { useData } from './composables/useData'
-import { useMediaShell } from './composables/useMediaShell'
-import data from './data/DATA.json'
-
-const { parseData } = useData()
-const songsStore = useSongsStore()
-const parsedData = parseData(data)
-
-songsStore.loadData(parsedData)
-
-useMediaShell()
+useMediaDataStore()
+useMediaPlayer()
 </script>
 
 <style lang="scss">
-:root {
-  --oz-app-bars: rgb(32, 0, 51);
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
-
-html {
-  font-family: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-    sans-serif;
-  font-size: 14px;
-}
+// @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
 
 body {
+  background-color: var(--el-bg-color-page);
   margin: 0;
 }
 
@@ -61,12 +44,16 @@ audio {
 
 canvas.video-canvas {
   position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 1000;
+  left: 50%;
+  bottom: 2em;
+  transform: translateX(-50%);
+  z-index: 1;
+  border-radius: 50%;
+  box-shadow: var(--el-box-shadow-light);
 }
 </style>
 
 <template>
   <RouterView />
 </template>
+./player/usePlayer ./stores/MediaDataStore

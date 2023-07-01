@@ -1,32 +1,25 @@
 <script setup lang="ts">
 import HeaderBar from './Header.vue'
 import FooterBar from './Footer.vue'
-import PlayerOverlay from '@/components/PlayerOverlay.vue'
+import NowPlayingPanel from '@/player/NowPlayingPanel.vue'
 </script>
 
 <style lang="scss" scoped>
 .main-container {
+  padding-top: 75px;
   padding-bottom: 125px;
-  max-width: 1440px;
-  margin: 0 auto;
 }
 </style>
 
 <template>
   <el-container direction="vertical">
-    <!-- <el-scrollbar max-height="calc(100% - 120px)">
-      <HeaderBar />
-      <el-main class="main-container">
-        <slot></slot>
-      </el-main>
-      <PlayerOverlay />
-      <FooterBar />
-    </el-scrollbar> -->
     <HeaderBar />
     <el-main class="main-container">
-      <slot></slot>
+      <el-row>
+        <el-col :offset="3" :span="18"><slot></slot></el-col>
+      </el-row>
     </el-main>
-    <PlayerOverlay />
+    <NowPlayingPanel />
     <FooterBar />
   </el-container>
 </template>

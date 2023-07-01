@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { usePlayerStore } from '@/stores/PlayerStore'
-import { useAppStore } from '@/stores/AppStore'
+import { useMediaPlayer } from '@/player/useMediaPlayer'
+import { useSettingsStore } from '@/stores/SettingsStore'
 
-const appStore = useAppStore()
-const playerStore = usePlayerStore()
+const { showNowPlayingPanel, toggleNowPlayingPanel } = useSettingsStore()
+const { nowPlaying } = useMediaPlayer()
 </script>
 
 <style lang="scss">
@@ -11,7 +11,8 @@ const playerStore = usePlayerStore()
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: var(--oz-app-bars);
+  background-color: var(--el-bg-color);
+  background-color: var(--el-bg-color-page);
   display: flex;
   align-items: center;
   box-shadow: var(--el-box-shadow-light);
@@ -30,18 +31,18 @@ const playerStore = usePlayerStore()
 
 <template>
   <transition name="el-zoom-in-bottom">
-    <el-footer class="footer" v-if="playerStore.currentSong">
+    <el-footer class="footer" v-if="nowPlaying">
       <div class="footer-base">
         <el-row justify="center">
           <el-col :xs="24" :sm="18" :md="12">
             <div class="footer-options">
-              <span>{{ playerStore.currentSong?.title ?? '' }}</span>
+              <span>{{ nowPlaying.title }}</span>
               <span>Play/Pause</span>
               <span>Scrub</span>
               <span>Volume</span>
               <el-button
-                :icon="appStore.showPlayerOverlay ? 'Upload' : 'More'"
-                @click="appStore.togglePlayerOverlay"
+                :icon="showNowPlayingPanel ? 'Upload' : 'More'"
+                @click="toggleNowPlayingPanel"
                 link
               />
             </div>
@@ -51,3 +52,4 @@ const playerStore = usePlayerStore()
     </el-footer>
   </transition>
 </template>
+@/stores/SystemStore

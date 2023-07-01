@@ -1,5 +1,5 @@
 import SongPage from '@/pages/SongPage.vue'
-import { useSongsStore } from '@/stores/SongBankStore'
+import { useSongsStore } from '@/stores/MediaDataStore'
 import { RouteLocationNormalized } from 'vue-router'
 
 export default {

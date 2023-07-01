@@ -9,12 +9,11 @@ const goHome = () => {
 
 <style lang="scss">
 .header {
-  background-color: var(--oz-app-bars);
-  display: flex;
-  align-items: center;
-  box-shadow: var(--el-box-shadow-light);
-  position: relative;
-  z-index: 1000;
+  background-color: var(--el-bg-color);
+  background-color: var(--el-bg-color-page);
+  position: fixed;
+  width: 100%;
+  z-index: 1;
 
   .header-base {
     width: 100%;
@@ -28,18 +27,16 @@ const goHome = () => {
 </style>
 
 <template>
-  <el-affix>
-    <el-header class="header">
-      <div class="header-base">
-        <el-page-header title="Home" @back="goHome">
-          <template #content>
-            <h3 class="brand">Oskar Wild</h3>
-          </template>
-          <template #extra>
-            <Search />
-          </template>
-        </el-page-header>
-      </div>
-    </el-header>
-  </el-affix>
+  <el-header class="header">
+    <div class="header-base">
+      <el-page-header title="Home" @back="goHome">
+        <template #content>
+          <h3 class="brand">Oskar Wild</h3>
+        </template>
+        <template #extra>
+          <Search />
+        </template>
+      </el-page-header>
+    </div>
+  </el-header>
 </template>

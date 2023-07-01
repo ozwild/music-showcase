@@ -1,4 +1,7 @@
-import AudioMotionAnalyzer, { GradientOptions } from 'audiomotion-analyzer'
+import AudioMotionAnalyzer, {
+  GradientOptions,
+  ConstructorOptions,
+} from 'audiomotion-analyzer'
 import themes from './themes.json'
 import defaultsJson from './defaults.json'
 
@@ -9,7 +12,7 @@ const defaults = { ...defaultsJson, fftSize: FFTSizes.REGULAR }
 
 function createAnalyzer(
   container: HTMLElement,
-  options: IAnalyzerOptions = {}
+  options: ConstructorOptions = {}
 ) {
   console.log('analyzer defaults', defaults)
   const analyzer = new AudioMotionAnalyzer(container, {

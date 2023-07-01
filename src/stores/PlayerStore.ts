@@ -1,5 +1,5 @@
-import { ISong } from '@/data/types'
 import { defineStore } from 'pinia'
+import { ISong } from '@/data/types'
 
 interface IState {
   isPlaying: boolean
