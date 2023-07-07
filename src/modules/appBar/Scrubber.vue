@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, Ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, Ref, watch } from 'vue'
 import { useMediaPlayer } from '@/modules/player/useMediaPlayer'
 import Duration from './Duration.vue'
 import ElapsedTime from './ElapsedTime.vue'
@@ -31,25 +31,25 @@ listen.onBuffering(() => {
   })
 })
 
-const clickHandler = (event: MouseEvent) => {
-  if (!container.value) return
-  seek((event.clientX / container.value.clientWidth) * duration.value)
-}
-
-const mouseDownHandler = (event: MouseEvent) => {
-  mouseIsDown.value = true
-  clickX.value = event.clientX
-}
-
-document.addEventListener('mousemove', (event: MouseEvent) => {
+function trackMouseHorizontalPosition(event: MouseEvent) {
   currentMouseX.value = event.x
-})
+}
 
-document.addEventListener('mouseup', () => {
+function trackMouseUpEvents() {
   if (mouseIsDown.value && container.value) {
     seek((currentMouseX.value / container.value.clientWidth) * duration.value)
   }
   mouseIsDown.value = false
+}
+
+onMounted(() => {
+  document.addEventListener('mousemove', trackMouseHorizontalPosition)
+  document.addEventListener('mouseup', trackMouseUpEvents)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', trackMouseHorizontalPosition)
+  document.removeEventListener('mouseup', trackMouseUpEvents)
 })
 
 watch(currentTime, () => {
@@ -147,8 +147,18 @@ watch(currentTime, () => {
     class="container"
     :class="{ seeking: mouseIsDown }"
     ref="container"
-    @click="clickHandler"
-    @mousedown="mouseDownHandler"
+    @click="
+      (event) => {
+        if (!container) return
+        seek((event.clientX / container.clientWidth) * duration)
+      }
+    "
+    @mousedown="
+      (event) => {
+        mouseIsDown = true
+        clickX = event.clientX
+      }
+    "
   >
     <ElapsedTime class="elapsed" @click.stop />
     <Duration class="duration" @click.stop />
