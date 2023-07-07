@@ -6,8 +6,8 @@ function syncVideoToAudioTime(
   if (!videoElement.src) {
     return
   }
-  videoElement.currentTime = audioCurrentTime - 0.1
-  
+  videoElement.currentTime = audioCurrentTime - 0
+
   if (play) videoElement.play()
   if (stop) videoElement.pause()
 }
@@ -71,11 +71,23 @@ class MediaShell {
       })
     )
 
+    audioElement.addEventListener('seeked', () => {
+      syncVideoToAudioTime(videoElement, audioElement.currentTime, {
+        play: true,
+      })
+    })
+
     videoElement.addEventListener(
       'play',
       () => copyVideoToCanvas(videoElement, videoCanvasElement),
       false
     )
+
+    videoElement.addEventListener('playing', () => {
+      syncVideoToAudioTime(videoElement, audioElement.currentTime, {
+        play: true,
+      })
+    })
   }
 
   createAudioElement() {

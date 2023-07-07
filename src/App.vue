@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useMediaDataStore } from './stores/MediaDataStore'
-import { useMediaPlayer } from './player/useMediaPlayer'
+import { useMediaPlayer } from '@/modules/player/useMediaPlayer'
 
 useMediaDataStore()
 useMediaPlayer()
@@ -13,10 +13,10 @@ useMediaPlayer()
 
 body {
   background-color: var(--el-bg-color-page);
-  margin: 0;
+  margin-top: 0;
 }
 
-video {
+/* video {
   position: fixed;
   right: 12px;
   bottom: 12px;
@@ -27,7 +27,8 @@ video {
   display: block;
   top: 100px;
   right: 100px;
-}
+  pointer-events: none;
+} */
 
 audio {
   position: fixed;
@@ -41,19 +42,8 @@ audio {
   top: 340px;
   left: 100px;
 }
-
-canvas.video-canvas {
-  position: fixed;
-  left: 50%;
-  bottom: 2em;
-  transform: translateX(-50%);
-  z-index: 1;
-  border-radius: 50%;
-  box-shadow: var(--el-box-shadow-light);
-}
 </style>
 
 <template>
   <RouterView />
 </template>
-./player/usePlayer ./stores/MediaDataStore

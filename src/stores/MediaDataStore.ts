@@ -38,6 +38,7 @@ const parseData = ({
       energy,
       danceability,
       happiness,
+      date,
     }) => ({
       id: id as string,
       draft: draft === 1,
@@ -53,6 +54,8 @@ const parseData = ({
         danceability,
         happiness,
       },
+      sourceDate: date,
+      date: date ? new Date(Date.UTC(0, 0, date - 1)) : undefined,
     })
   )
 
@@ -79,6 +82,16 @@ export const useMediaDataStore = defineStore('mediaData', {
           regex.test(song.title) ||
           (song.albumArtist && regex.test(song.albumArtist.name))
       )
+    },
+    latestSongs: (state) => {
+      return [...state.songs]
+        .sort((a, b) => {
+          if (a.meta?.year && b.meta?.year) {
+            return b.sourceDate - a.sourceDate
+          }
+          return 0
+        })
+        .splice(0, 10)
     },
   },
   actions: {},

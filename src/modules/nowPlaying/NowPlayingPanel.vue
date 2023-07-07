@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import Analyzer from '@/analizer/Analyzer.vue'
+import Analyzer from '@/modules/analizer/Analyzer.vue'
 import { useSettingsStore } from '@/stores/SettingsStore'
+import { useMediaPlayer } from '../player/useMediaPlayer'
+import { Ref, ref, watch } from 'vue'
+
+const canvasContainer: Ref<HTMLDivElement | null> = ref(null)
 
 const settings = useSettingsStore()
+const { videoCanvasElement } = useMediaPlayer()
 
 settings.$subscribe((_, { showNowPlayingPanel }) => {
   settings.runAnalyzer = !showNowPlayingPanel
+})
+
+watch(canvasContainer, () => {
+  canvasContainer.value?.append(videoCanvasElement.value)
 })
 </script>
 
@@ -17,6 +26,7 @@ settings.$subscribe((_, { showNowPlayingPanel }) => {
   width: 100%;
   height: calc(100% - 120px);
   background-color: var(--el-bg-color-page);
+  z-index: 100;
 
   .analyzer-panel {
     position: absolute;
@@ -64,6 +74,21 @@ settings.$subscribe((_, { showNowPlayingPanel }) => {
 }
 </style>
 
+<style lang="scss">
+canvas.video-canvas {
+  /* position: fixed;
+  left: 50%;
+  bottom: 2em;
+  transform: translateX(-50%); */
+  z-index: 1;
+  border-radius: 50%;
+  border-radius: 8px;
+  // box-shadow: var(--el-box-shadow-light);
+  pointer-events: none;
+  // display: none;
+}
+</style>
+
 <template>
   <transition name="el-zoom-in-bottom">
     <div v-show="settings.showNowPlayingPanel" class="container">
@@ -72,10 +97,12 @@ settings.$subscribe((_, { showNowPlayingPanel }) => {
         <el-col :span="24"> Now Playing </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24"> </el-col>
+        <el-col :span="24">
+          <div ref="canvasContainer"></div>
+        </el-col>
       </el-row>
       <el-row>
-        <el-col class="bottom-panel" :span="24"></el-col>
+        <el-col class="bottom-panel" :span="24"> </el-col>
       </el-row>
     </div>
   </transition>

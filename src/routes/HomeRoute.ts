@@ -1,7 +1,7 @@
-import SongsListPage from '@/pages/SongsListPage.vue'
+import HomePage from '@/pages/HomePage.vue'
 
 export default {
   path: '/',
   name: 'Home',
-  component: SongsListPage,
+  component: HomePage,
 }

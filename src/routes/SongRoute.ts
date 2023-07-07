@@ -1,13 +1,13 @@
-import SongPage from '@/pages/SongPage.vue'
-import { useSongsStore } from '@/stores/MediaDataStore'
 import { RouteLocationNormalized } from 'vue-router'
+import SongPage from '@/pages/SongPage.vue'
+import { useMediaDataStore } from '@/stores/MediaDataStore'
 
 export default {
   path: '/songs/:song',
   name: 'Song',
   component: SongPage,
   beforeEnter: (to: RouteLocationNormalized) => {
-    const songStore = useSongsStore()
+    const songStore = useMediaDataStore()
 
     const { song: songId } = to.params
 

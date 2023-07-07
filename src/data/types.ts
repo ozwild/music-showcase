@@ -24,6 +24,7 @@ export interface ISongPrecursor {
   happiness?: number
   audioUrl: string
   videoUrl?: string
+  date?: number
 }
 
 export interface ISong {
@@ -34,13 +35,15 @@ export interface ISong {
   albumArtist?: IAlbumArtist
   meta: Partial<ISongMeta>
   source: ISource
+  sourceDate: number
+  date: Date
 }
 
 export interface IAlbumArtistPrecursor {
   id: string
   name: string
   genreId: string
-  genero: string
+  genre: string
 }
 
 export interface IAlbumArtist {

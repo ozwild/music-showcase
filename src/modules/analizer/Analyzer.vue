@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useAnalyzer } from './useAnalyzer'
 import { useSettingsStore } from '@/stores/SettingsStore'
-import { useMediaShell } from '@/player/useMediaShell'
+import { useMediaShell } from '@/modules/player/useMediaShell'
 
 //const { audio: audioElement } = useMediaShell()
 
@@ -48,4 +48,3 @@ onMounted(() => {
 <template>
   <div id="analyzer-container"></div>
 </template>
-@/player/useMediaShell

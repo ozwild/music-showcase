@@ -6,8 +6,20 @@ module.exports = {
       .tap((options) => {
         return {
           ...options,
-          reactivityTransform: true,
         }
       })
+  },
+  devServer: {
+    host: '0.0.0.0',
+    // public: '0.0.0.0:8080',
+    liveReload: true,
+    // disableHostCheck: true,
+    proxy: {
+      '/app': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        ws: true,
+      },
+    },
   },
 }

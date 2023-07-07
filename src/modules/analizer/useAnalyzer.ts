@@ -6,7 +6,6 @@ import themes from './themes.json'
 import defaultsJson from './defaults.json'
 
 import { FFTSizes } from '@/utilities/constants'
-import { IAnalyzerOptions } from './types'
 
 const defaults = { ...defaultsJson, fftSize: FFTSizes.REGULAR }
 
