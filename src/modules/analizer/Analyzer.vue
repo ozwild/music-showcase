@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useAnalyzer } from './useAnalyzer'
-import { useSettingsStore } from '@/stores/SettingsStore'
+import { useAppStore } from '@/stores'
+import { useDark } from '@/composables/useDark'
 import { useMediaShell } from '@/modules/player/useMediaShell'
 
-//const { audio: audioElement } = useMediaShell()
-
-const { createAnalyzer } = useAnalyzer()
-const settings = useSettingsStore()
+const app = useAppStore()
 const { audioElement } = useMediaShell()
-
-// const analyzer = sourceNode.value.context.createAnalyser()
+const { isDark } = useDark()
 
 const containerElement = ref(document.createElement('div'))
-const analyzer = ref(
-  createAnalyzer(containerElement.value, {
-    source: audioElement.value,
-  })
-)
+const { analyzer, updateTheme } = useAnalyzer(containerElement.value, {
+  source: audioElement.value,
+})
 
 containerElement.value.style.height = '100%'
 
+updateTheme(isDark.value)
+
+watch(isDark, () => {
+  updateTheme(isDark.value)
+})
+
 watch(
-  () => settings.runAnalyzer,
+  () => app.runAnalyzer,
   (runAnalyzer) => {
     analyzer.value.toggleAnalyzer(!runAnalyzer)
   }
@@ -34,5 +35,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="analyzer-container"></div>
+  <div id="analyzer-container" style="height: 200%"></div>
 </template>

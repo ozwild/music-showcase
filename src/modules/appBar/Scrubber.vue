@@ -107,6 +107,8 @@ watch(currentTime, () => {
 
   .progress-bar {
     background-color: yellow;
+    background-color: var(--el-text-color-primary);
+    background-color: var(--el-text-color-regular);
   }
 
   .dot {

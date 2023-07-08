@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useMediaDataStore } from '@/stores/MediaDataStore'
+import { useMediaDataStore } from '@/stores'
 import SongsTable from '@/components/SongsTable.vue'
 
-const mediaDataStore = useMediaDataStore()
+const mediaStore = useMediaDataStore()
 </script>
 
 <style lang="scss" scoped>
@@ -12,8 +12,5 @@ h2 {
 </style>
 
 <template>
-  <SongsTable
-    title="Todas las canciones"
-    :songs="mediaDataStore.filteredSongs"
-  />
+  <SongsTable title="Todas las canciones" :songs="mediaStore.filteredSongs" />
 </template>

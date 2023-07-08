@@ -1,20 +1,29 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { useMediaDataStore } from './stores/MediaDataStore'
-import { useMediaPlayer } from '@/modules/player/useMediaPlayer'
-import { useSettingsStore } from './stores/SettingsStore'
-import { useLocalStorage } from './composables/useLocalStorage'
-import { useEnvironmentStore } from './stores/EnvironmentStore'
+import { useSettingsStore, useMediaDataStore } from '@/stores'
+import { useDark } from './composables/useDark'
 
-const environment = useEnvironmentStore()
-const settingsStore = useSettingsStore()
-useMediaDataStore()
-useMediaPlayer()
+import data from '@/data/DATA.json'
+import { watch } from 'vue'
 
-const appSettingsStorageKey = environment.normalizedAppName
-const { update } = useLocalStorage(appSettingsStorageKey)
+const settings = useSettingsStore()
+const mediaStore = useMediaDataStore()
+const { isDark } = useDark()
 
-settingsStore.$subscribe((_, state) => update(state))
+mediaStore.loadSongsData(data)
+
+// First establishing the light/dark theme to use according to stored settings
+document.documentElement.classList.toggle('dark', isDark.value)
+
+watch(isDark, () => {
+  // Updating the light/dark theme in the DOM
+  document.documentElement.classList.toggle('dark', isDark.value)
+})
+
+settings.$subscribe(() => {
+  // Trigger a settings backup (can't trigger this action from within the store)
+  settings.backupSettingsToLocalStorage()
+})
 </script>
 
 <style lang="scss">
@@ -24,6 +33,7 @@ settingsStore.$subscribe((_, state) => update(state))
 body {
   background-color: var(--el-bg-color-page);
   margin-top: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 </style>
 

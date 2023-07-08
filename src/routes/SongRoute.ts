@@ -1,17 +1,17 @@
 import { RouteLocationNormalized } from 'vue-router'
 import SongPage from '@/pages/SongPage.vue'
-import { useMediaDataStore } from '@/stores/MediaDataStore'
+import { useMediaDataStore } from '@/stores'
 
 export default {
   path: '/songs/:song',
   name: 'Song',
   component: SongPage,
   beforeEnter: (to: RouteLocationNormalized) => {
-    const songStore = useMediaDataStore()
+    const mediaStore = useMediaDataStore()
 
     const { song: songId } = to.params
 
-    const song = songStore.getSongById(songId as string)
+    const song = mediaStore.getSongById(songId as string)
 
     if (!song) {
       console.log('redirect')

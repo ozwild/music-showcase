@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useMediaDataStore } from '@/stores/MediaDataStore'
+import { useMediaDataStore } from '@/stores'
 import { useDebounce } from '@/composables/useDebounce'
 
 const { debounce } = useDebounce()
@@ -15,7 +15,6 @@ watch(searchInput, (newSearchInput) => {
 <template>
   <el-input
     v-model="searchInput"
-    class=""
     placeholder="Buscar"
     prefix-icon="Search"
     clearable

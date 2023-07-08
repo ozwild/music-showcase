@@ -23,6 +23,7 @@ onUnmounted(() => document.removeEventListener('mousedown', clearVolumeControl))
 
 <style lang="scss" scoped>
 .mute-control {
+  position: relative;
   padding: 0 24px 0 0px;
 }
 
@@ -39,7 +40,7 @@ onUnmounted(() => document.removeEventListener('mousedown', clearVolumeControl))
 
   .slash-icon {
     position: absolute;
-    right: -6px;
+    right: 18px;
     bottom: -3px;
     transform: scale(2) rotate(135deg);
   }
@@ -58,7 +59,5 @@ onUnmounted(() => document.removeEventListener('mousedown', clearVolumeControl))
     </span>
 
     <VolumeSlider v-if="volumeBarIsVisible" class="volume-slider" @click.stop />
-
-    <transition-group name="fade" mode="out-in"> </transition-group>
   </span>
 </template>

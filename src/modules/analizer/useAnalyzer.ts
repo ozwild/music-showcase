@@ -1,21 +1,18 @@
+import { Ref, ref } from 'vue'
 import AudioMotionAnalyzer, {
   GradientOptions,
   ConstructorOptions,
 } from 'audiomotion-analyzer'
+import { FFTSizes } from '@/utilities/constants'
+
 import themes from './themes.json'
 import defaultsJson from './defaults.json'
 
-import { FFTSizes } from '@/utilities/constants'
-
 const defaults = { ...defaultsJson, fftSize: FFTSizes.SMALL }
 
-function createAnalyzer(
-  container: HTMLElement,
-  options: ConstructorOptions = {}
-) {
-  console.log('analyzer defaults', defaults)
+function createAnalyzer(container: HTMLElement, options: ConstructorOptions) {
   const analyzer = new AudioMotionAnalyzer(container, {
-    ...defaults as unknown as Partial<ConstructorOptions>,
+    ...(defaults as unknown as Partial<ConstructorOptions>),
     ...options,
   })
 
@@ -26,13 +23,21 @@ function createAnalyzer(
     themes.LightRainbow as GradientOptions
   )
 
-  analyzer.gradient = 'outrun'
-
   return analyzer
 }
 
-export function useAnalyzer() {
+export function useAnalyzer(
+  container: HTMLElement,
+  options: ConstructorOptions = {}
+) {
+  const analyzer: Ref<AudioMotionAnalyzer> = ref(
+    createAnalyzer(container, options)
+  )
   return {
-    createAnalyzer,
+    updateTheme: (isDark: boolean) => {
+      analyzer.value.gradient = isDark ? 'outrun' : 'orangered'
+      
+    },
+    analyzer,
   }
 }

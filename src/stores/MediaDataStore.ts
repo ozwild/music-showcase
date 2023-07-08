@@ -62,14 +62,12 @@ const parseData = ({
   return { songs: songs as ISong[], albumArtists, genres, tags }
 }
 
-const { songs, albumArtists, genres, tags } = parseData(data)
-
 export const useMediaDataStore = defineStore('mediaData', {
   state: (): IState => ({
-    songs,
-    albumArtists,
-    genres,
-    tags,
+    songs: [],
+    albumArtists: [],
+    genres: [],
+    tags: [],
     filterBy: '',
   }),
   getters: {
@@ -94,5 +92,15 @@ export const useMediaDataStore = defineStore('mediaData', {
         .splice(0, 10)
     },
   },
-  actions: {},
+  actions: {
+    loadSongsData(data: IRawData) {
+      const { songs, albumArtists, genres, tags } = parseData(data)
+      this.$patch({
+        songs,
+        albumArtists,
+        genres,
+        tags,
+      })
+    },
+  },
 })

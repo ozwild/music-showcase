@@ -1,29 +1,29 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import { unref } from 'vue'
-import { useEnvironmentStore } from './EnvironmentStore'
+import { useAppStore } from './AppStore'
 
 interface IState {
+  appKey: string
   isDark: boolean
-  showNowPlayingPanel: boolean
-  runAnalyzer: boolean
 }
 
 export const useSettingsStore = defineStore('settings', {
   state: (): IState => {
-    const environmentStore = useEnvironmentStore()
-    const { stored } = useLocalStorage(environmentStore.normalizedAppName)
+    const app = useAppStore()
+    const appKey = app.normalizedAppName
+    const { stored } = useLocalStorage(app.normalizedAppName)
     const storedSettings = unref(stored) as IState
-
     return {
       ...storedSettings,
-      showNowPlayingPanel: false,
-      runAnalyzer: false,
+      appKey,
     }
   },
   actions: {
-    toggleNowPlayingPanel() {
-      this.showNowPlayingPanel = !this.showNowPlayingPanel
+    backupSettingsToLocalStorage() {
+      const appKey = this.appKey
+      const { update } = useLocalStorage(appKey)
+      update({ ...this.$state })
     },
   },
 })

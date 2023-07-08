@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSettingsStore } from '@/stores/SettingsStore'
+import { useAppStore } from '@/stores'
 import VolumeControl from './VolumeControl.vue'
 
-const settingsStore = useSettingsStore()
+const app = useAppStore()
 </script>
 
 <style lang="scss" scoped>
@@ -27,10 +27,10 @@ const settingsStore = useSettingsStore()
     <VolumeControl class="volume-control" />
     <el-button
       class="toggle-panel-button"
-      @click="settingsStore.toggleNowPlayingPanel"
+      @click="() => (app.showNowPlayingPanel = !app.showNowPlayingPanel)"
       link
     >
-      <el-icon :size="24" v-if="settingsStore.showNowPlayingPanel">
+      <el-icon :size="24" v-if="app.showNowPlayingPanel">
         <ArrowDownBold />
       </el-icon>
       <el-icon :size="24" v-else>

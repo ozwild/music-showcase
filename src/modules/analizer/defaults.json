@@ -10,7 +10,7 @@
   "gradient": "orangered",
   "height": 0,
   "ledBars": false,
-  "lineWidth": 1,
+  "lineWidth": 3,
   "loRes": true,
   "lumiBars": false,
   "maxDecibels": 0,
@@ -35,12 +35,12 @@
   "showPeaks": true,
   "showScaleX": false,
   "showScaleY": false,
-  "smoothing": 0.5,
+  "smoothing": 0.6,
   "spinSpeed": 0,
   "splitGradient": true,
   "start": true,
   "useCanvas": true,
   "volume": 1,
-  "weightingFilter": "D",
+  "weightingFilter": "C",
   "width": 0
 }

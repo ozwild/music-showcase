@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { Ref, ref, watch } from 'vue'
 import Analyzer from '@/modules/analizer/Analyzer.vue'
-import { useSettingsStore } from '@/stores/SettingsStore'
+import { useDark } from '@/composables/useDark'
+import { useAppStore } from '@/stores'
 import { useMediaPlayer } from '../player/useMediaPlayer'
 
 const canvasContainer: Ref<HTMLDivElement | null> = ref(null)
 
-const settings = useSettingsStore()
-const { videoCanvasElement } = useMediaPlayer()
+const app = useAppStore()
+const { isDark } = useDark()
+const { videoCanvasElement, nowPlaying } = useMediaPlayer()
 
 watch(
-  () => settings.showNowPlayingPanel,
+  () => app.showNowPlayingPanel,
   (showNowPlayingPanel) => {
-    settings.runAnalyzer = !showNowPlayingPanel
+    app.runAnalyzer = !showNowPlayingPanel
   }
 )
 
@@ -55,6 +57,17 @@ watch(canvasContainer, () => {
     width: 100%;
     height: 100%;
 
+    &.dark {
+      .background-color-overlay {
+        mix-blend-mode: difference;
+      }
+
+      .background-dark-overlay {
+        mix-blend-mode: overlay;
+        background-image: linear-gradient(180deg, black, rgb(50, 10, 16), #222);
+      }
+    }
+
     .image-layer {
       width: 100%;
       height: 100%;
@@ -66,20 +79,13 @@ watch(canvasContainer, () => {
     .analyzer-panel {
       position: absolute;
       bottom: 0;
-      // bottom: -38%;
-      right: -8%;
       right: -100%;
-      width: 130%;
-      width: 250%;
       width: 200%;
-      height: 100px;
       height: 100%;
       opacity: 1;
       z-index: 1;
 
       > div {
-        /* position: relative;
-      top: -30%; */
         height: 100%;
       }
     }
@@ -115,7 +121,7 @@ watch(canvasContainer, () => {
 
     .background-color-overlay {
       background: cadetblue;
-      mix-blend-mode: difference;
+      mix-blend-mode: screen;
     }
   }
 
@@ -127,6 +133,19 @@ watch(canvasContainer, () => {
 
 <style lang="scss">
 .container {
+  .song-details-panel {
+    .song-title,
+    .song-album-artist {
+      margin: 0 20px;
+      text-shadow: var(--el-box-shadow-lighter);
+    }
+    .song-title {
+      font-size: var(--el-font-size-larger);
+    }
+    .song-album-artist {
+      font-size: var(--el-font-size-large);
+    }
+  }
   .video-panel {
     canvas {
       border-radius: 8px;
@@ -138,8 +157,8 @@ watch(canvasContainer, () => {
 
 <template>
   <transition name="el-zoom-in-bottom">
-    <div v-show="settings.showNowPlayingPanel" class="container">
-      <div class="background-layers">
+    <div v-show="app.showNowPlayingPanel" class="container">
+      <div class="background-layers" :class="{ dark: isDark }">
         <div class="image-layer"></div>
         <div class="analyzer-panel"><Analyzer /></div>
         <div class="background-color-overlay"></div>
@@ -149,7 +168,12 @@ watch(canvasContainer, () => {
       <div class="content-layers">
         <el-row>
           <el-col :span="24" class="hidden-md-and-down">
-            <div class="song-details-panel">Now Playing</div>
+            <div class="song-details-panel">
+              <h3 class="song-title">{{ nowPlaying?.title }}</h3>
+              <h4 class="song-album-artist">
+                {{ nowPlaying?.albumArtist?.name }}
+              </h4>
+            </div>
           </el-col>
           <el-col :xs="8" :sm="8" :md="12" :lg="24">
             <div class="small-screen-video-spacer hidden-md-and-up"></div>
