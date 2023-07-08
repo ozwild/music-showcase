@@ -18,7 +18,24 @@ watch(canvasContainer, () => {
 
 <style lang="scss" scoped>
 .main-container {
-  padding-bottom: 80px;
+  padding-bottom: 150px;
+  .background-layers {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    mix-blend-mode: soft-light;
+    .image-layer {
+      width: 100%;
+      height: 100%;
+      background-image: url('../resources/bg-2.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: 50% 30%;
+    }
+  }
 }
 </style>
 
@@ -28,6 +45,9 @@ watch(canvasContainer, () => {
 
     <el-container>
       <el-main class="main-container">
+        <div class="background-layers">
+          <div class="image-layer"></div>
+        </div>
         <slot></slot>
         <div ref="canvasContainer"></div>
         <NowPlayingPanel />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Search from '@/components/Search.vue'
+import DarkModeToggler from '@/components/DarkModeToggler.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -42,6 +43,7 @@ import Search from '@/components/Search.vue'
     </template>
     <template #extra>
       <Search />
+      <DarkModeToggler />
     </template>
   </el-page-header>
 </template>

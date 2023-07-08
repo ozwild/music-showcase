@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores/SettingsStore'
+import VolumeControl from './VolumeControl.vue'
 
 const settingsStore = useSettingsStore()
 </script>
@@ -12,17 +13,18 @@ const settingsStore = useSettingsStore()
   align-items: center;
 
   .volume-control {
-    padding: 0 8px;
+    padding: 0 0.75em;
+    cursor: pointer;
   }
   .toggle-panel-button {
-    padding: 0 8px;
+    padding: 0 1.5em 0 1em;
   }
 }
 </style>
 
 <template>
   <div class="other-segment">
-    <span class="volume-control">Volume</span>
+    <VolumeControl class="volume-control" />
     <el-button
       class="toggle-panel-button"
       @click="settingsStore.toggleNowPlayingPanel"

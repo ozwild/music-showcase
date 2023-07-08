@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useAnalyzer } from './useAnalyzer'
 import { useSettingsStore } from '@/stores/SettingsStore'
 import { useMediaShell } from '@/modules/player/useMediaShell'
@@ -21,29 +21,17 @@ const analyzer = ref(
 
 containerElement.value.style.height = '100%'
 
-settings.$subscribe((mutation, { runAnalyzer }) => {
-  console.log('analyzer store at analyzer', runAnalyzer)
-  analyzer.value.toggleAnalyzer(!runAnalyzer)
-})
+watch(
+  () => settings.runAnalyzer,
+  (runAnalyzer) => {
+    analyzer.value.toggleAnalyzer(!runAnalyzer)
+  }
+)
 
 onMounted(() => {
   document.getElementById('analyzer-container')?.append(containerElement.value)
 })
 </script>
-
-<style lang="scss" scoped>
-#analyzer-container {
-  //position: fixed;
-  z-index: 0;
-  top: 0;
-  left: 0;
-  //width: 100vw;
-  //height: 100vh;
-  width: 100%;
-  height: 100%;
-  //max-height: 500px;
-}
-</style>
 
 <template>
   <div id="analyzer-container"></div>

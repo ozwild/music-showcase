@@ -7,7 +7,7 @@ import defaultsJson from './defaults.json'
 
 import { FFTSizes } from '@/utilities/constants'
 
-const defaults = { ...defaultsJson, fftSize: FFTSizes.REGULAR }
+const defaults = { ...defaultsJson, fftSize: FFTSizes.SMALL }
 
 function createAnalyzer(
   container: HTMLElement,
@@ -15,7 +15,7 @@ function createAnalyzer(
 ) {
   console.log('analyzer defaults', defaults)
   const analyzer = new AudioMotionAnalyzer(container, {
-    ...defaults,
+    ...defaults as unknown as Partial<ConstructorOptions>,
     ...options,
   })
 

@@ -1,0 +1,16 @@
+<style lang="scss" scoped>
+.gg-format-slash {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: rotate(25deg) scale(var(--ggs, 1));
+  width: 2px;
+  height: 14px;
+  background: currentColor;
+  border-radius: 3px;
+}
+</style>
+
+<template>
+  <i class="gg-format-slash"></i>
+</template>

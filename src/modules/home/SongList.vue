@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMediaDataStore } from '@/stores/MediaDataStore'
-import SongListItem from './SongListItem.vue'
+import SongsTable from '@/components/SongsTable.vue'
 
 const mediaDataStore = useMediaDataStore()
 </script>
@@ -12,19 +12,8 @@ h2 {
 </style>
 
 <template>
-  <h2>
-    {{
-      mediaDataStore.filterBy
-        ? `Mostrando resultados para: ${mediaDataStore.filterBy}`
-        : 'Todas las canciones'
-    }}
-  </h2>
-  <el-divider />
-  <el-row :gutter="10">
-    <SongListItem
-      v-for="song in mediaDataStore.filteredSongs"
-      :key="song.id"
-      :song="song"
-    />
-  </el-row>
+  <SongsTable
+    title="Todas las canciones"
+    :songs="mediaDataStore.filteredSongs"
+  />
 </template>

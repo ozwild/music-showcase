@@ -450,7 +450,6 @@ import { ILightThemeInjection } from '@/types/types'
 import { ISong } from '@/data/types'
 import { lightThemeInjectionKey } from '@/utilities/injectionKeys'
 import { formatDuration, formatElapsed } from '@/utilities/format'
-import { usePlayerStore } from '@/stores/PlayerStore'
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { song } = defineProps<{
@@ -461,10 +460,6 @@ const videoElement: HTMLMediaElement = $ref()
 const controlsElement: HTMLElement = $ref()
 const { lightTheme } = inject(lightThemeInjectionKey) as ILightThemeInjection
 const skipSize = $ref(10)
-
-const playerStore = usePlayerStore()
-
-console.log('Is Playing (store)', playerStore.isPlaying)
 
 let isPlaying = $ref(false)
 let duration = $ref(0)

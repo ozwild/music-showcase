@@ -2,9 +2,19 @@
 import { RouterView } from 'vue-router'
 import { useMediaDataStore } from './stores/MediaDataStore'
 import { useMediaPlayer } from '@/modules/player/useMediaPlayer'
+import { useSettingsStore } from './stores/SettingsStore'
+import { useLocalStorage } from './composables/useLocalStorage'
+import { useEnvironmentStore } from './stores/EnvironmentStore'
 
+const environment = useEnvironmentStore()
+const settingsStore = useSettingsStore()
 useMediaDataStore()
 useMediaPlayer()
+
+const appSettingsStorageKey = environment.normalizedAppName
+const { update } = useLocalStorage(appSettingsStorageKey)
+
+settingsStore.$subscribe((_, state) => update(state))
 </script>
 
 <style lang="scss">
@@ -14,33 +24,6 @@ useMediaPlayer()
 body {
   background-color: var(--el-bg-color-page);
   margin-top: 0;
-}
-
-/* video {
-  position: fixed;
-  right: 12px;
-  bottom: 12px;
-  width: 480px;
-  z-index: 2000;
-  z-index: 10000;
-  position: fixed;
-  display: block;
-  top: 100px;
-  right: 100px;
-  pointer-events: none;
-} */
-
-audio {
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  width: 460px;
-  z-index: 2000;
-  z-index: 10000;
-  position: fixed;
-  display: block;
-  top: 340px;
-  left: 100px;
 }
 </style>
 

@@ -6,6 +6,7 @@ import { useMediaShell } from './useMediaShell'
 const isPlaying = ref(false)
 const currentTime = ref(0)
 const duration = ref(0)
+const muted = ref(false)
 const bufferedTimeRanges: Ref<{ start: number; end: number }[]> = ref([])
 const nowPlaying: Ref<ISong | null> = ref(null)
 
@@ -70,6 +71,8 @@ watch(nowPlaying, () => {
   }
 })
 
+watch(muted, () => (audioElement.value.muted = muted.value))
+
 export function useMediaPlayer() {
   return {
     videoCanvasElement,
@@ -79,6 +82,9 @@ export function useMediaPlayer() {
     currentTime,
     bufferedTimeRanges,
     duration,
+    muted,
+    volume: audioElement.value.volume,
+    setVolume: (n: number) => (audioElement.value.volume = n),
     loadSong: (song: ISong) => {
       if (nowPlaying.value !== song) {
         nowPlaying.value = song
