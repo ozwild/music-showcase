@@ -1,5 +1,6 @@
-import { useSettingsStore } from '@/stores'
 import { ref, watch } from 'vue'
+import { useSettingsStore } from '@/stores'
+
 import { useToggle } from './useToggle'
 
 const initialized = ref(false)
@@ -8,7 +9,6 @@ const { toggle } = useToggle(isDark)
 
 function getInitialValue() {
   const settings = useSettingsStore()
-  console.log('initial value', settings.isDark)
   return settings.isDark
 }
 
@@ -18,15 +18,12 @@ function storeNewValue(newValue: boolean) {
 }
 
 export function useDark() {
-  console.log('use dark called', initialized.value, isDark.value)
-
   if (!initialized.value) {
     isDark.value = getInitialValue()
     initialized.value = true
   }
 
   watch(isDark, (newDarkValue) => {
-    console.log('new dark', newDarkValue)
     storeNewValue(newDarkValue)
   })
 

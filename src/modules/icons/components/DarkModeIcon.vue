@@ -1,9 +1,21 @@
+<script lang="ts">
+const { defaultProps } = useIconProps()
+</script>
+
+<script setup lang="ts">
+import {
+  IIconSharedProps,
+  useIconProps,
+} from '@/modules/icons/composables/useIconProps'
+withDefaults(defineProps<IIconSharedProps>(), { ...defaultProps })
+</script>
+
 <style lang="scss" scoped>
 .gg-dark-mode {
   box-sizing: border-box;
   position: relative;
   display: block;
-  transform: scale(var(--ggs, 1));
+  transform: scale(v-bind(scale));
   border: 2px solid;
   border-radius: 100px;
   width: 20px;

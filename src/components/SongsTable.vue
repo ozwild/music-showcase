@@ -2,9 +2,8 @@
 import { Ref, ref } from 'vue'
 import { useMediaPlayer } from '@/modules/player/useMediaPlayer'
 import { useMediaQueries } from '@/composables/useMediaQueries'
-import PlayIcon from '@/components/PlayIcon.vue'
-import PauseIcon from '@/components/PauseIcon.vue'
-import NowPlayingIcon from '@/components/NowPlayingIcon.vue'
+import { PlayIcon, PauseIcon, MusicNoteIcon } from '@/modules/icons'
+
 import { ISong } from '@/data/types'
 
 defineProps<{ songs: ISong[]; title: string }>()
@@ -30,30 +29,32 @@ h2 {
   <el-table
     :data="songs"
     style="width: 100%"
+    :max-height="512"
+    empty-text=""
     table-layout="auto"
     @cellMouseEnter="(song: ISong) => hoveredSong = song"
     @cellMouseLeave="hoveredSong = null"
   >
-    <el-table-column width="70">
+    <el-table-column width="64" align="right">
       <template #default="{ row: song }">
         <el-button
           v-if="hoveredSong !== song && nowPlaying === song"
-          type="primary"
+          type="danger"
           link
         >
-          <NowPlayingIcon />
+          <MusicNoteIcon :scale="0.75" />
         </el-button>
         <el-button
           v-if="hoveredSong === song && isPlaying && nowPlaying === song"
-          type="info"
+          type="warning"
           @click="pause"
           link
         >
-          <PauseIcon />
+          <PauseIcon :scale="1" />
         </el-button>
         <el-button
           v-if="hoveredSong === song && !isPlaying && nowPlaying === song"
-          type="info"
+          type="danger"
           @click="play"
           link
         >
@@ -61,7 +62,6 @@ h2 {
         </el-button>
         <el-button
           v-if="hoveredSong === song && nowPlaying !== song"
-          type="info"
           @click="loadSong(song)"
           link
         >
@@ -88,3 +88,4 @@ h2 {
     />
   </el-table>
 </template>
+@/modules/icons

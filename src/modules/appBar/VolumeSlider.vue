@@ -14,22 +14,17 @@ watch(value, (newValue) => {
 <style lang="scss">
 .slider-block {
   width: 72px;
-  /* display: flex;
-  align-items: center;
-  position: relative;
-  bottom: 0.5em;
-  right: -0.5em;
-  padding-bottom: 1em; */
+
+  .el-slider__bar {
+    background-color: var(--el-menu-text-color);
+  }
 
   .el-slider__button.el-tooltip__trigger.el-tooltip__trigger {
-    border: none;
-    width: 10px;
-    height: 10px;
+    border-color: var(--el-menu-text-color);
+
+    width: 12px;
+    height: 12px;
   }
-}
-.slider-demo-block .el-slider {
-  /* margin-top: 0;
-  margin-left: 12px; */
 }
 </style>
 <template>

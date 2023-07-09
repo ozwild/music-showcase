@@ -56,10 +56,13 @@ watch(canvasContainer, () => {
     right: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 
     &.dark {
       .background-color-overlay {
         mix-blend-mode: difference;
+        mix-blend-mode: multiply;
+        background: darkturquoise;
       }
 
       .background-dark-overlay {
@@ -86,7 +89,7 @@ watch(canvasContainer, () => {
       z-index: 1;
 
       > div {
-        height: 100%;
+        height: 250%;
       }
     }
     .background-dark-overlay,
@@ -121,7 +124,8 @@ watch(canvasContainer, () => {
 
     .background-color-overlay {
       background: cadetblue;
-      mix-blend-mode: screen;
+      background: mediumvioletred;
+      mix-blend-mode: plus-lighter;
     }
   }
 

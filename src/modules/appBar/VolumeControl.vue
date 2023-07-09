@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useToggle } from '@/composables/useToggle'
-import VolumeIcon from '@/components/icons/VolumeIcon.vue'
-import FormatSlashIcon from '@/components/icons/FormatSlashIcon.vue'
+import { VolumeIcon, FormatSlashIcon } from '@/modules/icons'
 import VolumeSlider from './VolumeSlider.vue'
 
 import { useMediaPlayer } from '../player/useMediaPlayer'

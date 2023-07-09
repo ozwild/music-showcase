@@ -1,9 +1,21 @@
+<script lang="ts">
+const { defaultProps } = useIconProps()
+</script>
+
+<script setup lang="ts">
+import {
+  IIconSharedProps,
+  useIconProps,
+} from '@/modules/icons/composables/useIconProps'
+withDefaults(defineProps<IIconSharedProps>(), { ...defaultProps })
+</script>
+
 <style lang="scss" scoped>
 .gg-options {
   box-sizing: border-box;
   position: relative;
   display: block;
-  transform: scale(var(--ggs, 1));
+  transform: scale(v-bind(scale));
   width: 10px;
   height: 2px;
   box-shadow: -3px 4px 0 0, 3px -4px 0 0;

@@ -1,11 +1,21 @@
-<script setup lang="ts"></script>
+<script lang="ts">
+const { defaultProps } = useIconProps()
+</script>
+
+<script setup lang="ts">
+import {
+  IIconSharedProps,
+  useIconProps,
+} from '@/modules/icons/composables/useIconProps'
+withDefaults(defineProps<IIconSharedProps>(), { ...defaultProps })
+</script>
 
 <style lang="scss" scoped>
 .gg-volume {
   box-sizing: border-box;
   position: relative;
   display: block;
-  transform: scale(var(--ggs, 1));
+  transform: scale(v-bind(scale));
   width: 8px;
   height: 8px;
   border: 2px solid;

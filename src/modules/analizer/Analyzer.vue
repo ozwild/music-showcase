@@ -35,5 +35,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="analyzer-container" style="height: 200%"></div>
+  <div id="analyzer-container"></div>
 </template>

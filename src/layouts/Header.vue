@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import Search from '@/components/Search.vue'
 import { useDark } from '@/composables/useDark'
-import OptionsIcon from '@/components/icons/OptionsIcon.vue'
-import DarkModeIconVue from '@/components/icons/DarkModeIcon.vue'
-import { onMounted } from 'vue';
+import OptionsIcon from '@/modules/icons/components/OptionsIcon.vue'
+import DarkModeIconVue from '@/modules/icons/components/DarkModeIcon.vue'
 
 const { toggle: toggleDarkMode } = useDark()
-
-onMounted(() => {
-  console.log('header mounted')
-  window.toggleDark = toggleDarkMode
-})
 </script>
 
 <style lang="scss" scoped>
@@ -32,15 +26,24 @@ onMounted(() => {
   }
 
   .options-segment {
-    display: inline-flex;
-    align-items: center;
+    /* display: inline-flex;
+    align-items: center; */
 
     .options-dropdown {
       padding: 0 10px 0 30px;
     }
+    .options-icon-wrapper {
+      display: inline-block;
+      width: 1.5em;
+      height: 1.5em;
+      position: absolute;
+      top: -3px;
+      right: 30px;
+      cursor: pointer;
+    }
     .options-icon {
-      right: 1em;
-      top: 0.5em;
+      top: 10px;
+      right: -6px;
     }
 
     .dark-mode-icon,
@@ -52,6 +55,12 @@ onMounted(() => {
 </style>
 
 <style lang="scss">
+.el-dropdown-link.el-tooltip__trigger.el-tooltip__trigger {
+  .el-icon {
+    cursor: pointer;
+  }
+}
+
 .el-dropdown-menu__item {
   .el-icon {
     width: 25px;
@@ -74,7 +83,10 @@ onMounted(() => {
       <div class="options-segment">
         <el-dropdown class="options-dropdown" trigger="click">
           <span class="el-dropdown-link">
-            <OptionsIcon class="options-icon" />
+            <!-- eslint-disable-next-line vue/valid-v-on -->
+            <span class="options-icon-wrapper">
+              <OptionsIcon class="options-icon" />
+            </span>
             <el-icon class="el-icon--right">
               <arrow-down />
             </el-icon>

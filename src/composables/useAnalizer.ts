@@ -30,7 +30,7 @@ export function useAnalizer(
   )
 
   gainNode.value.connect(analyserNode.value)
-  //analyserNode.value.connect(context.value.destination)
+
   const bufferLength: Ref<number> = ref(analyserNode.value.frequencyBinCount)
   const dataArray: Ref<Float32Array> = ref(new Float32Array(bufferLength.value))
 
