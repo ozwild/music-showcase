@@ -1,13 +1,15 @@
 <script lang="ts">
-const { defaultProps } = useIconProps()
-</script>
+import { defineComponent } from 'vue'
+import { sharedIconProps } from '@/modules/icons/composables/useIconProps'
 
-<script setup lang="ts">
-import {
-  IIconSharedProps,
-  useIconProps,
-} from '@/modules/icons/composables/useIconProps'
-withDefaults(defineProps<IIconSharedProps>(), { ...defaultProps })
+export default defineComponent({
+  props: {
+    ...sharedIconProps,
+  },
+  setup() {
+    return {}
+  },
+})
 </script>
 
 <style lang="scss" scoped>
